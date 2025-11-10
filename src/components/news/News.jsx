@@ -1,5 +1,6 @@
 import React from 'react'
 import './News.css'
+import Schoolnews from './school/Schoolnews'
 
 export default function News() {
     const newsData = [
@@ -39,7 +40,7 @@ export default function News() {
   return (
     <div className='flex flex-col justify-center items-center'>
         <div className='flex justify-center items-center p-1 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-yellow-400 text-3xl font-black uppercase'>Tin Nổi bật</div>
-        <div className='flex gap-2'>
+        <div className='flex w-full justify-between items-center'>
             {
                 newsData && newsData.map(item=>(
                     <div key={item.id} className="card" id="card">
@@ -52,6 +53,18 @@ export default function News() {
                 ))
             }
             
+        </div>
+        <div className='flex flex-col w-full h-fit mt-4'>
+            <div className='flex w-full h-full'>
+                <div className='w-1/2 bg-amber-200'>
+                    <Schoolnews></Schoolnews>
+                </div>
+                <div className='w-1/2 bg-fuchsia-200'>2</div>
+            </div>
+            <div className='flex w-full'>
+                <div className='w-1/2 bg-red-300'>3</div>
+                <div className='w-1/2 bg-green-200'>4</div>
+            </div>
         </div>
     </div>
   )

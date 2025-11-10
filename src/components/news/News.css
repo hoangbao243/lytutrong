@@ -1,7 +1,7 @@
 /* From Uiverse.io by ElSombrero2 */ 
 .card {
-  width: 190px;
-  height: 254px;
+  width: 12.5rem;
+  height: 15rem;
   background: #866969;
   display: flex;
   justify-content: center;
@@ -14,8 +14,8 @@
 
 .card .content {
   border-radius: 5px;
-  width: 186px;
-  height: 250px;
+  width: 12.5rem;
+  height: 15.5rem;
   z-index: 1;
   padding: 5px;
   color: white;
@@ -45,8 +45,8 @@
   content: " ";
   position: absolute;
   display: block;
-  width: 80px;
-  height: 360px;
+  width: 5rem;
+  height: 22.5rem;
   background: linear-gradient(#ff222d, #fa902d);
   transition: opacity 300ms;
   animation: rotation_9018 8000ms infinite linear;
@@ -62,8 +62,8 @@
   position: absolute;
   content: " ";
   display: block;
-  width: 250px;
-  height: 360px;
+  width: 15.5rem;
+  height: 22.5rem;
   background: #756a6a33;
   backdrop-filter: blur(50px);
 }

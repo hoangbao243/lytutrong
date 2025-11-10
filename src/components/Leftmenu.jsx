@@ -2,6 +2,8 @@ import React from 'react'
 
 export default function Leftmenu() {
   return (
-    <div>10</div>
+    <div>
+      1
+    </div>
   )
 }
