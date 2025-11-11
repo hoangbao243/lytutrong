@@ -3,7 +3,7 @@ import Slideshow from "@/components/slideshow/Slideshow";
 
 export default function Main() {
   return (
-    <div className="w-full bg-red-300 m-2">
+    <div className="w-full">
       <Slideshow></Slideshow>
     </div>
   );

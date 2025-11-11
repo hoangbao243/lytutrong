@@ -3,10 +3,14 @@ import React from "react";
 
 export default function Imagelibrary() {
   return (
-    <div className="flex flex-col w-full">
-      <div className="mt-5 ">
-        <Link href={"#"}>
-          <img src="images/thuvienanh.png" alt="Thư Viện Ảnh" />
+    <div className="flex flex-col w-full ">
+      <div className="flex flex-col mt-5 justify-center items-center">
+        <div className="flex justify-center items-center mb-2 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-yellow-400 text-xl font-black uppercase">
+            Thư viện ảnh
+        </div>
+        <div className="w-1/2 border-t border-solid border-gray-400"></div>
+        <Link href={"#"} className="w-full p-2">
+          <img src="images/thuvienanh.png" className="w-full shadow-lg shadow-amber-200/40" alt="Thư Viện Ảnh" />
         </Link>
       </div>
     </div>

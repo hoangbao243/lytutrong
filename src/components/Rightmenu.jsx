@@ -4,7 +4,7 @@ import Imagelibrary from "./imageLibrary/Imagelibrary";
 export default function Rightmenu() {
   return (
     <div>
-      <div className="w-full  m-2">
+      <div className="w-full ">
         <Imagelibrary></Imagelibrary>
       </div>
     </div>

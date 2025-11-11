@@ -50,20 +50,20 @@ export default function News() {
       </div>
       <div className="flex w-full justify-between items-center">
         {newsData &&
-          newsData.map((item) => (
-            <div key={item.id} className="card" id="card">
+          newsData?.map((item) => (
+            <div key={item?.id} className="card" id="card">
               <div className="content flex flex-col justify-between gap-2">
                 <img
-                  src={item.image}
+                  src={item?.image}
                   alt="lytutrongnews"
                   width={150}
                   height={150}
-                  className="shadow-[0px_0px_7px_4px_#58545488] scale-95 hover:scale-120 transition-transform duration-300 ease-in-out"
+                  className="shadow-lg shadow-amber-100/20 scale-95 hover:scale-120 transition-transform duration-300 ease-in-out"
                 />
                 <div className="p-1 overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] text-white">
-                  {item.title}
+                  {item?.title?.charAt(0)?.toUpperCase() + item?.title?.slice(1)?.toLowerCase()}
                 </div>
-                <div>{item.createDate}</div>
+                <div>{item?.createDate}</div>
               </div>
             </div>
           ))}
