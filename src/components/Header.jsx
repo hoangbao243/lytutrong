@@ -2,8 +2,8 @@ import React from 'react'
 
 export default function Header() {
   return (
-    <div className="w-full bg-gray-300">
+    <header className="flex w-full items-center justify-center">
       <img src="images/banner.png" alt="lytutrong" />
-    </div>
+    </header>
   )
 }
