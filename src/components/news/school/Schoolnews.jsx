@@ -10,40 +10,41 @@ export default function Schoolnews(props) {
         {props.title}
       </div>
 
-      <div className="flex gap-2">
-        <div className="clearfix">
-          <Link href={`/post/${Data[0]?.id}`}>
-            <img
-              src={Data[0]?.image}
-              alt={Data[0]?.title}
-              className="float-left w-40 h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
-            />
-            <h3 className="font-bold text-blue-700 hover:underline line-clamp-2 text-sm md:text-base">
-              {Data[0]?.title?.toUpperCase()}
-            </h3>
-            <p className="text-gray-700 line-clamp-4 text-sm">
-              {Data[0]?.description?.charAt(0)?.toUpperCase() + Data[0]?.description?.slice(1)?.toLowerCase()}
-            </p>
-          </Link>
-        </div>
-      </div>
-      <ul>
+      <div className="flex flex-row grid grid-cols-2 gap-2">
         {Data &&
-          Data?.slice(1)?.map((item) => (
-            <li key={item?.id} className="flex">
-              <img
-                className="m-1"
-                src="images/icon/right-arrow.png"
-                alt="right-arrow"
-                width={12}
-                height={12}
-              />
-              <h3 className="line-clamp-1 hover:text-blue-500">
-                <Link href={`/post/${item?.id}`}>{item?.title?.charAt(0)?.toUpperCase() + item?.title?.slice(1)?.toLowerCase()}</Link>
-              </h3>
-            </li>
+          Data.map((item) => (
+            <div key={item?.id} className="flex w-full gap-4 h-[14rem]">
+              {/* <div className="w-full bg-red-200">
+
+              <Link href={`/post/${Data[0]?.id}`}>
+                <img
+                  src={Data[0]?.image}
+                  alt={Data[0]?.title}
+                  className="float-left w-40 h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
+                />
+                <h3 className="font-bold w-full text-blue-700 hover:underline line-clamp-2 text-sm md:text-base">
+                  {Data[0]?.title?.toUpperCase()}
+                </h3>
+                <p className="text-gray-700 w-full line-clamp-4 text-sm">
+                  {Data[0]?.description?.charAt(0)?.toUpperCase() +
+                    Data[0]?.description?.slice(1)?.toLowerCase()}
+                </p>
+              </Link>
+            </div> */}
+              <Link href={`/post/${item?.id}`} class="bg-white rounded-xl shadow-md p-4 overflow-hidden leading-relaxed">
+                <img
+                  src={item?.image}
+                  alt="Thumbnail"
+                  class="float-left w-40 h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
+                />
+                <h3 class="font-bold text-blue-700 hover:underline line-clamp-2 text-sm md:text-base">{item?.title?.toUpperCase()}</h3>
+                <p class="text-gray-600 h-full text-sm">
+                  {item?.description}
+                </p>
+              </Link>
+            </div>
           ))}
-      </ul>
+      </div>
     </div>
   );
 }
