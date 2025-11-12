@@ -43,16 +43,15 @@ export default function Announcement() {
     },
   ];
   return (
-    <div className='flex flex-col justify-center items-center w-full'>
-        <div className="flex justify-center items-center p-1 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-yellow-400 text-xl font-black uppercase">
+    <div className='flex flex-col justify-start items-start w-full'>
+        <div className="flex justify-center items-center mt-4 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-yellow-400 text-xl font-black uppercase">
             Văn Bản - Thông Báo
         </div>
-        <div className="w-1/2 border-t border-solid border-gray-400"></div>
         <ul className='divide-y-2 divide-gray-300'>
             {
                 announcementData && announcementData?.map(item=>(
-                    <li key={item.id} className='flex flex-col hover:text-blue-500 text-red-400 p-3'>
-                        <Link href={`post/${item.id}`}>{item.title.charAt(0).toUpperCase() + item.title.slice(1).toLowerCase()}</Link>
+                    <li key={item.id} className='flex flex-col hover:text-blue-500 text-red-400 px-3 py-1'>
+                        <Link href={`/post/${item.id}`}>{item.title.charAt(0).toUpperCase() + item.title.slice(1).toLowerCase()}</Link>
                         <span className='text-[12px] text-gray-500'>{item.createDate}</span>
                     </li>
                 ))

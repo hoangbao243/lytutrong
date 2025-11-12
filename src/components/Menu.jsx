@@ -132,17 +132,17 @@ export default function Menu() {
   ];
   const pathName = usePathname()
   return (
-    <div className="flex gap-4 min-h-14 w-full bg-red-300">
-      <nav className="flex justify-center items-center max-w-screen-xl w-full bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-        <ul className="flex justify-between  h-full gap-2 z-1 p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+    <div className="flex gap-4 min-h-14 w-full max-w-7xl px-2">
+      <nav className="flex justify-center items-center w-full bg-[url(/images/bg-menu.png)] border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+        <ul className="flex justify-between  h-full gap-2 z-1 p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-transparent md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-transparent">
           {menuItem &&
             menuItem.map((item) => {
               const isActive = pathName === item.link || item?.dropdownMenu?.some(item=>item.link === pathName) || item?.dropdownMenu?.some(item=>item?.subMenu?.some(subItem=>subItem.link === pathName));
               return (
-              <li key={item.id} className={`flex relative  group p-2 m-0 hover:bg-orange-400 ${isActive === true ? 'bg-red-500' : ''}`} >
+              <li key={item.id} className={`flex relative  group p-2 m-0 hover:bg-orange-400 ${isActive === true ? 'bg-[#FFB300] border-b-2 border-solid border-white' : ''}`} >
                 <Link
-                  href={item?.link}
-                  className={`flex items-center justify-center uppercase font-medium text-balance  ${isActive === true ? 'text-white md:text-white md:p-0 md:dark:text-white' : ''} hover:text-white rounded-sm md:bg-transparent md:text-gray-600 md:p-0 md:dark:text-gray-600 dark:bg-grtext-gray-600 md:dark:bg-transparent `}
+                  href={item?.id == 1 ? `/` : `/post/${item?.id}`}
+                  className={`flex items-center justify-center uppercase font-medium text-balance  ${isActive === true ? 'text-white' : ''} hover:text-white rounded-sm dark:bg-grtext-gray-600 md:dark:bg-transparent `}
                   aria-current="page"
                 >
                   {item?.title}
@@ -159,7 +159,7 @@ export default function Menu() {
                     {item.dropdownMenu.map((sub) => (
                       <li key={sub.id} className="relative group/sub">
                         <Link
-                          href={sub.link}
+                          href={`/post/${sub?.id}`}
                           className="flex items-center justify-between px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-red-400"
                         >
                           {sub.title}
@@ -176,7 +176,7 @@ export default function Menu() {
                             {sub.subMenu.map((subItem) => (
                               <li key={subItem.id} className="m-0">
                                 <Link
-                                  href={subItem.link}
+                                  href={`/post/${subItem?.id}`}
                                   className="block px-4 py-2 text-gray-600 hover:bg-gray-100 whitespace-nowrap hover:text-red-400"
                                 >
                                   {subItem.title}

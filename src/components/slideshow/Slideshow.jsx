@@ -13,13 +13,13 @@ import Image from 'next/image' // optional: use <img> if you prefer
 const slides = [
     {
         id: 1,
-        src: 'images/banner.png',
+        src: '/images/banner.png',
         alt: 'Slide banner lytutrong',
         caption: 'aaaa'
     },
     {
         id: 2,
-        src: 'images/banner.png',
+        src: '/images/banner.png',
         alt: 'Slide banner lytutrong',
         caption: 'bbb'
     }
