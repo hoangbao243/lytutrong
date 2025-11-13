@@ -50,8 +50,8 @@ export default function News() {
     },
   ];
   return (
-    <div className="flex flex-col p-2">
-      <div className="flex h-fit w-full justify-start items-center border-b-2 border-blue-400 text-2xl uppercase">
+    <div className="flex flex-col">
+      <div className="flex h-fit w-full justify-start items-center border-b-2 border-blue-400 text-2xl uppercase mt-2">
         <div className="w-fit p-2 font-bold text-xl text-white bg-blue-400 rounded-t-xl">
           Tin nổi bật
         </div>
@@ -81,7 +81,7 @@ export default function News() {
             <Schoolnews props={newsData} title={"Nhà trường"}></Schoolnews>
           </div>
         </div>
-        <div className="flex flex-row w-full h-full">
+        <div className="flex flex-row w-full h-full gap-2">
           <div className="w-full bg-red-300">
             <Schoolnews2 props={newsData} title={"Hoạt động giảng dạy"}></Schoolnews2>
           </div>
