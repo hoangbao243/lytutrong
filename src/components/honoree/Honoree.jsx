@@ -9,14 +9,7 @@ export default function Honoree() {
       name: `Nguyen Van A`,
       title: `Giải nhất toán cấp thành phố`,
       description: `...`,
-    },
-    {
-      id: 26,
-      image: `/images/AnhTinTuc/2025/9/HS1-1.jpg`,
-      name: `Pham B`,
-      title: `Giải nhì văn cấp thành phố Giải nhì văn cấp thành phố Giải nhì văn cấp thành phố Giải nhì văn cấp thành phố Giải nhì văn cấp thành phố Giải nhì văn cấp thành phố`,
-      description: `...`,
-    },
+    }
   ];
   return (
     <div className="w-full">
