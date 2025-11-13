@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 export default function Menu() {
@@ -130,6 +130,7 @@ export default function Menu() {
       link: "/post/7",
     },
   ];
+  const { id } = useParams()
   const pathName = usePathname()
   return (
     <div className="flex gap-4 min-h-14 w-full max-w-7xl px-2">
@@ -137,12 +138,12 @@ export default function Menu() {
         <ul className="flex justify-between  h-full gap-2 z-1 p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-transparent md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-transparent">
           {menuItem &&
             menuItem.map((item) => {
-              const isActive = pathName === item.link || item?.dropdownMenu?.some(item=>item.link === pathName) || item?.dropdownMenu?.some(item=>item?.subMenu?.some(subItem=>subItem.link === pathName));
+              const isActive = pathName == item?.link || id == item.id || item?.dropdownMenu?.some(item=>item.id == id) || item?.dropdownMenu?.some(item=>item?.subMenu?.some(subItem=>subItem.id == id));
               return (
-              <li key={item.id} className={`flex relative  group p-2 m-0 hover:bg-orange-400 ${isActive === true ? 'bg-[#FFB300] border-b-2 border-solid border-white' : ''}`} >
+              <li key={item.id} className={`flex relative  group p-2 m-0 hover:bg-orange-400  ${isActive === true ? 'bg-[#FFB300] border-b-2  border-solid border-black' : ''}`} >
                 <Link
                   href={item?.id == 1 ? `/` : `/post/${item?.id}`}
-                  className={`flex items-center justify-center uppercase font-medium text-balance  ${isActive === true ? 'text-white' : ''} hover:text-white rounded-sm dark:bg-grtext-gray-600 md:dark:bg-transparent `}
+                  className={`flex items-center justify-center uppercase font-medium text-balance  ${isActive === true ? 'text-black' : 'text-white'} hover:text-black  rounded-sm dark:bg-grtext-gray-600 md:dark:bg-transparent `}
                   aria-current="page"
                 >
                   {item?.title}

@@ -68,7 +68,7 @@ export default function Slideshow({ interval = 4000, height = 'h-[40vh]' }) {
             <img
               src={s.src}
               alt={s.alt ?? ''}
-              className="w-full h-full object-cover"
+              className="w-full h-112.5 object-cover"
               draggable={false}
             />
 
