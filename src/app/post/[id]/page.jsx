@@ -36,8 +36,6 @@ export default function Postpage() {
               </div>
               <div className="flex flex-col items-center w-1/4 pl-2 py-2">
                 <Rightmenu></Rightmenu>
-                <Announcement></Announcement>
-                <Mealmenu></Mealmenu>
               </div>
             </section>
           </main>

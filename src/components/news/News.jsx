@@ -1,6 +1,7 @@
 import React from "react";
 import "./News.css";
 import Schoolnews from "./school/Schoolnews";
+import Schoolnews2 from "./school/Schoolnews2";
 
 export default function News() {
   const newsData = [
@@ -49,11 +50,13 @@ export default function News() {
     },
   ];
   return (
-    <div className="flex flex-col">
-      <div className="flex justify-start items-start p-1 my-2 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-yellow-400 text-3xl font-black uppercase">
-        Tin Nổi bật
+    <div className="flex flex-col p-2">
+      <div className="flex h-fit w-full justify-start items-center border-b-2 border-blue-400 text-2xl uppercase">
+        <div className="w-fit p-2 font-bold text-xl text-white bg-blue-400 rounded-t-xl">
+          Tin nổi bật
+        </div>
       </div>
-      <div className="flex w-full justify-between items-center grid grid-cols-2 lg:grid-cols-4 gap-2">
+      <div className="w-full justify-between items-center grid grid-cols-2 lg:grid-cols-4 gap-2">
         {newsData &&
           newsData?.map((item) => (
             <div key={item?.id} className="transform transition duration-300 hover:scale-110 rounded-lg shadow-lg h-fit w-full hover:shadow-xl bg-white hover:text-blue-500">
@@ -77,19 +80,13 @@ export default function News() {
           <div className="w-full bg-amber-200">
             <Schoolnews props={newsData} title={"Nhà trường"}></Schoolnews>
           </div>
-          <div className="w-full bg-fuchsia-200">
-            <Schoolnews
-              props={newsData}
-              title={"Hoạt động giảng dạy"}
-            ></Schoolnews>
-          </div>
         </div>
-        <div className="flex flex-col w-full h-full">
+        <div className="flex flex-row w-full h-full">
           <div className="w-full bg-red-300">
-            <Schoolnews props={newsData} title={"Đoàn thể"}></Schoolnews>
+            <Schoolnews2 props={newsData} title={"Hoạt động giảng dạy"}></Schoolnews2>
           </div>
-          <div className="w-full bg-green-200">
-            <Schoolnews props={newsData} title={"Các văn bản"}></Schoolnews>
+          <div className="w-full bg-red-300">
+            <Schoolnews2 props={newsData} title={"Đoàn thể"}></Schoolnews2>
           </div>
         </div>
       </div>
