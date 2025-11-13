@@ -24,7 +24,7 @@ export default function Schoolnews2(props) {
                   alt="Thumbnail"
                   className="float-left w-full h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
                 />
-                <h3 className="font-bold text-black hover:text-blue-500 line-clamp-4 text-sm md:text-base">
+                <h3 className="font-medium text-black hover:text-blue-500 line-clamp-4 text-sm md:text-base">
                   {item?.title?.charAt(0)?.toUpperCase() + item?.title?.slice(1)?.toLowerCase()}
                 </h3>
               </Link>
