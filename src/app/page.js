@@ -16,7 +16,7 @@ export default function Home() {
             <Main></Main>
             <News></News>
           </div>
-          <div className="flex flex-col items-center w-1/4 pl-2 py-2">
+          <div className="flex flex-col items-center w-1/4 pl-2">
             <Rightmenu></Rightmenu>
           </div>
         </section>
