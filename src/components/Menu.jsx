@@ -136,6 +136,10 @@ export default function Menu() {
     <div className="flex gap-4 min-h-14 w-full max-w-7xl px-2">
       <nav className="flex justify-center items-center w-full bg-[url(/images/bg-menu.png)] border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <ul className="flex justify-between  h-full gap-2 z-1 p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-transparent md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-transparent">
+          <li className="flex items-center">
+            <Link href={`/`}>
+            <img src="/images/icon/home.png" alt="home" className="rounded-full w-12 h-12"/></Link>
+          </li>
           {menuItem &&
             menuItem.map((item) => {
               const isActive = pathName == item?.link || id == item.id || item?.dropdownMenu?.some(item=>item.id == id) || item?.dropdownMenu?.some(item=>item?.subMenu?.some(subItem=>subItem.id == id));
@@ -143,7 +147,7 @@ export default function Menu() {
               <li key={item.id} className={`flex relative  group p-2 m-0 hover:bg-orange-400  ${isActive === true ? 'bg-[#FFB300] border-b-2  border-solid border-black' : ''}`} >
                 <Link
                   href={item?.id == 1 ? `/` : `/post/${item?.id}`}
-                  className={`flex items-center justify-center uppercase font-medium text-balance  ${isActive === true ? 'text-black' : 'text-white'} hover:text-black  rounded-sm dark:bg-grtext-gray-600 md:dark:bg-transparent `}
+                  className={`flex items-center justify-center uppercase font-bold text-balance  ${isActive === true ? 'text-red-500' : 'text-white'} hover:text-black  rounded-sm dark:bg-grtext-gray-600 md:dark:bg-transparent `}
                   aria-current="page"
                 >
                   {item?.title}

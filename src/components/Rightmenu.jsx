@@ -3,7 +3,7 @@ import Imagelibrary from "./imageLibrary/Imagelibrary";
 import Mealmenu from "@/components/mealMenu/Mealmenu";
 import Announcement from "@/components/announcement/Announcement";
 import Honoree from "./honoree/Honoree";
-import Access from "./access/Access";
+import Fanpage from "./fanpage/Fanpage";
 
 export default function Rightmenu() {
   const data = [
@@ -54,7 +54,7 @@ export default function Rightmenu() {
         <Announcement announcementData={data} title={`Văn Bản - Thông Báo`}></Announcement>
         <Mealmenu></Mealmenu>
         <Announcement announcementData={data} title={`Các Văn Bản`}></Announcement>
-        <Access></Access>
+        <Fanpage></Fanpage>
       </div>
     </div>
   );
