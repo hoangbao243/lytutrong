@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image' // optional: use <img> if you prefer
 
 /**
  * Slider props:
@@ -9,41 +8,27 @@ import Image from 'next/image' // optional: use <img> if you prefer
  *  - interval: ms between auto slides (default 4000)
  *  - height: Tailwind-compatible height class or CSS (default 'h-[50vh]')
  */
-
-const slides = [
-    {
-        id: 1,
-        src: '/images/banner.png',
-        alt: 'Slide banner lytutrong',
-        caption: 'aaaa'
-    },
-    {
-        id: 2,
-        src: '/images/banner.png',
-        alt: 'Slide banner lytutrong',
-        caption: 'bbb'
-    }
-]
-export default function Slideshow({ interval = 4000, height = 'h-[40vh]' }) {
+export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]'}) {
+  const slides = data
   const [index, setIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const timerRef = useRef(null)
 
-  const prev = () => setIndex((i) => (i - 1 + slides.length) % slides.length)
-  const next = () => setIndex((i) => (i + 1) % slides.length)
-  const goTo = (i) => setIndex(i % slides.length)
+  const prev = () => setIndex((i) => (i - 1 + slides?.length) % slides?.length)
+  const next = () => setIndex((i) => (i + 1) % slides?.length)
+  const goTo = (i) => setIndex(i % slides?.length)
 
   // autoplay
   useEffect(() => {
-    if (isPaused || slides.length <= 1) return
-    timerRef.current = setInterval(() => setIndex((i) => (i + 1) % slides.length), interval)
+    if (isPaused || slides?.length <= 1) return
+    timerRef.current = setInterval(() => setIndex((i) => (i + 1) % slides?.length), interval)
     return () => clearInterval(timerRef.current)
-  }, [isPaused, slides.length, interval])
+  }, [isPaused, slides?.length, interval])
 
   // cleanup on unmount
   useEffect(() => () => clearInterval(timerRef.current), [])
 
-  if (!slides || slides.length === 0) return null
+  if (!slides || slides?.length === 0) return null
 
   return (
     <section
@@ -55,25 +40,25 @@ export default function Slideshow({ interval = 4000, height = 'h-[40vh]' }) {
       {/* Slides wrapper */}
       <div
         className="h-full flex transition-transform duration-700 ease-in-out"
-        style={{ width: `${slides.length * 100}%`, transform: `translateX(-${index * (100 / slides.length)}%)` }}
+        style={{ width: `${slides?.length * 100}%`, transform: `translateX(-${index * (100 / slides?.length)}%)` }}
       >
         {slides.map((s) => (
           <div
             key={s.id}
             className="flex-shrink-0 w-full relative flex items-center justify-center"
-            style={{ width: `${100 / slides.length}%` }}
+            style={{ width: `${100 / slides?.length}%` }}
           >
             {/* If using next/image: use layout='fill' or responsive */}
             {/* Using simple <img> for easier drop-in */}
             <img
               src={s.src}
               alt={s.alt ?? ''}
-              className="w-full h-112.5 object-cover"
+              className={`w-full ${height} object-cover`}
               draggable={false}
             />
 
             {s.caption && (
-              <div className="absolute left-1/2 bottom-6 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-md text-sm md:text-base">
+              <div className="absolute left-1/2 max-w-2/3 w-fit line-clamp-2 bottom-6 -translate-x-1/2 bg-black/50 text-white hover:bg-black/70 px-4 py-2 rounded-md text-sm md:text-base">
                 {s.caption}
               </div>
             )}
