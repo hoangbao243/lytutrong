@@ -9,7 +9,7 @@ export default function Rightmenu() {
   const data = [
     {
       id: 1,
-      image: "images/11.png",
+      image: "/images/11.png",
       title:
         "TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026",
       createDate: "01-01-2025",
@@ -20,7 +20,7 @@ export default function Rightmenu() {
     },
     {
       id: 2,
-      image: "images/11.png",
+      image: "/images/11.png",
       title:
         "Thông báo về việc đề nghị phê duyệt phương án giá dịch vụ năm học 2025-2026",
       createDate: "01-02-2025",
@@ -29,7 +29,7 @@ export default function Rightmenu() {
     },
     {
       id: 3,
-      image: "images/11.png",
+      image: "/images/11.png",
       title:
         "Kế hoạch thực hiện quy định công khai trong các hoạt động của cơ sở giáo dục, NH 2025-2026",
       createDate: "01-03-2025",
@@ -38,7 +38,7 @@ export default function Rightmenu() {
     },
     {
       id: 4,
-      image: "images/11.png",
+      image: "/images/11.png",
       title:
         "TRƯỜNG TIỂU HỌC LÝ TỰ TRỌNG HÂN HOAN CHÀO ĐÓN NĂM HỌC MỚI 2025-2026",
       createDate: "01-04-2025",

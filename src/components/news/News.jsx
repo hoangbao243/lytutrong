@@ -3,6 +3,7 @@ import "./News.css";
 import Schoolnews from "./school/Schoolnews";
 import Schoolnews2 from "./school/Schoolnews2";
 import Link from "next/link";
+import Organization from "./school/Organization";
 
 export default function News() {
   const newsData = [
@@ -83,12 +84,11 @@ export default function News() {
                   className="w-full h-full shadow-lg shadow-amber-100/20 rounded-lg"
                 />
                 <h2 className="px-2 pt-2 font-semibold lg:line-clamp-4 line-clamp-3">
-                {item?.title?.charAt(0)?.toUpperCase() +
-                  item?.title?.slice(1)?.toLowerCase()}
-              </h2>
+                  {item?.title?.charAt(0)?.toUpperCase() +
+                    item?.title?.slice(1)?.toLowerCase()}
+                </h2>
               </div>
 
-              
               <span className="text-gray-600 text-[14px] ml-4 my-1">
                 {item?.createDate}
               </span>
@@ -97,7 +97,7 @@ export default function News() {
       </div>
       <div className="flex flex-col w-full h-fit mt-4">
         <div className="flex flex-col w-full h-full">
-          <div className="w-full bg-amber-200">
+          <div className="w-full ">
             <Schoolnews
               props={newsData}
               title={"Tin tức nhà trường"}
@@ -108,17 +108,17 @@ export default function News() {
           </div>
         </div>
         <div className="flex flex-row w-full h-full gap-2">
-          <div className="w-full bg-red-300">
+          <div className="w-full ">
             <Schoolnews2
               props={newsData}
               title={"Hoạt động giảng dạy"}
             ></Schoolnews2>
           </div>
-          <div className="w-full bg-red-300">
-            <Schoolnews2
+          <div className="w-full ">
+            <Organization
               props={newsData}
               title={"Tin tức Đoàn - Đội"}
-            ></Schoolnews2>
+            ></Organization>
           </div>
         </div>
       </div>
