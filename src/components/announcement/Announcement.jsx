@@ -3,6 +3,7 @@ import React from "react";
 
 export default function Announcement(props) {
   const announcementData = props.announcementData;
+  
 
   return (
     <div className="flex flex-col justify-start items-start w-full">
@@ -13,7 +14,7 @@ export default function Announcement(props) {
       </div>
       <ul className="divide-y-2 divide-gray-300">
         {announcementData && props.title == "Các Văn Bản"
-          ? announcementData?.map((item) => (
+          ? announcementData?.slice(1)?.map((item) => (
               <li
                 key={item?.id}
                 className="flex hover:text-blue-500 items-center text-red-400 "

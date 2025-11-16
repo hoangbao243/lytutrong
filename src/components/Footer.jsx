@@ -5,19 +5,24 @@ export default function Footer() {
   const views = 2025;
   const digits = views.toString().split("");
   return (
-    <footer className="flex flex-row bg-[#e4eeed] h-30 min-h-fit w-full m-2 mb-4 max-w-7xl rounded-lg border border-gray-300">
-      <img src="/images/logo2.png" className="w-30 h-30" alt="Logo" />
-      <p className="bg-[#e4eeed] h-26 w-0.5 mt-2 mx-3"></p>
-      <div className="flex w-110">
+    <footer className="flex flex-col justify-center mx-auto md:flex-row bg-[#e4eeed] h-30 min-h-fit w-full m-2 mb-4 max-w-7xl rounded-lg border border-gray-300">
+      <img
+        src="/images/logo2.png"
+        className="w-30 h-30 mx-auto md:mx-0"
+        alt="Logo"
+      />
+      <div className="flex w-fit md:w-110">
         <div className="flex flex-col justify-center items-start ml-2 ">
-          <span>
+          <span className="mx-auto md:mx-0">
             Trưởng ban biên tập:{" "}
             <span className="text-emerald-600">
               Cô Trần Thị Lệ - Hiệu Trưởng
             </span>
           </span>
-          <span>Bản quyền © 2025 Trường Tiểu Học Lý Tự Trọng - Đà Nẵng</span>
-          <span>
+          <span className="mx-2 md:mx-0">
+            Bản quyền © 2025 Trường Tiểu Học Lý Tự Trọng - Đà Nẵng
+          </span>
+          <span className="hidden md:inline mx-auto md:mx-0">
             Thiết kế bởi{" "}
             <Link
               href={`https://thietkewebtv.com/`}
@@ -29,17 +34,17 @@ export default function Footer() {
           </span>
         </div>
       </div>
-      <p className="bg-[#e4eeed] h-26 w-0.5 mt-2 mx-3"></p>
-      <div className="flex flex-col justify-center items-start ml-2 w-82.5">
-        <p className="uppercase text-[#19908e] font-bold mb-2">
+      <div className="flex flex-col w-full justify-center items-start md:w-82.5">
+        <p className="uppercase text-[#19908e] font-bold md:mb-2 mx-auto md:mx-0">
           Thông tin liên hệ
         </p>
-        <span>Địa chỉ: 12 lý tự trọng, P.Hải Châu, TP Đà Nẵng</span>
-        <span>Số điện thoại: 0985.145.906</span>
+        <span className="mx-auto md:mx-0">
+          Địa chỉ: 12 lý tự trọng, P.Hải Châu, TP Đà Nẵng
+        </span>
+        <span className="mx-auto md:mx-0">Số điện thoại: 0985.145.906</span>
       </div>
-      <p className="bg-[#e4eeed] h-26 w-0.5 mt-2 mx-3"></p>
-      <div className="flex flex-col justify-center items-center ml-2 w-68">
-        <p className="uppercase text-[#19908e] font-bold mb-2">
+      <div className="flex flex-col w-full justify-center items-center md:w-68">
+        <p className="uppercase text-[#19908e] font-bold mb-2 mx-auto md:mx-0">
           Lượng truy cập website
         </p>
         <div className="flex  gap-0.5">
@@ -55,6 +60,16 @@ export default function Footer() {
           ))}
         </div>
       </div>
+      <p className="md:hidden text-center w-full mt-2">
+        Thiết kế bởi{" "}
+        <Link
+          href={`https://thietkewebtv.com/`}
+          target="_blank"
+          className="text-emerald-600 font-bold"
+        >
+          IT Trí Việt
+        </Link>
+      </p>
     </footer>
   );
 }

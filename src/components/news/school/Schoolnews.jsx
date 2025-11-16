@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import Slideshow from "@/components/slideshow/Slideshow";
 import Link from "next/link";
@@ -41,7 +41,7 @@ export default function Schoolnews(props) {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
+
   return (
     <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow pb-3">
       <div className="flex h-fit w-full justify-between items-center border-b-2 border-blue-400 text-2xl uppercase">

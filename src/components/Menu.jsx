@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 export default function Menu() {
   const menuItem = [
@@ -134,38 +134,27 @@ export default function Menu() {
   const pathName = usePathname();
   const [openMobile, setOpenMobile] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [openSubDropdown, setOpenSubDropdown] = useState(null);
 
   const checkActive = (item) => {
     if (pathName === item.link) return true;
     if (id == item.id) return true;
     if (item?.dropdownMenu?.some((d) => d.id == id)) return true;
-    if (
-      item?.dropdownMenu?.some((d) =>
-        d?.subMenu?.some((s) => s.id == id)
-      )
-    )
+    if (item?.dropdownMenu?.some((d) => d?.subMenu?.some((s) => s.id == id)))
       return true;
     return false;
   };
   const toggleMobileMenu = () => {
     setOpenMobile(!openMobile);
-  
-    // scroll menu lên đầu trang
-    if (!openMobile) {
-      window.scrollTo({
-        top: 300,        // cuộn lên đầu
-        behavior: "smooth", // animation mượt
-      });
-    }
   };
   return (
     <header className="w-full sticky top-0 z-999 md:static max-w-7xl shadow-lg md:px-2">
-      <div className="w-full bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-16">
+      <div className="max-w-7xl bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-16">
         {/* LOGO */}
         <Link href="/">
           <img
             src="/images/icon/home.png"
-            className="w-12 h-12 rounded-full mr-1"
+            className="w-12 h-12 rounded-full"
             alt="Home"
           />
         </Link>
@@ -173,7 +162,7 @@ export default function Menu() {
         {/* MOBILE BUTTON */}
         <button
           className="md:hidden text-white text-3xl"
-          onClick={()=>toggleMobileMenu()}
+          onClick={() => setOpenMobile(!openMobile)}
         >
           ☰
         </button>
@@ -181,85 +170,96 @@ export default function Menu() {
         {/* MENU LIST */}
         <nav
           className={`
-            fixed md:static left-0 top-16 md:top-0 w-full h-full md:w-auto 
+            absolute md:static left-0 top-full h-fit md:h-full w-full md:w-auto
             md:bg-transparent bg-amber-300
-            md:flex md:items-center md:gap-4
-            transition-all duration-300 z-50 md:px-2
-            ${openMobile ? "opacity-100 visible" : "opacity-0 invisible md:visible md:opacity-100"}
+             md:gap-4
+            transition-all duration-300 z-99 md:px-2 md:visible
+            ${
+              openMobile
+                ? "opacity-100 visible translate-y-0 md:translate-y-0"
+                : "opacity-0 md:opacity-100 invisible md:static translate-y-10 md:translate-y-0"
+            }
           `}
         >
-          <ul className="flex flex-col h-full justify-center items-center md:flex-row md:gap-2 w-full ">
+          <ul className="flex flex-col md:flex-row xl:gap-2 w-full md:h-full">
             {menuItem.map((item) => (
-              <li key={item.id} className={`flex relative group h-full items-center ${
-                checkActive(item) ? "text-red-600 bg-[#FFB300] md:border-b-2 md:border-black" : ""
-              }`}>
+              <li
+                key={item.id}
+                className={`relative group md:flex md:items-center ${
+                  checkActive(item) ? "text-red-600 bg-[#FFB300]" : ""
+                }`}
+              >
                 <div
-                  className="flex flex-col justify-center items-center md:flex-row items-center md:block px-4 text-white hover:text-black hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
+                  className="flex md:flex-row justify-between items-center md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 text-white hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
                   onClick={() =>
-                    setOpenDropdown(
-                      openDropdown === item.id ? null : item.id
-                    )
+                    setOpenDropdown(openDropdown === item.id ? null : item.id)
                   }
                 >
                   <Link
                     href={item.link}
-                    className={`flex items-center uppercase text-sm font-bold px-2 ${
+                    className={`uppercase md:text-[10px] lg:text-sm font-bold ${
                       checkActive(item) ? "text-red-600" : ""
                     }`}
                   >
                     {item.title}
-                    {item?.dropdownMenu && (
-                      <svg
-                      className="w-2.5 h-2.5 ms-1 "
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 10 6"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 1 4 4 4-4"
-                      />
-                    </svg>
-                  )}
                   </Link>
+
+                  {/* Arrow SVG (thay cho lucide) */}
+                  {item.dropdownMenu && (
+                    <span className=" lg:ml-1 xl:ml-2 mr-4 md:mr-0 text-white">
+                      <svg
+                        className="w-2.5 h-2.5 ms-1 "
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 10 6"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 1 4 4 4-4"
+                        />
+                      </svg>
+                    </span>
+                  )}
                 </div>
 
                 {/* Dropdown Desktop */}
                 {item.dropdownMenu && (
-                  <ul className="hidden md:absolute md:group-hover:block bg-white shadow-lg rounded-md w-56 text-gray-700 border border-gray-200">
+                  <ul className="hidden md:absolute top-full md:group-hover:block bg-white shadow-lg rounded-md w-56 text-gray-700">
                     {item.dropdownMenu.map((sub) => (
                       <li key={sub.id} className="relative group/sub">
                         <Link
                           href={sub.link}
-                          className="flex justify-between px-4 py-2 hover:bg-zinc-100"
+                          className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100"
                         >
                           {sub.title}
-                          {sub?.subMenu && (
-                      <svg
-                      className="w-2.5 h-2.5 ms-1 mt-2"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 10 6"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 1 4 4 4-4"
-                      />
-                    </svg>
-                  )}
+                          {sub.subMenu && (
+                            <span className="ml-2 text-black">
+                              <svg
+                                className="w-2.5 h-2.5 "
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 10 6"
+                              >
+                                <path
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="m1 1 4 4 4-4"
+                                />
+                              </svg>
+                            </span>
+                          )}
                         </Link>
 
                         {/* Submenu Desktop */}
                         {sub.subMenu && (
-                          <ul className="hidden absolute md:right-full lg:left-full top-0 bg-white shadow-lg rounded-md w-56 group-hover/sub:block">
+                          <ul className="hidden absolute right-full xl:left-full top-4 bg-white shadow-lg rounded-md w-56 group-hover/sub:block">
                             {sub.subMenu.map((s) => (
                               <li key={s.id}>
                                 <Link
@@ -267,7 +267,6 @@ export default function Menu() {
                                   className="block px-4 py-2 hover:bg-zinc-100"
                                 >
                                   {s.title}
-                                  
                                 </Link>
                               </li>
                             ))}
@@ -282,24 +281,54 @@ export default function Menu() {
                 {item.dropdownMenu && (
                   <ul
                     className={`
-                      md:hidden bg-zinc-800 transition-all overflow-hidden duration-300
+                      md:hidden bg-amber-300 transition-all overflow-hidden duration-300
                       ${openDropdown === item.id ? "max-h-96" : "max-h-0"}
                     `}
                   >
                     {item.dropdownMenu.map((sub) => (
-                      <li key={sub.id} className="border-t border-zinc-700">
-                        <Link
-                          href={sub.link}
-                          className="block px-6 py-2 text-white"
+                      <li key={sub.id} className="uppercase font-bold text-sm">
+                        <div
+                          className="flex justify-between items-center pl-10 py-2"
+                          onClick={() =>
+                            setOpenSubDropdown(
+                              openSubDropdown === sub.id ? null : sub.id
+                            )
+                          }
                         >
-                          {sub.title}
-                        </Link>
+                          <Link href={sub.link} className="  text-white">
+                            {sub.title}
+                          </Link>
+                          {sub.subMenu && (
+                            <span className="md:hidden ml-2 text-white">
+                              <svg
+                                className="w-2.5 h-2.5 mr-4 "
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 10 6"
+                              >
+                                <path
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="m1 1 4 4 4-4"
+                                />
+                              </svg>
+                            </span>
+                          )}
+                        </div>
 
                         {/* Submenu mobile */}
                         {sub.subMenu && (
-                          <ul className="bg-zinc-900">
+                          <ul
+                            className={`
+                      md:hidden bg-amber-300 transition-all overflow-hidden duration-300
+                      ${openSubDropdown === sub.id ? "max-h-96" : "max-h-0"}
+                    `}
+                          >
                             {sub.subMenu.map((s) => (
-                              <li key={s.id}>
+                              <li key={s.id} className="pl-10">
                                 <Link
                                   href={s.link}
                                   className="block px-10 py-2 text-white"
