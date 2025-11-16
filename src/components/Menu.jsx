@@ -185,12 +185,12 @@ export default function Menu() {
             {menuItem.map((item) => (
               <li
                 key={item.id}
-                className={`relative group md:flex md:items-center ${
-                  checkActive(item) ? "text-red-600 bg-[#FFB300]" : ""
+                className={`relative group md:flex md:items-center  ${
+                  checkActive(item) ? "text-red-600 bg-[#FFB300] md:border-b-2 md:border-black" : ""
                 }`}
               >
                 <div
-                  className="flex md:flex-row justify-between items-center md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 text-white hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
+                  className="flex md:flex-row justify-between hover:text-black md:h-full items-center md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 text-white hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
                   onClick={() =>
                     setOpenDropdown(openDropdown === item.id ? null : item.id)
                   }
@@ -230,10 +230,10 @@ export default function Menu() {
                 {item.dropdownMenu && (
                   <ul className="hidden md:absolute top-full md:group-hover:block bg-white shadow-lg rounded-md w-56 text-gray-700">
                     {item.dropdownMenu.map((sub) => (
-                      <li key={sub.id} className="relative group/sub">
+                      <li key={sub.id} className="relative group/sub ">
                         <Link
                           href={sub.link}
-                          className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100"
+                          className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
                         >
                           {sub.title}
                           {sub.subMenu && (
@@ -264,7 +264,7 @@ export default function Menu() {
                               <li key={s.id}>
                                 <Link
                                   href={s.link}
-                                  className="block px-4 py-2 hover:bg-zinc-100"
+                                  className="block px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
                                 >
                                   {s.title}
                                 </Link>
