@@ -48,7 +48,7 @@ export default function Rightmenu() {
   ];
   return (
     <div>
-      <div className="w-full ">
+      <div className="w-full grid grid-cols-2 gap-2 lg:grid-cols-1">
         <Honoree></Honoree>
         <Imagelibrary></Imagelibrary>
         <Announcement announcementData={data} title={`Văn Bản - Thông Báo`}></Announcement>

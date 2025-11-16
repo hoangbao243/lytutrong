@@ -1,6 +1,7 @@
+"use client"
+import React, { useEffect, useState } from "react";
 import Slideshow from "@/components/slideshow/Slideshow";
 import Link from "next/link";
-import React from "react";
 
 export default function Schoolnews(props) {
   const Data = props.props || [];
@@ -24,6 +25,23 @@ export default function Schoolnews(props) {
       caption: "ccc",
     },
   ];
+  const [sliceCount, setSliceCount] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setSliceCount(2); // dưới md
+      } else {
+        setSliceCount(1); // md trở lên
+      }
+    };
+
+    handleResize(); // chạy 1 lần khi load
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   return (
     <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow pb-3">
       <div className="flex h-fit w-full justify-between items-center border-b-2 border-blue-400 text-2xl uppercase">
@@ -44,11 +62,11 @@ export default function Schoolnews(props) {
       </div>
 
       <div className="flex flex-row grid grid-cols-2 gap-2">
-        <div className="h-56 w-full flex transition-transform duration-700 ease-in-out rounded-lg">
+        <div className="h-56 w-full flex transition-transform duration-700 ease-in-out rounded-lg md:col-span-1 col-span-2">
           <Slideshow data={slides} height="h-56"></Slideshow>
         </div>
         {Data &&
-          Data.slice(1).map((item) => (
+          Data.slice(sliceCount).map((item) => (
             <div key={item?.id} className="flex w-full gap-4 h-[14rem]">
               <Link
                 href={`/post/${item?.id}`}

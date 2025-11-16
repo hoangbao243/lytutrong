@@ -107,7 +107,7 @@ export default function News() {
             <img src="/images/mid-banner.jpg" className="w-full" alt="" />
           </div>
         </div>
-        <div className="flex flex-row w-full h-full gap-2">
+        <div className="flex md:flex-row flex-col w-full h-full gap-2">
           <div className="w-full ">
             <Schoolnews2
               props={newsData}

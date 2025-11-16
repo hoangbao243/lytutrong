@@ -5,7 +5,7 @@ export default function Footer() {
   const views = 2025;
   const digits = views.toString().split("");
   return (
-    <footer className="flex flex-row bg-[#e4eeed] h-30 w-full m-2 mb-4 max-w-7xl rounded-lg border border-gray-300">
+    <footer className="flex flex-row bg-[#e4eeed] h-30 min-h-fit w-full m-2 mb-4 max-w-7xl rounded-lg border border-gray-300">
       <img src="/images/logo2.png" className="w-30 h-30" alt="Logo" />
       <p className="bg-[#e4eeed] h-26 w-0.5 mt-2 mx-3"></p>
       <div className="flex w-110">
