@@ -45,7 +45,7 @@ export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]'})
         {slides.map((s) => (
           <div
             key={s.id}
-            className="flex-shrink-0 w-full relative flex items-center justify-center"
+            className="shrink-0 w-full relative flex items-center justify-center"
             style={{ width: `${100 / slides?.length}%` }}
           >
             {/* If using next/image: use layout='fill' or responsive */}
@@ -58,7 +58,7 @@ export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]'})
             />
 
             {s.caption && (
-              <div className="absolute left-1/2 max-w-2/3 w-fit line-clamp-2 bottom-6 -translate-x-1/2 bg-black/50 text-white hover:bg-black/70 px-4 py-2 rounded-md text-sm md:text-base">
+              <div className="absolute left-1/2 max-w-2/3 w-fit h-fit line-clamp-4 bottom-8 -translate-x-1/2 bg-black/40 text-white hover:bg-black/70 px-4 py-2 rounded-md text-sm md:text-base">
                 {s.caption}
               </div>
             )}
