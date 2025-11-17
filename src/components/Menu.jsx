@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React, { useState } from "react";
+import Search from "./search/Search";
 
 export default function Menu() {
   const menuItem = [
@@ -345,6 +346,7 @@ export default function Menu() {
                 )}
               </li>
             ))}
+            <Search></Search>
           </ul>
         </nav>
       </div>
