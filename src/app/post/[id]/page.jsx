@@ -37,15 +37,16 @@ export default function Postpage() {
       <main className="flex min-h-screen w-full max-w-7xl flex-col items-start bg-white dark:bg-black">
         <Header></Header>
         <Menu></Menu>
-        <section className="flex w-full p-2 h-1/3">
-          <div className="flex flex-col w-3/4">
+        <section className="flex flex-col lg:flex-row w-full p-2 h-1/3">
+          <div className="flex flex-col w-full lg:w-3/4">
+            <div className="font-bold text-3xl mx-auto px-4 my-4">{post?.title}</div>
             <div
               dangerouslySetInnerHTML={{
                 __html: (post && post?.description) || "",
               }}
             />
           </div>
-          <div className="flex flex-col items-center w-1/4 pl-2 py-2">
+          <div className="flex flex-col items-center lg:w-1/4 w-full pl-2 py-2">
             <Rightmenu></Rightmenu>
           </div>
         </section>

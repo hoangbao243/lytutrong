@@ -11,8 +11,8 @@ export default function Footer() {
         className="w-30 h-30 mx-auto md:mx-0"
         alt="Logo"
       />
-      <div className="flex w-fit md:w-110">
-        <div className="flex flex-col justify-center items-start ml-2 ">
+      <div className="flex justify-center w-fit mx-auto md:mx-0 md:w-108">
+        <div className="flex flex-col justify-center items-center ml-2 mx-auto ">
           <span className="mx-auto md:mx-0">
             Trưởng ban biên tập:{" "}
             <span className="text-emerald-600">
@@ -34,8 +34,8 @@ export default function Footer() {
           </span>
         </div>
       </div>
-      <p className="block md:hidden w-2/3 h-0.5 mx-auto my-1 bg-emerald-500"></p>
-      <div className="flex flex-col w-full justify-center items-start md:w-82.5">
+      <p className="w-2/3 h-0.5 md:w-0.5 md:h-2/3 md:my-auto md:mx-1 mx-auto my-1 bg-emerald-500"></p>
+      <div className="flex flex-col w-full justify-center items-start md:w-82.5 lg:ml-2">
         <p className="uppercase text-[#19908e] font-bold md:mb-2 mx-auto md:mx-0">
           Thông tin liên hệ
         </p>
@@ -44,6 +44,8 @@ export default function Footer() {
         </span>
         <span className="mx-auto md:mx-0">Số điện thoại: 0985.145.906</span>
       </div>
+      <p className="w-0 h-0 md:w-0.5 md:h-2/3 md:my-auto md:mx-1 mx-auto my-1 bg-emerald-500"></p>
+
       <div className="flex flex-col w-full justify-center items-center md:w-68">
         <p className="uppercase text-[#19908e] font-bold mb-2 mx-auto md:mx-0">
           Lượng truy cập website

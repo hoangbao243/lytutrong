@@ -75,7 +75,7 @@ export default function Rightmenu() {
   ];
   return (
     <div>
-      <div className="w-full grid grid-cols-1  lg:grid-cols-1">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-1">
         <Honoree></Honoree>
         <Imagelibrary></Imagelibrary>
         <Announcement
