@@ -14,7 +14,7 @@ export default function Postpage() {
   const { id } = useParams();
 
   const getPost = async () => {
-    const response = await axios.get(`http://localhost:3000/api/post/${id}`);
+    const response = await axios.get(`/api/post/${id}`);
     if (response.status == 200) {
       setPost(response.data.data);
     } else {
@@ -39,7 +39,7 @@ export default function Postpage() {
         <Menu></Menu>
         <section className="flex flex-col lg:flex-row w-full p-2 h-1/3">
           <div className="flex flex-col w-full lg:w-3/4">
-            <div className="font-bold text-3xl mx-auto px-4 my-4">{post?.title}</div>
+            <div className="font-bold text-3xl mx-auto px-4 my-4">{post && post?.title}</div>
             <div
               dangerouslySetInnerHTML={{
                 __html: (post && post?.description) || "",
