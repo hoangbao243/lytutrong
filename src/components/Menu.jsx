@@ -15,7 +15,6 @@ export default function Menu() {
       id: 2,
       title: "Nhà trường",
       link: "/about",
-      parent: "/post/8",
       dropdownMenu: [
         {
           id: 8,
@@ -149,7 +148,7 @@ export default function Menu() {
     setOpenMobile(!openMobile);
   };
   return (
-    <header className="w-full sticky top-0 z-999 md:static max-w-7xl shadow-lg md:px-2">
+    <header className="w-full sticky top-0 z-999 max-w-7xl shadow-lg md:px-2">
       <div className="max-w-7xl bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-16">
         {/* LOGO */}
         <Link href="/">
@@ -187,7 +186,9 @@ export default function Menu() {
               <li
                 key={item.id}
                 className={`relative group md:flex md:items-center  ${
-                  checkActive(item) ? "text-red-600 bg-[#FFB300] md:border-b-2 md:border-black" : ""
+                  checkActive(item)
+                    ? "text-red-600 bg-[#FFB300] md:border-b-2 md:border-black"
+                    : ""
                 }`}
               >
                 <div
@@ -197,7 +198,7 @@ export default function Menu() {
                   }
                 >
                   <Link
-                    href={item.link}
+                    href={item?.id == 1 ? `/` : `/post/${item?.id}`}
                     className={`uppercase md:text-[10px] lg:text-sm font-bold ${
                       checkActive(item) ? "text-red-600" : ""
                     }`}
@@ -233,7 +234,7 @@ export default function Menu() {
                     {item.dropdownMenu.map((sub) => (
                       <li key={sub.id} className="relative group/sub ">
                         <Link
-                          href={sub.link}
+                          href={`/post/${sub?.id}`}
                           className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
                         >
                           {sub.title}
@@ -264,7 +265,7 @@ export default function Menu() {
                             {sub.subMenu.map((s) => (
                               <li key={s.id}>
                                 <Link
-                                  href={s.link}
+                                  href={`/post/${s.id}`}
                                   className="block px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
                                 >
                                   {s.title}
@@ -296,7 +297,10 @@ export default function Menu() {
                             )
                           }
                         >
-                          <Link href={sub.link} className="  text-white">
+                          <Link
+                            href={`/post/${sub?.id}`}
+                            className="  text-white"
+                          >
                             {sub.title}
                           </Link>
                           {sub.subMenu && (
@@ -331,7 +335,7 @@ export default function Menu() {
                             {sub.subMenu.map((s) => (
                               <li key={s.id} className="pl-10">
                                 <Link
-                                  href={s.link}
+                                  href={`/post/${s?.id}`}
                                   className="block px-10 py-2 text-white"
                                 >
                                   {s.title}
