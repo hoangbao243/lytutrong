@@ -54,8 +54,8 @@ export default function News() {
   ];
   return (
     <div className="flex flex-col">
-      <div className="flex h-fit w-full justify-between items-center border-b-2 border-blue-400 text-2xl uppercase mt-2">
-        <div className="w-fit p-2 font-bold text-xl text-white bg-blue-400 rounded-t-xl">
+      <div className="flex h-fit w-full justify-between items-center border-b-2 border-red-500 text-2xl uppercase mt-2">
+        <div className="w-fit p-2 font-bold text-xl text-white bg-red-500 rounded-t-xl">
           Tin nổi bật
         </div>
         <Link

@@ -34,6 +34,7 @@ export default function Footer() {
           </span>
         </div>
       </div>
+      <p className="block md:hidden w-2/3 h-0.5 mx-auto my-1 bg-emerald-500"></p>
       <div className="flex flex-col w-full justify-center items-start md:w-82.5">
         <p className="uppercase text-[#19908e] font-bold md:mb-2 mx-auto md:mx-0">
           Thông tin liên hệ
