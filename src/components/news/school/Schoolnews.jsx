@@ -5,34 +5,14 @@ import Link from "next/link";
 
 export default function Schoolnews(props) {
   const Data = props.props || [];
-  const slides = [
-    {
-      id: 1,
-      src: "/images/banner.png",
-      alt: "Slide banner lytutrong",
-      caption: "aaaa",
-    },
-    {
-      id: 2,
-      src: "/images/banner.png",
-      alt: "Slide banner lytutrong",
-      caption: "bbb",
-    },
-    {
-      id: 3,
-      src: "/images/banner.png",
-      alt: "Slide banner lytutrong",
-      caption: "ccc",
-    },
-  ];
   const [sliceCount, setSliceCount] = useState(1);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setSliceCount(2); // dưới md
+        setSliceCount(4); // dưới md
       } else {
-        setSliceCount(1); // md trở lên
+        setSliceCount(3); // md trở lên
       }
     };
 
@@ -63,7 +43,7 @@ export default function Schoolnews(props) {
 
       <div className="flex flex-row grid grid-cols-2 gap-2">
         <div className="h-56 w-full flex transition-transform duration-700 ease-in-out rounded-lg md:col-span-1 col-span-2">
-          <Slideshow data={slides} height="h-56"></Slideshow>
+          <Slideshow data={Data.slice(0, 3)} height="h-56"></Slideshow>
         </div>
         {Data &&
           Data.slice(sliceCount).map((item) => (
@@ -73,13 +53,13 @@ export default function Schoolnews(props) {
                 className="bg-white rounded-xl shadow-md p-4 overflow-hidden leading-relaxed"
               >
                 <img
-                  src={item?.image}
+                  src={item?.src}
                   alt="Thumbnail"
                   className="float-left w-40 h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
                 />
                 <h3 className="font-bold text-blue-700 hover:underline line-clamp-2 text-sm md:text-base">
-                  {item?.title?.charAt(0)?.toUpperCase() +
-                    item?.title?.slice(1)?.toLowerCase()}
+                  {item?.caption?.charAt(0)?.toUpperCase() +
+                    item?.caption?.slice(1)?.toLowerCase()}
                 </h3>
                 <p className="text-gray-600 h-full text-sm text-justify [text-align-last:start] [hyphens:auto] [word-spacing:0.01em] leading-relaxed">
                   {item?.description}

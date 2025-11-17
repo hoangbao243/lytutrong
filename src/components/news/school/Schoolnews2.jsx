@@ -24,7 +24,7 @@ export default function Schoolnews2(props) {
 
       <div className=" grid grid-cols-2 gap-2">
         {data &&
-          data.map((item) => (
+          data?.slice(0, 4)?.map((item) => (
             <div
               key={item?.id}
               className="flex w-full gap-2 h-[15rem] cursor-pointer transition-all duration-500 hover:translate-y-2 bg-neutral-50 rounded-lg shadow-xlitems-center justify-evenly"
@@ -34,13 +34,13 @@ export default function Schoolnews2(props) {
                 className="flex flex-col bg-white rounded-xl shadow-md p-2 overflow-hidden leading-relaxed"
               >
                 <img
-                  src={item?.image}
+                  src={item?.src}
                   alt="Thumbnail"
                   className="float-left w-full h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
                 />
                 <h3 className="font-medium text-black hover:text-blue-500 line-clamp-4 text-sm md:text-base">
-                  {item?.title?.charAt(0)?.toUpperCase() +
-                    item?.title?.slice(1)?.toLowerCase()}
+                  {item?.caption?.charAt(0)?.toUpperCase() +
+                    item?.caption?.slice(1)?.toLowerCase()}
                 </h3>
               </Link>
             </div>
