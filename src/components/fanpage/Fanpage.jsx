@@ -19,7 +19,7 @@ export default function Fanpage() {
           Fanpage
         </div>
       </div>
-      <div className="fanpage w-full h-65 lg:h-88">
+      <div className="fanpage w-full h-54 lg:h-62 xl:h-68">
         <iframe
           src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHCLyTuTrong%3F_rdc%3D1%26_rdr%23&tabs=timeline&width=${width}&height=${height}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`}
           width={width}
