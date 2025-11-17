@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
 /**
@@ -52,15 +53,15 @@ export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]'})
             {/* Using simple <img> for easier drop-in */}
             <img
               src={s.src}
-              alt={s.alt ?? ''}
+              alt={s.caption ?? ''}
               className={`w-full ${height} object-cover`}
               draggable={false}
             />
 
             {s.caption && (
-              <div className="absolute left-1/2 max-w-2/3 w-fit h-fit line-clamp-4 bottom-8 -translate-x-1/2 bg-black/40 text-white hover:bg-black/70 px-4 py-2 rounded-md text-sm md:text-base">
+              <Link href={`/post/${s?.id}`} className="absolute left-1/2 max-w-2/3 w-fit h-fit line-clamp-4 bottom-8 -translate-x-1/2 bg-black/50 text-white hover:bg-black/70 px-4 py-2 rounded-md text-sm md:text-base">
                 {s.caption}
-              </div>
+              </Link>
             )}
           </div>
         ))}

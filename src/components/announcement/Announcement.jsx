@@ -3,8 +3,6 @@ import React from "react";
 
 export default function Announcement(props) {
   const announcementData = props.announcementData;
-  
-
   return (
     <div className="flex flex-col justify-start items-start w-full mt-1">
       <div className="flex h-fit w-full justify-start items-center border-b-2 border-blue-400 text-2xl uppercase">
@@ -14,20 +12,20 @@ export default function Announcement(props) {
       </div>
       <ul className="divide-y-2 divide-gray-300">
         {announcementData && props.title == "Các Văn Bản"
-          ? announcementData?.slice(1)?.map((item) => (
+          ? announcementData?.map((item) => (
               <li
                 key={item?.id}
                 className="flex hover:text-blue-500 items-center text-red-400 "
               >
                 <img
-                  src={item?.image}
-                  alt={item?.title}
+                  src={item?.src}
+                  alt={item?.caption}
                   className="h-22 w-24 p-1 rounded-lg"
                 />
                 <div className="flex flex-col">
                   <Link href={`/post/${item?.id}`} className="line-clamp-3">
-                    {item?.title?.charAt(0)?.toUpperCase() +
-                      item?.title?.slice(1)?.toLowerCase()}
+                    {item?.caption?.charAt(0)?.toUpperCase() +
+                      item?.caption?.slice(1)?.toLowerCase()}
                   </Link>
                   <span className="text-[12px] text-gray-500">
                     {item.createDate}
@@ -42,8 +40,8 @@ export default function Announcement(props) {
                 className="flex flex-col hover:text-blue-500 text-red-400 px-3  py-1"
               >
                 <Link href={`/post/${item?.id}`} className="line-clamp-3">
-                  {item?.title?.charAt(0)?.toUpperCase() +
-                    item?.title?.slice(1)?.toLowerCase()}
+                  {item?.caption?.charAt(0)?.toUpperCase() +
+                    item?.caption?.slice(1)?.toLowerCase()}
                 </Link>
                 <span className="text-[12px] text-gray-500">
                   {item.createDate}
