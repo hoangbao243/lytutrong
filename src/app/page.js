@@ -31,7 +31,7 @@ export default function Home() {
 
         {/* RESPONSIVE MAIN LAYOUT */}
         <section
-          className="flex w-full md:p-2 flex-col lg:flex-row gap-4"
+          className="flex h-fit w-full md:p-2 flex-col lg:flex-row gap-4"
         >
           {/* LEFT: MAIN + NEWS */}
           <div className="flex flex-col w-full lg:w-3/4">
