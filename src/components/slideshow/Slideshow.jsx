@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react'
  *  - interval: ms between auto slides (default 4000)
  *  - height: Tailwind-compatible height class or CSS (default 'h-[50vh]')
  */
-export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]'}) {
+export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]', bottom = "bottom-4", width = "w-fit", text="text-base"}) {
   const slides = data
   const [index, setIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -59,7 +59,7 @@ export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]'})
             />
 
             {s.caption && (
-              <Link href={`/post/${s?.id}`} className="absolute left-1/2 max-w-2/3 w-fit h-fit line-clamp-4 bottom-8 -translate-x-1/2 bg-black/50 text-white hover:bg-black/70 px-4 py-2 rounded-md text-sm md:text-base">
+              <Link href={`/post/${s?.id}`} className={`absolute left-1/2 max-w-2/3 ${width} h-fit line-clamp-4 ${bottom} -translate-x-1/2 bg-black/50 text-white hover:bg-black/70 px-4 py-2 rounded-md text-sm md:${text}`}>
                 {s.caption}
               </Link>
             )}
@@ -89,13 +89,13 @@ export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]'})
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+      <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
             aria-label={`Go to slide ${i + 1}`}
-            className={`w-3 h-3 rounded-full transition-all ${i === index ? 'bg-white/90 scale-110' : 'bg-white/60'}`}
+            className={`w-3 h-3 rounded-full transition-all ${i === index ? 'bg-white/70 scale-110' : 'bg-white/20'}`}
           />
         ))}
       </div>

@@ -13,8 +13,8 @@ export default function Honoree() {
   ];
   return (
     <div className="w-full">
-      <div className="flex h-fit w-full justify-start items-center border-b-2 border-blue-400 text-2xl uppercase">
-        <div className="w-fit p-2 font-bold text-xl text-white bg-blue-400 rounded-t-xl">
+      <div className="flex h-fit w-full justify-start items-center border-b-2 border-red-500 text-2xl uppercase">
+        <div className="w-fit p-2 font-bold text-xl text-white bg-red-500 rounded-t-xl">
           Thành tích học sinh
         </div>
       </div>

@@ -8,15 +8,24 @@ import Menu from "@/components/Menu";
 import Rightmenu from "@/components/Rightmenu";
 import { useParams } from "next/navigation";
 import axios from "axios";
+import Link from "next/link";
 
 export default function Postpage() {
   const [post, setPost] = useState();
   const { id } = useParams();
+  const [breadcrumb, setBreadcrumb] = useState(null);
+  const [title, setTitle] = useState("");
 
   const getPost = async () => {
     const response = await axios.get(`/api/post/${id}`);
     if (response.status == 200) {
       setPost(response.data.data);
+      const preTitle = response.data.data.caption
+        ?.split(" ")
+        ?.map(
+          (item) => item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
+        );
+      setTitle(preTitle.join(" "));
     } else {
       setPost({
         id: 1,
@@ -32,14 +41,50 @@ export default function Postpage() {
     getPost();
   }, [id]);
 
+  useEffect(() => {
+    async function getBreadcrumb() {
+      const List = [];
+      try {
+        const res = await axios.get(`/api/category`);
+        let current = res.data.data.find((c) => c.id === post.categoryId);
+        while (current) {
+          List.unshift(current);
+          current = res.data.data.find((c) => c.id === current.parent);
+        }
+        setBreadcrumb(List);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    }
+    getBreadcrumb();
+  }, [post]);
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-7xl flex-col items-start bg-white dark:bg-black">
         <Header></Header>
         <Menu></Menu>
         <section className="flex flex-col lg:flex-row w-full p-2 h-1/3">
-          <div className="flex flex-col w-full lg:w-3/4">
-            <div className="font-bold text-3xl mx-auto px-4 my-4">{post && post?.title}</div>
+          <div className="flex flex-col w-full lg:w-3/4 md:mx-5">
+            <div className="flex items-center gap-1 text-sm text-gray-600">
+              <img src="/images/icon/home-icon.png" alt="home"  className="w-3 h-3"/>
+              <Link href="/" className="hover:underline">
+                Trang chủ
+              </Link>
+
+              {breadcrumb?.map((item, index) => (
+                <span key={item.id} className="flex items-center gap-1">
+                  <span>/</span>
+                  <a href={`/post/${item.id}`} className="hover:underline">
+                    {item.name}
+                  </a>
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-col font-bold text-3xl mx-auto px-4 my-4">
+              {post && title}
+              <span className="text-sm my-1 font-normal text-gray-400">{post && post?.createDate}</span>
+            </div>
             <div
               dangerouslySetInnerHTML={{
                 __html: (post && post?.description) || "",

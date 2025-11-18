@@ -54,11 +54,6 @@ export default function Menu() {
           link: "/post/21",
         },
         {
-          id: 22,
-          title: "Công đoàn",
-          link: "/post/22",
-        },
-        {
           id: 23,
           title: "Liên đội",
           link: "/post/23",
