@@ -46,7 +46,7 @@ export default function Organization(props) {
 
       <div className=" grid grid-cols-2 gap-2">
         <div className="h-56 w-full col-span-2 flex transition-transform duration-700 ease-in-out rounded-lg my-2">
-          <Slideshow data={slides.slice(0, 3)} height={`h-[14rem]`}></Slideshow>
+          <Slideshow data={slides.slice(0, 3)} height={`h-[14rem]`} bottom="bottom-4" text="text-sm" width="w-fit"></Slideshow>
         </div>
         {data &&
           data.slice(4)?.map((item) => (

@@ -43,7 +43,7 @@ export default function Schoolnews(props) {
 
       <div className="flex flex-row grid grid-cols-2 gap-2">
         <div className="h-56 w-full flex transition-transform duration-700 ease-in-out rounded-lg md:col-span-1 col-span-2">
-          <Slideshow data={Data.slice(0, 3)} height="h-56"></Slideshow>
+          <Slideshow data={Data.slice(0, 3)} height="h-56" text="text-sm" bottom='bottom-4' width="w-full"></Slideshow>
         </div>
         {Data &&
           Data.slice(sliceCount).map((item) => (

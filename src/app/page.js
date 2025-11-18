@@ -24,7 +24,7 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex flex-col min-h-screen items-center md:mt-2 justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-col min-h-screen w-full max-w-7xl bg-white dark:bg-black">
         <Header />
         <Menu />
