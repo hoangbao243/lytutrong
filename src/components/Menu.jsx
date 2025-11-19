@@ -139,11 +139,8 @@ export default function Menu() {
       return true;
     return false;
   };
-  const toggleMobileMenu = () => {
-    setOpenMobile(!openMobile);
-  };
   return (
-    <header className="w-full sticky top-0 z-999 max-w-7xl shadow-lg md:px-2">
+    <header className="w-full sticky top-0 z-50 max-w-7xl shadow-lg md:px-2">
       <div className="max-w-7xl bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-16">
         {/* LOGO */}
         <Link href="/">
@@ -168,7 +165,7 @@ export default function Menu() {
             absolute md:static left-0 top-full h-fit md:h-full w-full md:w-auto
             md:bg-transparent bg-amber-300
              md:gap-4
-            transition-all duration-300 z-99 md:px-2 md:visible
+            transition-all duration-300 z-50 md:px-2 md:visible
             ${
               openMobile
                 ? "opacity-100 visible translate-y-0 md:translate-y-0"
