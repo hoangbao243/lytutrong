@@ -20,7 +20,7 @@ export default function FooterSetting() {
       {
         footerData && Object.entries(footerData[0]).map(([key, value])=>(
           <div key={key}>
-            <p>{key}: {item.value}</p>
+            <p>{key}: {value}</p>
             <div className='flex items-center'>
               <img src="/images/icon/right-arrow.png" className='w-4 h-4' alt="" />
               <input type="text" name={key} id={key} placeholder={key}  className='border border-gray-200 m-2 rounded-sm w-50 p-2'/>
@@ -28,7 +28,7 @@ export default function FooterSetting() {
           </div>
         ))
       }
-      <button type='submit'>submit</button>
+      <button type='submit' className='p-2 bg-blue-300 rounded-2xl cursor-pointer'>submit</button>
       </form>
     </div>
     
