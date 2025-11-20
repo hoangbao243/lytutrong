@@ -18,9 +18,9 @@ export default function AdminLayout({ children }) {
   }, [open]);
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans">
+    <div className="flex  bg-gray-100 font-sans">
       <div className="flex-1">
-        <header className="bg-gradient-to-r from-[#7cbf96] to-[#b3d3bf] shadow p-4 flex justify-between  items-center">
+        <header className="sticky top-0 bg-linear-to-r from-[#7cbf96] to-[#b3d3bf] shadow p-4 flex justify-between  items-center">
           <div className="flex items-center ">
             <img
               src="/images/icon/menu.png"
@@ -54,7 +54,7 @@ export default function AdminLayout({ children }) {
         <aside
           className={`${
             open == true ? "w-64" : "w-16"
-          } duration-300 space-y-5 fixed h-full border-r-1 border-gray-300 bg-gray-200/50`}
+          } duration-300 space-y-5 h-full fixed border-r-1 border-gray-300 bg-gray-200/50`}
         >
           <nav className=" space-y-3 text-black">
             <div className="py-1.5">

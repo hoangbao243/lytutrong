@@ -1,7 +1,10 @@
+"use client"
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import PostModal from "../component/PostModal";
 
 export default function PostsManagement() {
+  const [open, setOpen] = useState(false)
   const posts = [
     {
       id: 1,
@@ -58,14 +61,40 @@ export default function PostsManagement() {
   ];
   return (
     <div className="font-sans">
-      <h1 className="font-bold text-3xl ">Quản lý bài viết</h1>
+      <div className="flex items-center ">
+        <h1 className="font-bold text-3xl mr-2">Quản lý bài viết</h1>
+
+        <button
+          className="group cursor-pointer outline-none hover:rotate-90 duration-300"
+          title="Add New"
+          onClick={()=>setOpen(true)}
+        >
+          <svg
+            className="stroke-gray-400 fill-none group-hover:fill-gray-500 group-active:stroke-gray-200 group-active:fill-gray-600 group-active:duration-0 duration-300"
+            viewBox="0 0 24 24"
+            height="30px"
+            width="30px"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeWidth="1.5"
+              d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+            ></path>
+            <path strokeWidth="1.5" d="M8 12H16"></path>
+            <path strokeWidth="1.5" d="M12 16V8"></path>
+          </svg>
+        </button>
+      </div>
+      <PostModal isOpen={open} onClose={() => setOpen(false)}></PostModal>
       <div>
         <table className="w-full bg-white shadow rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-left">
             <tr>
               {posts &&
                 Object.keys(posts[0])?.map((item, index) => (
-                  <th key={index} className={`p-3`}>{item}</th>
+                  <th key={index} className={`p-3`}>
+                    {item}
+                  </th>
                 ))}
               <th>Action</th>
             </tr>
@@ -73,7 +102,12 @@ export default function PostsManagement() {
 
           <tbody>
             {posts.map((item, index) => (
-              <tr key={index} className={`border-b hover:bg-gray-50 transition ${index % 2 == 0 ? "bg-gray-200" : ""}`}>
+              <tr
+                key={index}
+                className={`border-b hover:bg-gray-50 transition ${
+                  index % 2 == 0 ? "bg-gray-200" : ""
+                }`}
+              >
                 <td className="p-3">{item.id}</td>
 
                 <td className="p-3">
