@@ -1,14 +1,11 @@
 "use client";
-
 import React from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
-import { Underline } from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { TextAlign } from "@tiptap/extension-text-align";
-import { Link } from "@tiptap/extension-link";
 import { Image } from "@tiptap/extension-image";
 
 export default function Editor({ content, onChange }) {
@@ -20,14 +17,10 @@ export default function Editor({ content, onChange }) {
           levels: [1, 2, 3],
         },
       }),
-      Underline,
       TextStyle,
       Color,
       Highlight,
       Image,
-      Link.configure({
-        openOnClick: false,
-      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -164,7 +157,7 @@ export default function Editor({ content, onChange }) {
         {/* Lists */}
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={``}
+          className={editor.isActive('bulletList') ? 'is-active' : ''}
         >
           <img
             src="/images/icon/list.png"
