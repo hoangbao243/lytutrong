@@ -18,7 +18,7 @@ export default function AdminLayout({ children }) {
   }, [open]);
 
   return (
-    <div className="flex  bg-gray-100 font-sans">
+    <div className="flex font-sans">
       <div className="flex-1">
         <header className="sticky top-0 bg-linear-to-r from-[#7cbf96] to-[#b3d3bf] shadow p-4 flex justify-between  items-center">
           <div className="flex items-center ">
