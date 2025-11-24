@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
+import Editor from './component/Editor';
 
 export default function Adminpage() {
   const user = "a";
@@ -12,11 +13,7 @@ export default function Adminpage() {
   },[])
   return (
     <div>
-      <iframe
-      src={`https://drive.google.com/file/d/1Ssc5SrA7eXwgeJQhbQiZ1fbAxDM4-vjb/preview`}
-      width="100%"
-      className='h-180'
-    />
+      <Editor></Editor>
     </div>
   )
 }
