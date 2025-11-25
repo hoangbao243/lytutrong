@@ -3,12 +3,18 @@ import React from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { TextStyle } from "@tiptap/extension-text-style";
-import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Image } from "@tiptap/extension-image";
+import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node";
+import { MAX_FILE_SIZE, handleImageUpload } from "@/lib/tiptap-utils";
+import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { Color } from "@tiptap/extension-text-style";
 
 export default function Editor({ content, onChange }) {
+  const navigate = useRouter();
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -17,10 +23,19 @@ export default function Editor({ content, onChange }) {
           levels: [1, 2, 3],
         },
       }),
-      TextStyle,
-      Color,
+      TextStyle.configure({}),
       Highlight,
+      Color.configure({
+  types: ['textStyle'],
+}),
       Image,
+      ImageUploadNode.configure({
+        accept: "image/*",
+        maxSize: MAX_FILE_SIZE,
+        limit: 3,
+        upload: handleImageUpload,
+        onError: (error) => console.error("Upload failed:", error),
+      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -33,11 +48,6 @@ export default function Editor({ content, onChange }) {
   });
 
   if (!editor) return null;
-
-  const addImage = () => {
-    const url = prompt("Nhập URL ảnh:");
-    if (url) editor.chain().focus().setImage({ src: url }).run();
-  };
 
   const setLink = () => {
     let url = prompt("Nhập URL:");
@@ -58,6 +68,47 @@ export default function Editor({ content, onChange }) {
 
   const removeLink = () => editor.chain().focus().unsetLink().run();
 
+  const handlePublish = async () => {
+    try {
+      const res = await axios.post(`/api/upload/confirm`);
+      if (res.status == 200) {
+        const moved = res.data.files;
+        // lấy HTML hiện tại
+        let html = editor.getHTML();
+        // thay từng đường dẫn
+        moved.forEach((file) => {
+          html = html.replaceAll(file.old, file.new);
+        });
+        // cập nhật lại Tiptap
+        editor.commands.setContent(html);
+        if (editor.commands.setContent(html)) {
+          const newHTML = editor.getHTML();
+          console.log(newHTML);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      const res = await axios.post(`/api/upload/cleanup`);
+      if (res.status == 200) {
+        console.log("ok");
+        navigate.push(`/admin/posts`);
+      } else {
+        console.log(res.status);
+      }
+      console.log("a");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleColor = (e) =>{
+    const color = e.target.value
+    editor.chain().focus().setColor(color).run()
+  }
   return (
     <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white">
       {/* Toolbar */}
@@ -125,10 +176,11 @@ export default function Editor({ content, onChange }) {
 
         {/* Text Color */}
         <input
-          type="color"
-          onInput={(e) => editor.chain().focus().setColor(e.target.value).run()}
-          className="w-7 h-7 mt-2"
-        />
+            type="color"
+            onInput={e=>handleColor(e)}
+            data-testid="setColor"
+            className="mt-1.5"
+          />
 
         {/* Heading */}
         <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
@@ -157,7 +209,7 @@ export default function Editor({ content, onChange }) {
         {/* Lists */}
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive('bulletList') ? 'is-active' : ''}
+          className={editor.isActive("bulletList") ? "is-active" : ""}
         >
           <img
             src="/images/icon/list.png"
@@ -229,19 +281,29 @@ export default function Editor({ content, onChange }) {
         <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
 
         {/* Image */}
-        <button className="btn" onClick={addImage}>
-          <img
-            src="/images/icon/imageIcon.png"
-            alt="image"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-
-        
+        <div className="mt-0.5">
+          {editor && (
+            <ImageUploadButton
+              editor={editor}
+              text="Add Image"
+              hideWhenUnavailable={true}
+              showShortcut={true}
+              onInserted={() => console.log("Image inserted!")}
+            />
+          )}
+        </div>
       </div>
 
       {/* Content */}
       <EditorContent editor={editor} className="min-h-[200px]" />
+      <div className="flex gap-2 mt-3">
+        <button onClick={handlePublish} className="bg-green-300 p-2 rounded">
+          Đăng bài
+        </button>
+        <button onClick={handleCancel} className="bg-red-300 p-2 rounded">
+          Hủy
+        </button>
+      </div>
     </div>
   );
 }

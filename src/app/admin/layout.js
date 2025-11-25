@@ -20,7 +20,7 @@ export default function AdminLayout({ children }) {
   return (
     <div className="flex font-sans">
       <div className="flex-1">
-        <header className="sticky top-0 bg-linear-to-r from-[#7cbf96] to-[#b3d3bf] shadow p-4 flex justify-between  items-center">
+        <header className="sticky top-0 bg-linear-to-r from-[#7cbf96] to-[#b3d3bf] shadow p-4 flex justify-between  items-center z-100">
           <div className="flex items-center ">
             <img
               src="/images/icon/menu.png"
