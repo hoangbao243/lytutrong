@@ -19,6 +19,9 @@
   }
 }
 
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+
 body {
   background: var(--background);
   color: var(--foreground);
