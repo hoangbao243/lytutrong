@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { EditorContent, useEditor } from "@tiptap/react";
+import React, { useState } from "react";
+import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Highlight } from "@tiptap/extension-highlight";
@@ -23,11 +23,10 @@ export default function Editor({ content, onChange }) {
           levels: [1, 2, 3],
         },
       }),
-      TextStyle.configure({}),
+
       Highlight,
-      Color.configure({
-  types: ['textStyle'],
-}),
+      TextStyle.configure({}),
+      Color.configure({ types: ["textStyle"] }),
       Image,
       ImageUploadNode.configure({
         accept: "image/*",
@@ -44,6 +43,22 @@ export default function Editor({ content, onChange }) {
     onUpdate({ editor }) {
       const html = editor.getHTML();
       onChange && onChange(html);
+    },
+  });
+
+  const editorState = useEditorState({
+    editor,
+    selector: (ctx) => {
+      return {
+        color: ctx.editor?.getAttributes("textStyle").color,
+        isPurple: ctx.editor?.isActive("textStyle", { color: "#958DF1" }),
+        isRed: ctx.editor?.isActive("textStyle", { color: "#F98181" }),
+        isOrange: ctx.editor?.isActive("textStyle", { color: "#FBBC88" }),
+        isYellow: ctx.editor?.isActive("textStyle", { color: "#FAF594" }),
+        isBlue: ctx.editor?.isActive("textStyle", { color: "#70CFF8" }),
+        isTeal: ctx.editor?.isActive("textStyle", { color: "#94FADB" }),
+        isGreen: ctx.editor?.isActive("textStyle", { color: "#B9F18D" }),
+      };
     },
   });
 
@@ -105,14 +120,58 @@ export default function Editor({ content, onChange }) {
       console.log(error);
     }
   };
-  const handleColor = (e) =>{
-    const color = e.target.value
-    editor.chain().focus().setColor(color).run()
-  }
+  const handleColor = (e) => {
+    const color = e.target.value;
+    const { empty, $from } = editor.state.selection;
+    if (!editor.state.selection || editor.state.selection.empty) {
+      // Lấy vị trí cuối cùng của node hiện tại (paragraph hoặc heading)
+      const endPos = $from.end();
+      // Đặt con trỏ về cuối node
+      editor.commands.setTextSelection(endPos);
+      editor.chain().focus().setColor(color).run();
+      return;
+    }
+    editor.chain().focus().setColor(color).run();
+  };
+
+  const uploadPDF = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/uploadPDF", {
+      method: "POST",
+      body: formData,
+    });
+
+    return res.json();
+  };
+
+  const handleSelectPDF = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const result = await uploadPDF(file);
+
+    console.log("PDF URL:", result.viewUrl);
+
+    // Chèn vào Tiptap
+    editor
+      .chain()
+      .focus()
+      .insertContent(
+        `
+    <a href="${result.viewUrl}" target="_blank">📄 Xem PDF</a>
+  `
+      )
+      .run();
+  };
   return (
     <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white">
       {/* Toolbar */}
       <div className="flex flex-wrap gap-2 border-b pb-2">
+        {/* <input type="file" className="p-4 bg-red-300" onChange={e=>handleSelectPDF(e)}>
+          
+        </input> */}
         {/* Undo / Redo */}
         <button
           onClick={() => editor.chain().focus().undo().run()}
@@ -176,11 +235,11 @@ export default function Editor({ content, onChange }) {
 
         {/* Text Color */}
         <input
-            type="color"
-            onInput={e=>handleColor(e)}
-            data-testid="setColor"
-            className="mt-1.5"
-          />
+          type="color"
+          onInput={handleColor}
+          value={editor?.getAttributes("textStyle")?.color}
+          className="w-7 h-7 mt-1.5"
+        />
 
         {/* Heading */}
         <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
