@@ -12,6 +12,7 @@ import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Color } from "@tiptap/extension-text-style";
+import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 
 export default function Editor({ content, onChange }) {
   const navigate = useRouter();
@@ -28,6 +29,7 @@ export default function Editor({ content, onChange }) {
       TextStyle.configure({}),
       Color.configure({ types: ["textStyle"] }),
       Image,
+      Iframe,
       ImageUploadNode.configure({
         accept: "image/*",
         maxSize: MAX_FILE_SIZE,
@@ -134,25 +136,41 @@ export default function Editor({ content, onChange }) {
     editor.chain().focus().setColor(color).run();
   };
 
-  const uploadPDF = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
+  // const uploadPDF = async (file) => {
+  //   const formData = new FormData();
+  //   formData.append("file", file);
 
-    const res = await fetch("/api/uploadPDF", {
-      method: "POST",
-      body: formData,
+  //   const res = await fetch("/api/uploadPDF", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+
+  //   return res.json();
+  // };
+
+  const uploadPDF = async (file) => {
+    const form = new FormData();
+    form.append("file", file);
+
+    const res = await axios.post("/api/uploadPDF/upload", form, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
-    return res.json();
+    return res.data;
   };
 
   const handleSelectPDF = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (file.type !== "application/pdf") {
+    alert("Vui lòng chọn file PDF!");
+    return;
+    }
+
     const result = await uploadPDF(file);
 
-    console.log("PDF URL:", result.viewUrl);
+    console.log("PDF URL:", result);
 
     // Chèn vào Tiptap
     editor
@@ -160,8 +178,13 @@ export default function Editor({ content, onChange }) {
       .focus()
       .insertContent(
         `
-    <a href="${result.viewUrl}" target="_blank">📄 Xem PDF</a>
-  `
+          <iframe
+            src="${result.previewLink}"
+            width="100%"
+            height="500px"
+            title="Embedded Content"
+          ></iframe>
+        `
       )
       .run();
   };
@@ -169,9 +192,11 @@ export default function Editor({ content, onChange }) {
     <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white">
       {/* Toolbar */}
       <div className="flex flex-wrap gap-2 border-b pb-2">
-        {/* <input type="file" className="p-4 bg-red-300" onChange={e=>handleSelectPDF(e)}>
-          
-        </input> */}
+        <input
+          type="file"
+          className="p-4 bg-red-300"
+          onChange={(e) => handleSelectPDF(e)}
+        ></input>
         {/* Undo / Redo */}
         <button
           onClick={() => editor.chain().focus().undo().run()}
@@ -354,7 +379,7 @@ export default function Editor({ content, onChange }) {
       </div>
 
       {/* Content */}
-      <EditorContent editor={editor} className="min-h-[200px]" />
+      <EditorContent editor={editor} className="max-h-150 min-h-50 overflow-auto" />
       <div className="flex gap-2 mt-3">
         <button onClick={handlePublish} className="bg-green-300 p-2 rounded">
           Đăng bài
