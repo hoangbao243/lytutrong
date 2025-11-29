@@ -18,6 +18,13 @@
     --foreground: #ededed;
   }
 }
+.ProseMirror:focus {
+  outline: none !important;
+}
+
+.ProseMirror:focus-visible {
+  outline: none !important;
+}
 
 @import '../styles/_variables.scss';
 @import '../styles/_keyframe-animations.scss';

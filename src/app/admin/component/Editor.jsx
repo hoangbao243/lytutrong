@@ -15,6 +15,7 @@ import { Color } from "@tiptap/extension-text-style";
 import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 
 export default function Editor({ content, onChange }) {
+  const [uploading, setUploading] = useState(false);
   const navigate = useRouter();
   const editor = useEditor({
     immediatelyRender: false,
@@ -45,22 +46,6 @@ export default function Editor({ content, onChange }) {
     onUpdate({ editor }) {
       const html = editor.getHTML();
       onChange && onChange(html);
-    },
-  });
-
-  const editorState = useEditorState({
-    editor,
-    selector: (ctx) => {
-      return {
-        color: ctx.editor?.getAttributes("textStyle").color,
-        isPurple: ctx.editor?.isActive("textStyle", { color: "#958DF1" }),
-        isRed: ctx.editor?.isActive("textStyle", { color: "#F98181" }),
-        isOrange: ctx.editor?.isActive("textStyle", { color: "#FBBC88" }),
-        isYellow: ctx.editor?.isActive("textStyle", { color: "#FAF594" }),
-        isBlue: ctx.editor?.isActive("textStyle", { color: "#70CFF8" }),
-        isTeal: ctx.editor?.isActive("textStyle", { color: "#94FADB" }),
-        isGreen: ctx.editor?.isActive("textStyle", { color: "#B9F18D" }),
-      };
     },
   });
 
@@ -136,18 +121,6 @@ export default function Editor({ content, onChange }) {
     editor.chain().focus().setColor(color).run();
   };
 
-  // const uploadPDF = async (file) => {
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-
-  //   const res = await fetch("/api/uploadPDF", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   return res.json();
-  // };
-
   const uploadPDF = async (file) => {
     const form = new FormData();
     form.append("file", file);
@@ -164,12 +137,13 @@ export default function Editor({ content, onChange }) {
     if (!file) return;
 
     if (file.type !== "application/pdf") {
-    alert("Vui lòng chọn file PDF!");
-    return;
+      alert("Vui lòng chọn file PDF!");
+      return;
     }
+    setUploading(true);
 
     const result = await uploadPDF(file);
-
+    setUploading(false);
     console.log("PDF URL:", result);
 
     // Chèn vào Tiptap
@@ -189,197 +163,228 @@ export default function Editor({ content, onChange }) {
       .run();
   };
   return (
-    <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white">
-      {/* Toolbar */}
-      <div className="flex flex-wrap gap-2 border-b pb-2">
-        <input
-          type="file"
-          className="p-4 bg-red-300"
-          onChange={(e) => handleSelectPDF(e)}
-        ></input>
-        {/* Undo / Redo */}
-        <button
-          onClick={() => editor.chain().focus().undo().run()}
-          className="btn"
-        >
-          <img
-            src="/images/icon/undo.png"
-            alt="undo"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().redo().run()}
-          className="btn"
-        >
-          <img
-            src="/images/icon/redo.png"
-            alt="redo"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-        <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
-
-        {/* Text styles */}
-        <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`font-bold text-xl text-gray-400 cursor-pointer`}
-        >
-          B
-        </button>
-
-        <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`flex items-center justify-center cursor-pointer`}
-        >
-          <img
-            src="/images/icon/italic.png"
-            alt="italic"
-            className="w-5 h-5 mt-0.5"
-          />
-        </button>
-
-        <button
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`underline text-xl text-gray-400 cursor-pointer`}
-        >
-          U
-        </button>
-
-        {/* Highlight */}
-        <button
-          onClick={() => editor.chain().focus().toggleHighlight().run()}
-          className={``}
-        >
-          <img
-            src="/images/icon/highlight.png"
-            alt="HL"
-            className="w-5 h-5 mt-0.5 cursor-pointer"
-          />
-        </button>
-
-        {/* Text Color */}
-        <input
-          type="color"
-          onInput={handleColor}
-          value={editor?.getAttributes("textStyle")?.color}
-          className="w-7 h-7 mt-1.5"
-        />
-
-        {/* Heading */}
-        <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
-        <select
-          onChange={(e) => {
-            const level = Number(e.target.value);
-            editor.chain().focus().setHeading({ level }).run();
-          }}
-          className="border p-1 rounded border-gray-400 text-gray-500 text-xl"
-        >
-          <option value="0" className="text-gray-400">
-            Paragraph
-          </option>
-          <option value="1" className="text-gray-400">
-            Heading 1
-          </option>
-          <option value="2" className="text-gray-400">
-            Heading 2
-          </option>
-          <option value="3" className="text-gray-400">
-            Heading 3
-          </option>
-        </select>
-        <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
-
-        {/* Lists */}
-        <button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive("bulletList") ? "is-active" : ""}
-        >
-          <img
-            src="/images/icon/list.png"
-            alt="list"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-
-        <button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive("orderedList") ? "btn-active" : "btn"}
-        >
-          <img
-            src="/images/icon/orderlist.png"
-            alt="orderlist"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-
-        {/* Align */}
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("left").run()}
-          className="btn"
-        >
-          <img
-            src="/images/icon/leftalign.png"
-            alt="leftalign"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("center").run()}
-          className="btn"
-        >
-          <img
-            src="/images/icon/centeralign.png"
-            alt="centeralign"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("right").run()}
-          className="btn"
-        >
-          <img
-            src="/images/icon/rightalign.png"
-            alt="rightalign"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-
-        <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
-
-        {/* Link */}
-        <button className="btn" onClick={setLink}>
-          <img
-            src="/images/icon/link.png"
-            alt="link"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-        <button className="btn" onClick={removeLink}>
-          <img
-            src="/images/icon/unlink.png"
-            alt="unlink"
-            className="w-5 h-5 cursor-pointer"
-          />
-        </button>
-        <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
-
-        {/* Image */}
-        <div className="mt-0.5">
-          {editor && (
-            <ImageUploadButton
-              editor={editor}
-              text="Add Image"
-              hideWhenUnavailable={true}
-              showShortcut={true}
-              onInserted={() => console.log("Image inserted!")}
-            />
+    <div>
+      <div className="flex">
+        <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white w-2/3">
+          {uploading && (
+            <div className="fixed inset-0 bg-transparent bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="w-14 h-14 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+            </div>
           )}
+          {/* Toolbar */}
+          <div className="flex flex-wrap gap-2 border-b pb-2">
+            {/* Undo / Redo */}
+            <button
+              onClick={() => editor.chain().focus().undo().run()}
+              className="btn"
+            >
+              <img
+                src="/images/icon/undo.png"
+                alt="undo"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().redo().run()}
+              className="btn"
+            >
+              <img
+                src="/images/icon/redo.png"
+                alt="redo"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+            <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+
+            {/* Text styles */}
+            <button
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              className={`font-bold text-xl text-gray-400 cursor-pointer`}
+            >
+              B
+            </button>
+
+            <button
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              className={`flex items-center justify-center cursor-pointer`}
+            >
+              <img
+                src="/images/icon/italic.png"
+                alt="italic"
+                className="w-5 h-5 mt-0.5"
+              />
+            </button>
+
+            <button
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              className={`underline text-xl text-gray-400 cursor-pointer`}
+            >
+              U
+            </button>
+
+            {/* Highlight */}
+            <button
+              onClick={() => editor.chain().focus().toggleHighlight().run()}
+              className={``}
+            >
+              <img
+                src="/images/icon/highlight.png"
+                alt="HL"
+                className="w-5 h-5 mt-0.5 cursor-pointer"
+              />
+            </button>
+
+            {/* Text Color */}
+            <input
+              type="color"
+              onInput={handleColor}
+              value={editor?.getAttributes("textStyle")?.color}
+              className="w-7 h-7 mt-1.5"
+            />
+
+            {/* Heading */}
+            <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+            <select
+              onChange={(e) => {
+                const level = Number(e.target.value);
+                editor.chain().focus().setHeading({ level }).run();
+              }}
+              className="border p-1 rounded border-gray-400 text-gray-500 text-xl"
+            >
+              <option value="0" className="text-gray-400">
+                Paragraph
+              </option>
+              <option value="1" className="text-gray-400">
+                Heading 1
+              </option>
+              <option value="2" className="text-gray-400">
+                Heading 2
+              </option>
+              <option value="3" className="text-gray-400">
+                Heading 3
+              </option>
+            </select>
+            <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+
+            {/* Lists */}
+            <button
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              className={editor.isActive("bulletList") ? "is-active" : ""}
+            >
+              <img
+                src="/images/icon/list.png"
+                alt="list"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+
+            <button
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              className={editor.isActive("orderedList") ? "btn-active" : "btn"}
+            >
+              <img
+                src="/images/icon/orderlist.png"
+                alt="orderlist"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+
+            {/* Align */}
+            <button
+              onClick={() => editor.chain().focus().setTextAlign("left").run()}
+              className="btn"
+            >
+              <img
+                src="/images/icon/leftalign.png"
+                alt="leftalign"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+            <button
+              onClick={() =>
+                editor.chain().focus().setTextAlign("center").run()
+              }
+              className="btn"
+            >
+              <img
+                src="/images/icon/centeralign.png"
+                alt="centeralign"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().setTextAlign("right").run()}
+              className="btn"
+            >
+              <img
+                src="/images/icon/rightalign.png"
+                alt="rightalign"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+
+            <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+
+            {/* Link */}
+            <button className="btn" onClick={setLink}>
+              <img
+                src="/images/icon/link.png"
+                alt="link"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+            <button className="btn" onClick={removeLink}>
+              <img
+                src="/images/icon/unlink.png"
+                alt="unlink"
+                className="w-5 h-5 cursor-pointer"
+              />
+            </button>
+            <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+
+            {/* Image */}
+            <div className="mt-0.5">
+              {editor && (
+                <ImageUploadButton
+                  editor={editor}
+                  text="Add Image"
+                  hideWhenUnavailable={true}
+                  showShortcut={true}
+                  onInserted={() => console.log("Image inserted!")}
+                />
+              )}
+            </div>
+            <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+            <label className="cursor-pointer inline-flex items-center">
+              <input
+                type="file"
+                className="hidden"
+                onChange={(e) => handleSelectPDF(e)}
+              />
+              <img
+                src="/images/icon/pdf.png"
+                alt="upload pdf"
+                className="hover:scale-110 transition w-7 h-7"
+              />
+            </label>
+          </div>
+
+          {/* Content */}
+          <EditorContent
+            editor={editor}
+            className="max-h-150 min-h-50 overflow-auto bg-gray-100"
+          />
+        </div>
+        <div className="flex flex-col w-1/3 px-4">
+          <label htmlFor="category">Danh mục:</label>
+          <select name="category" className="border border-gray-200 p-1 rounded-md">
+            <option value="1">Nhà trường</option>
+            <option value="2">Đoàn thể</option>
+            <option value="3">Hoạt động giảng dạy</option>
+            <option value="4">Thư viện</option>
+          </select>
         </div>
       </div>
-
-      {/* Content */}
-      <EditorContent editor={editor} className="max-h-150 min-h-50 overflow-auto" />
       <div className="flex gap-2 mt-3">
         <button onClick={handlePublish} className="bg-green-300 p-2 rounded">
           Đăng bài
