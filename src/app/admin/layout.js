@@ -92,7 +92,7 @@ export default function AdminLayout({ children }) {
             </div>
           </nav>
         </aside>
-        <main className={`p-6 ${open == true ? "ml-64" : "ml-16"} duration-300 h-full`}>
+        <main className={`p-6 ${open == true ? "ml-64" : "ml-16"} duration-300 h-fit`}>
           {children}
         </main>
       </div>
