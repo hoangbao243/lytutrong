@@ -7,7 +7,8 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URL = process.env.REDIRECT_URL;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
-const folderId = `1nDJ6jaHvXDwWvEZG3pzbaY4x3w3i2EPR`
+const FOLDER_ID = `1nDJ6jaHvXDwWvEZG3pzbaY4x3w3i2EPR`
+const TEMP_FOLDER_ID = `1P9Z5HnX8fT3UPQ8ezYaxZJGqUrijOVoz`
 
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 oauth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
@@ -44,7 +45,7 @@ var that = module.exports = {
                 requestBody: {
                     name: fileName,
                     mimeType: 'application/pdf',
-                    parents: [folderId]   
+                    parents: [FOLDER_ID]   
                 },
                 media: {
                     mimeType: 'application/pdf',
@@ -74,5 +75,33 @@ var that = module.exports = {
         } catch (error) {
             console.error(error);
         }
+    },
+    moveFile: async()=>{
+        try {
+    //Liệt kê tất cả file trong thư mục tạm
+    // const res = await drive.files.list({
+    //   q: `'${TEMP_FOLDER_ID}' in parents and trashed=false`,
+    //   fields: "files(id, name)",
+    // });
+    // const files = res.data.files;
+    // if (!files || files.length === 0) {
+    //   console.log("Không có file nào trong thư mục tạm.");
+    //   return;
+    // }
+    // console.log(files);
+    //Xóa từng file
+    // for (const file of files) {
+    //   try {
+    //     await drive.files.delete({ fileId: file.id });
+    //     console.log(`Đã xóa file: ${file.name} (${file.id})`);
+    //   } catch (err) {
+    //     console.error(`Xóa file ${file.name} lỗi:`, err.message);
+    //   }
+    // }
+
+    console.log("Đã xóa tất cả file trong thư mục tạm.");
+  } catch (err) {
+    console.error("Lỗi khi liệt kê file:", err.message);
+  }
     }
 }
