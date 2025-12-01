@@ -13,7 +13,7 @@ export default function Adminpage() {
   },[])
   return (
     <div>
-      <Editor></Editor>
+      dashboard
     </div>
   )
 }

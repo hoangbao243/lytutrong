@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link";
 import React, { useState } from "react";
-import PostModal from "../component/PostModal";
 
 export default function PostsManagement() {
   const [open, setOpen] = useState(false)
@@ -64,10 +63,11 @@ export default function PostsManagement() {
       <div className="flex items-center ">
         <h1 className="font-bold text-3xl mr-2">Quản lý bài viết</h1>
 
-        <button
+        <Link
           className="group cursor-pointer outline-none hover:rotate-90 duration-300"
           title="Add New"
           onClick={()=>setOpen(true)}
+          href={`/admin/newpost`}
         >
           <svg
             className="stroke-gray-400 fill-none group-hover:fill-gray-500 group-active:stroke-gray-200 group-active:fill-gray-600 group-active:duration-0 duration-300"
@@ -83,9 +83,8 @@ export default function PostsManagement() {
             <path strokeWidth="1.5" d="M8 12H16"></path>
             <path strokeWidth="1.5" d="M12 16V8"></path>
           </svg>
-        </button>
+        </Link>
       </div>
-      <PostModal isOpen={open} onClose={() => setOpen(false)}></PostModal>
       <div>
         <table className="w-full bg-white shadow rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-left">
