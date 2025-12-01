@@ -328,13 +328,13 @@ export const handleImageUpload = async (file, onProgress, abortSignal, setTempIm
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/upload/temp");
 
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        onProgress({
-          progress: Math.round((event.loaded / event.total) * 100),
-        });
-      }
-    };
+    // xhr?.upload?.onprogress = (event) => {
+    //   if (event.lengthComputable) {
+    //     onProgress({
+    //       progress: Math.round((event.loaded / event.total) * 100),
+    //     });
+    //   }
+    // };
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {

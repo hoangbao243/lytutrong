@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { TextStyle } from "@tiptap/extension-text-style";
@@ -16,6 +16,8 @@ import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 
 export default function Editor({ content, onChange }) {
   const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const [category, setCategory] = useState([])
   const navigate = useRouter();
   const editor = useEditor({
     immediatelyRender: false,
@@ -48,6 +50,18 @@ export default function Editor({ content, onChange }) {
       onChange && onChange(html);
     },
   });
+  useEffect(()=>{
+    const getCategory = async () =>{
+      const res = await axios.get(`/api/category`)
+      console.log(res);
+      if (res.status == 200) {
+        setCategory(res.data.data)
+      }else{
+        console.log(res.status);
+      }
+    }
+    getCategory()
+  },[])
 
   if (!editor) return null;
 
@@ -90,6 +104,8 @@ export default function Editor({ content, onChange }) {
       }
     } catch (error) {
       console.log(error);
+    } finally{
+      navigate.push(`/admin/posts`)
     }
   };
 
@@ -162,8 +178,18 @@ export default function Editor({ content, onChange }) {
       )
       .run();
   };
+
+  const handleAvatarImage = async (file) => {
+    handleImageUpload(file);
+    const imageUrl = URL.createObjectURL(file);
+    setPreview(imageUrl);
+  };
+
+  
   return (
     <div>
+        <p className="font-bold text-xl my-2">Bài Viết Mới</p>
+
       <div className="flex">
         <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white w-2/3">
           {uploading && (
@@ -375,14 +401,71 @@ export default function Editor({ content, onChange }) {
             className="max-h-150 min-h-50 overflow-auto bg-gray-100"
           />
         </div>
-        <div className="flex flex-col w-1/3 px-4">
-          <label htmlFor="category">Danh mục:</label>
-          <select name="category" className="border border-gray-200 p-1 rounded-md">
-            <option value="1">Nhà trường</option>
-            <option value="2">Đoàn thể</option>
-            <option value="3">Hoạt động giảng dạy</option>
-            <option value="4">Thư viện</option>
-          </select>
+        <div className="flex flex-col w-1/3 px-4 text-sm text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <div className="flex flex-col">
+            <label htmlFor="category">Danh mục:</label>
+            <select
+              name="category"
+              className="border border-gray-200 p-1 rounded-md ml-4 text-black"
+              disabled={category[0] ? false : true}
+            >
+              {
+                category && category?.map(item=>(
+                  <option key={item.id} value={`${item.id}`}>{item.name}</option>
+                ))
+              }
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="category">Trạng thái:</label>
+            <select
+              name="category"
+              className="border border-gray-200 p-1 rounded-md ml-4 text-black"
+            >
+              <option value="1">Đã xuất bản</option>
+              <option value="2">Chờ duyệt</option>
+              <option value="3">Bản nháp</option>
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="category">Hiển thị:</label>
+            <select
+              name="category"
+              className="border border-gray-200 p-1 rounded-md ml-4 text-black"
+            >
+              <option value="1">Công khai</option>
+              <option value="2">Riêng tư</option>
+            </select>
+            <div className="dark:bg-black/10 mt-1 ml-4">
+              <label className="flex items-center text-black ">
+                <input
+                  className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
+                  type="checkbox"
+                />
+                <p>Dán bài viết lên trang nhất</p>
+              </label>
+            </div>
+          </div>
+          <div className="flex flex-col mt-1">
+            <label
+              htmlFor="category"
+              className="text-sm text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Ảnh đại diện:
+            </label>
+            <input
+              type="file"
+              className="flex mt-1 ml-4 p-1 rounded-md border border-blue-300 border-input bg-white text-sm text-gray-400 file:border-0 file:bg-blue-600 file:text-white file:text-sm file:font-medium"
+              onChange={(e) => handleAvatarImage(e.target.files[0])}
+            ></input>
+            {preview && (
+              <img
+                src={preview}
+                alt="Preview"
+                className="mt-3 w-40 h-40 object-cover rounded-md border border-gray-300"
+              />
+            )}
+          </div>
         </div>
       </div>
       <div className="flex gap-2 mt-3">

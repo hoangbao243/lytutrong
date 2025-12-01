@@ -37,11 +37,14 @@ export default function LoginPage() {
   
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-50">
+      
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-md p-8 space-y-4 bg-white shadow-md rounded-2xl"
       >
+        <img src="/images/logo2.png" className="w-30 h-30 mx-auto" alt="logo" />
         <div>
+          
           <h2 className="text-2xl font-bold mb-7 text-center mt-3 text-blue-900">
             Sign in
           </h2>
@@ -78,12 +81,11 @@ export default function LoginPage() {
 
           <div className="mt-8">
             <button
-              variant="contained"
-              type="submit"
-              className="w-full px-3 py-2"
-            >
-              SIGN IN
-            </button>
+      class="w-full py-2 px-4 bg-purple-500 hover:bg-purple-700 rounded-md shadow-lg text-white font-semibold transition duration-200"
+      type="submit"
+    >
+      Sign In
+    </button>
           </div>
         </div>
       </form>
