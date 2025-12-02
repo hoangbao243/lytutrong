@@ -1,5 +1,7 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function AdminLayout({ children }) {
@@ -8,14 +10,20 @@ export default function AdminLayout({ children }) {
     { id: 2, title: "Website", src: "/admin/website", icon: "" },
     { id: 3, title: "Users", src: "/admin/users", icon: "" },
   ];
-  
   const [open, setOpen] = useState(true);
+  const navigate = useRouter()
   const openNavbar = () => {
     setOpen(!open);
   };
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
+
+  const handleLogout = async () =>{
+    const res = await axios.post(`/api/logout`);
+    if (res.status == 200) {
+      navigate.push(`/login`)
+    }else{
+      console.log(res);
+    }
+  }
 
   return (
     <div className="flex font-sans">
@@ -35,7 +43,7 @@ export default function AdminLayout({ children }) {
 
           <div className="flex items-center">
             <p>Admin</p>
-            <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center ml-2">
+            <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center ml-2 cursor-pointer" onClick={handleLogout}>
               <svg
                 fill="currentColor"
                 viewBox="0 0 20 20"

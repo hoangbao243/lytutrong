@@ -64,7 +64,7 @@ export default function Editor({ content, onChange }) {
   },[])
 
   if (!editor) return null;
-
+  //gán link vào nội dung
   const setLink = () => {
     let url = prompt("Nhập URL:");
     if (url) {
@@ -81,9 +81,9 @@ export default function Editor({ content, onChange }) {
         .run();
     }
   };
-
+  //gỡ link
   const removeLink = () => editor.chain().focus().unsetLink().run();
-
+  //đăng bài
   const handlePublish = async () => {
     try {
       const res = await axios.post(`/api/upload/confirm`);
@@ -108,7 +108,7 @@ export default function Editor({ content, onChange }) {
       navigate.push(`/admin/posts`)
     }
   };
-
+  //hủy bài đang viết
   const handleCancel = async () => {
     try {
       const res = await axios.post(`/api/upload/cleanup`);
@@ -123,6 +123,7 @@ export default function Editor({ content, onChange }) {
       console.log(error);
     }
   };
+  //màu chữ
   const handleColor = (e) => {
     const color = e.target.value;
     const { empty, $from } = editor.state.selection;
@@ -136,7 +137,7 @@ export default function Editor({ content, onChange }) {
     }
     editor.chain().focus().setColor(color).run();
   };
-
+  //đẩy pdf lên thư mục chính
   const uploadPDF = async (file) => {
     const form = new FormData();
     form.append("file", file);
@@ -147,7 +148,7 @@ export default function Editor({ content, onChange }) {
 
     return res.data;
   };
-
+  //up pdf vào temp
   const handleSelectPDF = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -178,7 +179,7 @@ export default function Editor({ content, onChange }) {
       )
       .run();
   };
-
+  //Ảnh đại diện bài viết
   const handleAvatarImage = async (file) => {
     handleImageUpload(file);
     const imageUrl = URL.createObjectURL(file);
