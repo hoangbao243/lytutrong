@@ -108,7 +108,7 @@ export default function PostsManagement() {
                 }`}
               >
                 <td className="p-3">{item.id}</td>
-
+                
                 <td className="p-3">
                   <img
                     src={item?.src}
