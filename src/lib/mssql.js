@@ -1,7 +1,8 @@
 import mssql from 'mssql';
 
 const SQL_DRIVER = 'SQL Server';
-const SQL_SERVER = 'DESKTOP-L8U2PHD\\SQLEXPRESS01';
+// const SQL_SERVER = 'DESKTOP-L8U2PHD\\SQLEXPRESS01';
+const SQL_SERVER = '171.252.129.36';
 const SQL_DATABASE = 'lytutrong';
 const SQL_UID = 'sa';
 const SQL_PWD = '1234$';
@@ -12,7 +13,7 @@ const config = {
   database: SQL_DATABASE,
   user: SQL_UID,
   password: SQL_PWD,
-  port: 1433,
+  port: 1888,
   options: {
     encrypt: false,               // local dev
     trustServerCertificate: true, // tránh lỗi SSL self-signed

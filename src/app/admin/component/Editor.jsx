@@ -10,14 +10,16 @@ import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node";
 import { MAX_FILE_SIZE, handleImageUpload } from "@/lib/tiptap-utils";
 import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Color } from "@tiptap/extension-text-style";
 import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 
 export default function Editor({ content, onChange }) {
   const [uploading, setUploading] = useState(false);
+  const [editPost, setEditPost] = useState();
   const [preview, setPreview] = useState(null);
-  const [category, setCategory] = useState([])
+  const [category, setCategory] = useState([]);
+  const { id } = useParams();
   const navigate = useRouter();
   const editor = useEditor({
     immediatelyRender: false,
@@ -27,7 +29,6 @@ export default function Editor({ content, onChange }) {
           levels: [1, 2, 3],
         },
       }),
-
       Highlight,
       TextStyle.configure({}),
       Color.configure({ types: ["textStyle"] }),
@@ -50,18 +51,31 @@ export default function Editor({ content, onChange }) {
       onChange && onChange(html);
     },
   });
-  useEffect(()=>{
-    const getCategory = async () =>{
-      const res = await axios.get(`/api/category`)
-      console.log(res);
+
+  useEffect(() => {
+    if (!editor) return; // editor chưa khởi tạo
+    const getEditPost = async () => {
+      const res = await axios.get(`/api/post/${id}`);
+      if (res.status === 200) {
+        setEditPost(res.data?.data);
+        editor.commands.setContent(res.data?.data?.description || "");
+      }
+    };
+    id && getEditPost();
+  }, [id, editor]);
+
+  useEffect(() => {
+    const getCategory = async () => {
+      const res = await axios.get(`/api/category`);
       if (res.status == 200) {
-        setCategory(res.data.data)
-      }else{
+        setCategory(res.data.data);
+      } else {
         console.log(res.status);
       }
-    }
-    getCategory()
-  },[])
+    };
+    console.log(id);
+    getCategory();
+  }, []);
 
   if (!editor) return null;
   //gán link vào nội dung
@@ -104,8 +118,8 @@ export default function Editor({ content, onChange }) {
       }
     } catch (error) {
       console.log(error);
-    } finally{
-      navigate.push(`/admin/posts`)
+    } finally {
+      navigate.push(`/admin/posts`);
     }
   };
   //hủy bài đang viết
@@ -186,10 +200,9 @@ export default function Editor({ content, onChange }) {
     setPreview(imageUrl);
   };
 
-  
   return (
     <div>
-        <p className="font-bold text-xl my-2">Bài Viết Mới</p>
+      <p className="font-bold text-xl my-2">Bài Viết Mới</p>
 
       <div className="flex">
         <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white w-2/3">
@@ -410,11 +423,12 @@ export default function Editor({ content, onChange }) {
               className="border border-gray-200 p-1 rounded-md ml-4 text-black"
               disabled={category[0] ? false : true}
             >
-              {
-                category && category?.map(item=>(
-                  <option key={item.id} value={`${item.id}`}>{item.name}</option>
-                ))
-              }
+              {category &&
+                category?.map((item) => (
+                  <option key={item.id} value={`${item.id}`}>
+                    {item.name}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="flex flex-col">

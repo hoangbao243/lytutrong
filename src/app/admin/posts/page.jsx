@@ -1,63 +1,106 @@
-"use client"
+"use client";
+import axios from "axios";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+const ths = [
+  "id",
+  "Ảnh đại diện",
+  "Tiêu đề",
+  "Nội dung",
+  "Mô tả",
+  "Mục lục",
+  "Tác giả",
+  "Trạng Thái",
+  "Ngày đăng",
+  "Ngày cập nhật",
+  "Nổi bật",
+  "Hành động",
+];
 
 export default function PostsManagement() {
-  const [open, setOpen] = useState(false)
-  const posts = [
-    {
-      id: 1,
-      src: "/images/p1.jpg",
-      caption: "Cổng trường ngày hội",
-      description: "Bài viết mô tả sự kiện...",
-      fulltext: "Lorem ipsum...",
-      createDate: "2025-02-01",
-      updateDate: "2025-02-10",
-      categoryId: 3,
-      userId: 1,
-      status: "published",
-      featured: true,
-    },
-    {
-      id: 2,
-      src: "/images/p2.jpg",
-      caption: "Hoạt động ngoại khóa",
-      description: "Bài viết mô tả hoạt động...",
-      fulltext: "",
-      createDate: "2025-02-02",
-      updateDate: "2025-02-11",
-      categoryId: 4,
-      userId: 2,
-      status: "draft",
-      featured: false,
-    },
-    {
-      id: 3,
-      src: "/images/p2.jpg",
-      caption: "Hoạt động ngoại khóa",
-      description: "Bài viết mô tả hoạt động...",
-      fulltext: "",
-      createDate: "2025-02-02",
-      updateDate: "2025-02-11",
-      categoryId: 4,
-      userId: 2,
-      status: "draft",
-      featured: false,
-    },
-    {
-      id: 4,
-      src: "/images/p2.jpg",
-      caption: "Hoạt động ngoại khóa",
-      description: "Bài viết mô tả hoạt động...",
-      fulltext: "",
-      createDate: "2025-02-02",
-      updateDate: "2025-02-11",
-      categoryId: 4,
-      userId: 2,
-      status: "draft",
-      featured: false,
-    },
-  ];
+  const [open, setOpen] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({});
+  const limit = 5;
+  //   {
+  //     id: 1,
+  //     src: "/images/p1.jpg",
+  //     caption: "Cổng trường ngày hội",
+  //     description: "Bài viết mô tả sự kiện...",
+  //     fulltext: "Lorem ipsum...",
+  //     createDate: "2025-02-01",
+  //     updateDate: "2025-02-10",
+  //     categoryId: 3,
+  //     userId: 1,
+  //     status: "published",
+  //     featured: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     src: "/images/p2.jpg",
+  //     caption: "Hoạt động ngoại khóa",
+  //     description: "Bài viết mô tả hoạt động...",
+  //     fulltext: "",
+  //     createDate: "2025-02-02",
+  //     updateDate: "2025-02-11",
+  //     categoryId: 4,
+  //     userId: 2,
+  //     status: "draft",
+  //     featured: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     src: "/images/p2.jpg",
+  //     caption: "Hoạt động ngoại khóa",
+  //     description: "Bài viết mô tả hoạt động...",
+  //     fulltext: "",
+  //     createDate: "2025-02-02",
+  //     updateDate: "2025-02-11",
+  //     categoryId: 4,
+  //     userId: 2,
+  //     status: "draft",
+  //     featured: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     src: "/images/p2.jpg",
+  //     caption: "Hoạt động ngoại khóa",
+  //     description: "Bài viết mô tả hoạt động...",
+  //     fulltext: "",
+  //     createDate: "2025-02-02",
+  //     updateDate: "2025-02-11",
+  //     categoryId: 4,
+  //     userId: 2,
+  //     status: "draft",
+  //     featured: false,
+  //   },
+  // ];
+  const getPost = async () => {
+    const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
+    console.log(res);
+    if (res.status == 200) {
+      setPosts(res?.data?.data || []);
+      console.log(res);
+      setPagination(res?.data?.totalPages || 1);
+    }
+  };
+  useEffect(() => {
+    getPost();
+  }, []);
+
+  useEffect(() => {
+    getPost();
+  }, [page]);
+
+  const nextPage = () => {
+    if (page < pagination) setPage(page + 1);
+  };
+
+  const prevPage = () => {
+    if (page > 1) setPage(page - 1);
+  };
   return (
     <div className="font-sans">
       <div className="flex items-center ">
@@ -66,7 +109,7 @@ export default function PostsManagement() {
         <Link
           className="group cursor-pointer outline-none hover:rotate-90 duration-300"
           title="Add New"
-          onClick={()=>setOpen(true)}
+          onClick={() => setOpen(true)}
           href={`/admin/newpost`}
         >
           <svg
@@ -89,13 +132,11 @@ export default function PostsManagement() {
         <table className="w-full bg-white shadow rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-left">
             <tr>
-              {posts &&
-                Object.keys(posts[0])?.map((item, index) => (
-                  <th key={index} className={`p-3`}>
-                    {item}
-                  </th>
-                ))}
-              <th>Action</th>
+              {ths?.map((item, index) => (
+                <th key={index} className={`p-3`}>
+                  {item}
+                </th>
+              ))}
             </tr>
           </thead>
 
@@ -108,23 +149,23 @@ export default function PostsManagement() {
                 }`}
               >
                 <td className="p-3">{item.id}</td>
-                
+
                 <td className="p-3">
                   <img
                     src={item?.src}
-                    width={60}
-                    height={40}
+                    width={360}
+                    height={340}
                     className="rounded"
                     alt={item?.caption}
                   />
                 </td>
-                <td className="p-3 font-semibold">{item.caption}</td>
-                <td className="p-3">{item.description}</td>
-                <td className="p-3">{item.fulltext}</td>
-                <td className="p-3">{item.createDate}</td>
-                <td className="p-3">{item.updateDate}</td>
-                <td className="p-3">{item.categoryId}</td>
-                <td className="p-3">{item.userId}</td>
+                <td className="p-3 font-semibold">{item?.caption}</td>
+                <td className="m-4 line-clamp-5 overflow-auto w-120">
+                  {item?.description}
+                </td>
+                <td className="p-3">{item?.fulltext}</td>
+                <td className="p-3">{item?.categoryId}</td>
+                <td className="p-3">{item?.userId}</td>
                 <td className="p-3">
                   {item.status === "published" ? (
                     <span className="px-3 py-1 bg-green-200 text-green-700 text-sm rounded">
@@ -136,6 +177,10 @@ export default function PostsManagement() {
                     </span>
                   )}
                 </td>
+                <td className="p-3">{item?.createDate}</td>
+                <td className="p-3">{item?.updateDate}</td>
+                
+                
                 <td className="p-3">
                   {item.featured ? (
                     <span className="px-3 py-1 bg-blue-200 text-blue-700 text-sm rounded">
@@ -160,6 +205,28 @@ export default function PostsManagement() {
             ))}
           </tbody>
         </table>
+        {/* PAGINATION */}
+        <div className="flex items-center gap-3 mt-4">
+          <button
+            onClick={prevPage}
+            disabled={page === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+          >
+            Prev
+          </button>
+
+          <span>
+            Trang {pagination.page} / {pagination.totalPages}
+          </span>
+
+          <button
+            onClick={nextPage}
+            disabled={page === pagination.totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
