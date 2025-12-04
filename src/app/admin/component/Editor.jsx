@@ -19,6 +19,7 @@ export default function Editor({ content, onChange }) {
   const [editPost, setEditPost] = useState();
   const [preview, setPreview] = useState(null);
   const [category, setCategory] = useState([]);
+  const [featured, setFeatured] = useState(false);
   const { id } = useParams();
   const navigate = useRouter();
   const editor = useEditor({
@@ -58,6 +59,8 @@ export default function Editor({ content, onChange }) {
       const res = await axios.get(`/api/post/${id}`);
       if (res.status === 200) {
         setEditPost(res.data?.data);
+        console.log(res.data?.data);;
+        setFeatured(res.data?.data.featured)
         editor.commands.setContent(res.data?.data?.description || "");
       }
     };
@@ -422,6 +425,7 @@ export default function Editor({ content, onChange }) {
               name="category"
               className="border border-gray-200 p-1 rounded-md ml-4 text-black"
               disabled={category[0] ? false : true}
+              value={editPost?.category}
             >
               {category &&
                 category?.map((item) => (
@@ -436,6 +440,7 @@ export default function Editor({ content, onChange }) {
             <select
               name="category"
               className="border border-gray-200 p-1 rounded-md ml-4 text-black"
+              value={editPost?.status}
             >
               <option value="1">Đã xuất bản</option>
               <option value="2">Chờ duyệt</option>
@@ -456,6 +461,8 @@ export default function Editor({ content, onChange }) {
                 <input
                   className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
                   type="checkbox"
+                  onChange={e=>setFeatured(e.target.checked)}
+                  checked={featured}
                 />
                 <p>Dán bài viết lên trang nhất</p>
               </label>

@@ -13,10 +13,9 @@ Buổi tập huấn đã để lại nhiều ấn tượng sâu sắc, giúp h�
 Một ngày học bổ ích, thiết thực và đầy trải nghiệm!`,
       categoryId: 1,
       userId: 1,
-      status: "published",
+      status: 3,
       createDate: "01-01-2025",
       updateDate: "01-01-2025",
-      
       featured: true,
     },
     {
