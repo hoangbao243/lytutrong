@@ -22,67 +22,16 @@ export default function PostsManagement() {
   const [open, setOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
-  const [pagination, setPagination] = useState({});
+  const [pagination, setPagination] = useState();
   const limit = 5;
-  //   {
-  //     id: 1,
-  //     src: "/images/p1.jpg",
-  //     caption: "Cổng trường ngày hội",
-  //     description: "Bài viết mô tả sự kiện...",
-  //     fulltext: "Lorem ipsum...",
-  //     createDate: "2025-02-01",
-  //     updateDate: "2025-02-10",
-  //     categoryId: 3,
-  //     userId: 1,
-  //     status: "published",
-  //     featured: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     src: "/images/p2.jpg",
-  //     caption: "Hoạt động ngoại khóa",
-  //     description: "Bài viết mô tả hoạt động...",
-  //     fulltext: "",
-  //     createDate: "2025-02-02",
-  //     updateDate: "2025-02-11",
-  //     categoryId: 4,
-  //     userId: 2,
-  //     status: "draft",
-  //     featured: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     src: "/images/p2.jpg",
-  //     caption: "Hoạt động ngoại khóa",
-  //     description: "Bài viết mô tả hoạt động...",
-  //     fulltext: "",
-  //     createDate: "2025-02-02",
-  //     updateDate: "2025-02-11",
-  //     categoryId: 4,
-  //     userId: 2,
-  //     status: "draft",
-  //     featured: false,
-  //   },
-  //   {
-  //     id: 4,
-  //     src: "/images/p2.jpg",
-  //     caption: "Hoạt động ngoại khóa",
-  //     description: "Bài viết mô tả hoạt động...",
-  //     fulltext: "",
-  //     createDate: "2025-02-02",
-  //     updateDate: "2025-02-11",
-  //     categoryId: 4,
-  //     userId: 2,
-  //     status: "draft",
-  //     featured: false,
-  //   },
-  // ];
+
+  //ẩn cột trong table
+  const hiddenCols = ["Mô tả"];
+
   const getPost = async () => {
     const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
-    console.log(res);
     if (res.status == 200) {
       setPosts(res?.data?.data || []);
-      console.log(res);
       setPagination(res?.data?.totalPages || 1);
     }
   };
@@ -101,6 +50,7 @@ export default function PostsManagement() {
   const prevPage = () => {
     if (page > 1) setPage(page - 1);
   };
+  
   return (
     <div className="font-sans">
       <div className="flex items-center ">
@@ -132,7 +82,7 @@ export default function PostsManagement() {
         <table className="w-full bg-white shadow rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-left">
             <tr>
-              {ths?.map((item, index) => (
+              {ths?.filter(th => !hiddenCols.includes(th))?.map((item, index) => (
                 <th key={index} className={`p-3`}>
                   {item}
                 </th>
@@ -153,17 +103,16 @@ export default function PostsManagement() {
                 <td className="p-3">
                   <img
                     src={item?.src}
-                    width={360}
-                    height={340}
+                    width={160}
+                    height={140}
                     className="rounded"
                     alt={item?.caption}
                   />
                 </td>
-                <td className="p-3 font-semibold">{item?.caption}</td>
-                <td className="m-4 line-clamp-5 overflow-auto w-120">
+                <td className="p-3 font-semibold w-50">{item?.caption}</td>
+                <td className="m-4 line-clamp-5 overflow-auto w-80">
                   {item?.description}
                 </td>
-                <td className="p-3">{item?.fulltext}</td>
                 <td className="p-3">{item?.categoryId}</td>
                 <td className="p-3">{item?.userId}</td>
                 <td className="p-3">
@@ -216,12 +165,12 @@ export default function PostsManagement() {
           </button>
 
           <span>
-            Trang {pagination.page} / {pagination.totalPages}
+            Trang {page} / {pagination}
           </span>
 
           <button
             onClick={nextPage}
-            disabled={page === pagination.totalPages}
+            disabled={page == pagination}
             className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
           >
             Next
