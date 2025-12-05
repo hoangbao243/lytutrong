@@ -158,11 +158,11 @@ export default function Editor({ content, onChange }) {
   const uploadPDF = async (file) => {
     const form = new FormData();
     form.append("file", file);
-
     const res = await axios.post("/api/uploadPDF/upload", form, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-
+    console.log(res);
+    
     return res.data;
   };
   //up pdf vào temp
@@ -178,7 +178,7 @@ export default function Editor({ content, onChange }) {
 
     const result = await uploadPDF(file);
     setUploading(false);
-    console.log("PDF URL:", result);
+    console.log("PDF URL:", file);
 
     // Chèn vào Tiptap
     editor
@@ -415,7 +415,7 @@ export default function Editor({ content, onChange }) {
           {/* Content */}
           <EditorContent
             editor={editor}
-            className="max-h-150 min-h-50 overflow-auto bg-gray-100"
+            className="max-h-150 min-h-50 overflow-auto p-4 bg-gray-100"
           />
         </div>
         <div className="flex flex-col w-1/3 px-4 text-sm text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">

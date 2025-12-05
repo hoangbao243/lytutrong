@@ -3,9 +3,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import DriveStorage from "./components/DriveStorage";
 import TopViewPost from "./components/TopPosts";
+import UserInfo from "./components/UserInfo";
 
 export default function Dashboard() {
   const [topPosts, setTopPosts] = useState([])
+
+  //call api get top 5 view posts & top 5 new posts
   const [topNewPosts, setTopNewsPost] = useState([])
     useEffect(() => {
       const getTopViewPost = async () => {
@@ -13,7 +16,6 @@ export default function Dashboard() {
         if (res.status == 200) {
           setTopPosts(res?.data?.data)
         }
-        console.log(res);
       };
       const getTopNewPost = async () =>{
         const res = await axios.get(`/api/post/topnew`)
@@ -29,9 +31,8 @@ export default function Dashboard() {
     <div className="flex w-full justify-start ">
       <div className="flex flex-col h-fit gap-2 w-1/3 p-4">
         <DriveStorage></DriveStorage>
-        <div className="w-full h-25 p-4 bg-blue-400 rounded-xl">
-          Đăng nhập gần đây
-        </div>
+        
+        <UserInfo></UserInfo>
       </div>
       <div className="flex flex-col gap-2 w-2/3 h-fit p-4 rounded-xl">
         <TopViewPost data={topPosts} title={`Top 5 bài viết nhiều lượt xem`}></TopViewPost>

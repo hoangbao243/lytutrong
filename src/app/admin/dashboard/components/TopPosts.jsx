@@ -20,7 +20,7 @@ export default function TopPosts(data) {
               {data && data?.data?.map((post, index) => (
                 <tr
                   key={index}
-                  className="border-b py-3 border-gray-300 hover:bg-slate-800/40 transition"
+                  className="border-b py-3 border-gray-300 hover:bg-gray-300 transition"
                 >
 
                   <td className="py-3">

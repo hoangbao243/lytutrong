@@ -48,6 +48,15 @@ export async function POST(req) {
       );
     }
 
+    await pool
+      .request()
+      .input("id", user.Id)
+      .query(`
+        UPDATE Users
+        SET LastLogin = GETDATE()
+        WHERE Id = @id
+      `);
+
     // Tạo token
     const token = jwt.sign(
       {
@@ -58,6 +67,8 @@ export async function POST(req) {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+
+    
 
     const re = NextResponse.json({
       message: "Đăng nhập thành công",
