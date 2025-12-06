@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export async function middleware(req) {
+export async function proxy(req) {
   const token = req.cookies.get("token")?.value;
 
+  // Không có token → chuyển về login
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   try {
-    // SECRET phải là Uint8Array
+    // Verify token
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-    const { payload } = await jwtVerify(token, secret);
+    await jwtVerify(token, secret);
 
     // Cho phép request đi tiếp
     return NextResponse.next();
@@ -23,5 +23,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"], // Những đường dẫn cần bảo vệ
+  matcher: ["/admin/:path*"],
 };
