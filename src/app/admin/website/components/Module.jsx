@@ -1,7 +1,11 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import DeleteModal from "../../component/DeleteModal";
 
 export default function Module() {
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState();
+
   const menuItem = [
     {
       id: 1,
@@ -115,6 +119,24 @@ export default function Module() {
     },
   ];
 
+  const onDelete = (id) => {
+    setDeleteId(id);
+    setOpenDeleteModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      // const res = await axios.delete(`/api/module/${id}`);
+      if (res == 200) {
+        setOpenDeleteModal(false);
+        console.log(id);
+      }
+      // reload list
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div>
       <h1 className="font-bold text-3xl ">Quản lý bài viết</h1>
@@ -146,13 +168,13 @@ export default function Module() {
                   <td className="p-3">{item.title}</td>
                   <td className="p-3">{item.parent}</td>
                   <td className="p-3 space-x-2">
-                    <Link
-                      href={`#`}
-                      className="text-blue-600 hover:underline"
-                    >
+                    <Link href={`#`} className="text-blue-600 hover:underline">
                       Edit
                     </Link>
-                    <button className="text-red-600 hover:underline">
+                    <button
+                      className="text-red-600 hover:underline"
+                      onClick={() => onDelete(item.id)}
+                    >
                       Delete
                     </button>
                   </td>
@@ -160,6 +182,11 @@ export default function Module() {
               ))}
           </tbody>
         </table>
+        <DeleteModal
+          open={openDeleteModal}
+          onClose={() => setOpenDeleteModal(false)}
+          onConfirm={()=>handleDelete(deleteId)}
+        ></DeleteModal>
       </div>
     </div>
   );

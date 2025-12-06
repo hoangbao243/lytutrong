@@ -2,7 +2,7 @@ import mssql from 'mssql';
 
 const SQL_DRIVER = 'SQL Server';
 // const SQL_SERVER = 'DESKTOP-L8U2PHD\\SQLEXPRESS01';
-const SQL_SERVER = '171.252.129.36';
+const SQL_SERVER = '116.98.49.70';
 const SQL_DATABASE = 'lytutrong';
 const SQL_UID = 'sa';
 const SQL_PWD = '1234$';
