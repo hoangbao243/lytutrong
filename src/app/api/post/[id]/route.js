@@ -1,3 +1,6 @@
+import { NextResponse } from "next/server";
+import { getPool } from "@/lib/mssql";
+
 const data = [
     {
       id: 10,
@@ -199,4 +202,53 @@ export async function GET(request, { params }) {
   }
 
   return Response.json({ ok: true, data: item,})
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Thiếu ID bài viết!" },
+        { status: 400 }
+      );
+    }
+
+    const pool = await getPool();
+
+    // Kiểm tra xem bài viết có tồn tại không
+    const check = await pool
+      .request()
+      .input("id", id)
+      .query(`
+        SELECT Id FROM Posts WHERE Id = @id
+      `);
+
+    if (check.recordset.length === 0) {
+      return NextResponse.json(
+        { message: "Bài viết không tồn tại" },
+        { status: 404 }
+      );
+    }
+
+    // Xóa bài viết
+    await pool
+      .request()
+      .input("id", id)
+      .query(`
+        DELETE FROM Posts WHERE Id = @id
+      `);
+
+    return NextResponse.json({
+      message: "Xóa bài viết thành công",
+      deletedId: id,
+    });
+  } catch (error) {
+    console.error("Delete post error:", error);
+    return NextResponse.json(
+      { message: "Lỗi server" },
+      { status: 500 }
+    );
+  }
 }

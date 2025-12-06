@@ -2,6 +2,7 @@
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import DeleteModal from "../component/DeleteModal";
 
 const ths = [
   "id",
@@ -19,15 +20,16 @@ const ths = [
 ];
 
 export default function PostsManagement() {
-  const [open, setOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [deleteId,setDeleteId] = useState() 
   const limit = 5;
 
   //ẩn cột trong table
   const hiddenCols = ["Mô tả"];
-
+  //call api get post pageding by page and limit
   const getPost = async () => {
     const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
     if (res.status == 200) {
@@ -50,7 +52,27 @@ export default function PostsManagement() {
   const prevPage = () => {
     if (page > 1) setPage(page - 1);
   };
-  
+
+  //Call api delete post by id
+  const handleDelete = async (id) => {
+    try {
+      const res = await axios.delete(`/api/post/${id}`);
+      if (res == 200) {
+        setOpenDeleteModal(false);
+        console.log(id);
+      }
+      // reload list
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  //handle button delete of each post
+  const onDelete = (id) =>{
+    setDeleteId(id)
+    setOpenDeleteModal(true)
+  }
+
   return (
     <div className="font-sans">
       <div className="flex items-center ">
@@ -59,7 +81,6 @@ export default function PostsManagement() {
         <Link
           className="group cursor-pointer outline-none hover:rotate-90 duration-300"
           title="Add New"
-          onClick={() => setOpen(true)}
           href={`/admin/newpost`}
         >
           <svg
@@ -82,11 +103,13 @@ export default function PostsManagement() {
         <table className="w-full bg-white shadow rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-left">
             <tr>
-              {ths?.filter(th => !hiddenCols.includes(th))?.map((item, index) => (
-                <th key={index} className={`p-3`}>
-                  {item}
-                </th>
-              ))}
+              {ths
+                ?.filter((th) => !hiddenCols.includes(th))
+                ?.map((item, index) => (
+                  <th key={index} className={`p-3`}>
+                    {item}
+                  </th>
+                ))}
             </tr>
           </thead>
 
@@ -128,8 +151,7 @@ export default function PostsManagement() {
                 </td>
                 <td className="p-3">{item?.createDate}</td>
                 <td className="p-3">{item?.updateDate}</td>
-                
-                
+
                 <td className="p-3">
                   {item.featured ? (
                     <span className="px-3 py-1 bg-blue-200 text-blue-700 text-sm rounded">
@@ -146,7 +168,10 @@ export default function PostsManagement() {
                   >
                     Edit
                   </Link>
-                  <button className="text-red-600 hover:underline">
+                  <button
+                    className="text-red-600 hover:underline"
+                    onClick={()=>onDelete(item.id)}
+                  >
                     Delete
                   </button>
                 </td>
@@ -154,6 +179,12 @@ export default function PostsManagement() {
             ))}
           </tbody>
         </table>
+        {/* Modal */}
+        <DeleteModal
+          open={openDeleteModal}
+          onClose={() => setOpenDeleteModal(false)}
+          onConfirm={()=>handleDelete(deleteId)}
+        ></DeleteModal>
         {/* PAGINATION */}
         <div className="flex items-center gap-3 mt-4">
           <button
