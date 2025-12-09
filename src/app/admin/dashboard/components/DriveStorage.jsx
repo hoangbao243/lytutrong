@@ -1,6 +1,7 @@
 "use client";
 import React, {useState, useEffect} from "react";
 import axios from "axios";
+import Loader from "@/components/loader/Loader";
 
 export default function DriveStorage() {
   const [quota, setQuota] = useState(null);
@@ -14,14 +15,14 @@ export default function DriveStorage() {
       } catch (error) {
         console.error("Error loading quota:", error);
       } finally {
+        setTimeout(()=>{},5000)
         setLoading(false);
       }
     };
     getInfoDrive();
   }, []);
 
-  if (loading) return <div className="p-4">Đang tải...</div>;
-  if (!quota) return <div className="p-4">Không tải được dữ liệu Drive.</div>;
+  if (!quota) return (<div className="h-25 flex items-center justify-between"><Loader></Loader></div>);
 
   const total = Number(quota.limit);
   const used = Number(quota.usage);
@@ -34,7 +35,8 @@ export default function DriveStorage() {
   const strokeDash = 100;
   const strokeOffset = strokeDash - (strokeDash * percent) / 100;
   return (
-    <div className="h-25 flex items-center justify-between rounded-xl bg-slate-900 p-4">
+    <div className="h-25 flex items-center justify-between rounded-xl bg-slate-900 p-4 shadow-lg">
+      {loading || !quota && (<Loader></Loader>)}
       {/* Left side */}
       <div className="space-y-1">
         <p className="text-md font-medium text-white">Storage Used</p>

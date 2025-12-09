@@ -1,9 +1,11 @@
 "use client";
+import Loader from "@/components/loader/Loader";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
 export default function UserInfo() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -13,6 +15,8 @@ export default function UserInfo() {
         console.log(res);
       } catch (err) {
         console.log("Load users error:", err);
+      }finally{
+        setLoading(false)
       }
     };
     loadUsers();
@@ -20,24 +24,29 @@ export default function UserInfo() {
 
   // Format ngày giờ theo Việt Nam
   const formatVNDateUTC = (dateString) => {
-  return new Date(dateString).toLocaleString("vi-VN", {
-    hour12: false,
-    timeZone: "UTC",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-};
+    return new Date(dateString).toLocaleString("vi-VN", {
+      hour12: false,
+      timeZone: "UTC",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
 
   return (
     <div className="w-full h-fit bg-white rounded-xl">
+      {loading ? (
+        <Loader></Loader>
+      ) : (
         <table className="w-full border border-gray-300 rounded-xl overflow-hidden shadow-lg">
           <thead className="bg-gray-200">
             <tr>
-              <th className="p-3 border border-gray-300 text-left">Tên người dùng</th>
+              <th className="p-3 border border-gray-300 text-left">
+                Tên người dùng
+              </th>
               <th className="p-3 border border-gray-300 text-left">Quyền</th>
               <th className="p-3 border border-gray-300 text-left">
                 Lần đăng nhập cuối
@@ -50,7 +59,9 @@ export default function UserInfo() {
                 <tr key={u.Id} className="hover:bg-gray-200 transition">
                   <td className="p-3 border-b border-gray-300">{u.Username}</td>
                   <td className="p-3 border-b border-gray-300">{u.Role}</td>
-                  <td className="p-3 border-b border-gray-300">{formatVNDateUTC(u.LastLogin)}</td>
+                  <td className="p-3 border-b border-gray-300">
+                    {formatVNDateUTC(u.LastLogin)}
+                  </td>
                 </tr>
               ))
             ) : (
@@ -62,6 +73,7 @@ export default function UserInfo() {
             )}
           </tbody>
         </table>
+      )}
     </div>
   );
 }
