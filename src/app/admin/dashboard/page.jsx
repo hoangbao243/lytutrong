@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DriveStorage from "./components/DriveStorage";
 import TopViewPost from "./components/TopPosts";
 import UserInfo from "./components/UserInfo";
+import ChartViews from "./components/ChartViews";
 
 export default function Dashboard() {
   const [topPosts, setTopPosts] = useState([])
@@ -31,8 +32,8 @@ export default function Dashboard() {
     <div className="flex w-full justify-start ">
       <div className="flex flex-col h-fit gap-2 w-1/3 p-4">
         <DriveStorage></DriveStorage>
-        
         <UserInfo></UserInfo>
+        <ChartViews></ChartViews>
       </div>
       <div className="flex flex-col gap-2 w-2/3 h-fit p-4 rounded-xl">
         <TopViewPost data={topPosts} title={`Top 5 bài viết nhiều lượt xem`}></TopViewPost>
