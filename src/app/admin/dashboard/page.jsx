@@ -31,7 +31,7 @@ export default function Dashboard() {
   return (
     <div className="flex w-full justify-start ">
       <div className="flex flex-col h-fit gap-2 w-1/3 p-4">
-        <DriveStorage></DriveStorage>
+        {/* <DriveStorage></DriveStorage> */}
         <UserInfo></UserInfo>
         <ChartViews></ChartViews>
       </div>

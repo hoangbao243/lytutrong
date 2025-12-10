@@ -8,9 +8,6 @@ const ths = [
   "id",
   "Ảnh đại diện",
   "Tiêu đề",
-  "Nội dung",
-  "Mô tả",
-  "Mục lục",
   "Tác giả",
   "Trạng Thái",
   "Ngày đăng",
@@ -150,10 +147,6 @@ export default function PostsManagement() {
                       />
                     </td>
                     <td className="p-3 font-semibold w-50">{item?.caption}</td>
-                    <td className="m-4 line-clamp-5 overflow-auto w-80">
-                      {item?.description}
-                    </td>
-                    <td className="p-3">{item?.categoryId}</td>
                     <td className="p-3">{item?.userId}</td>
                     <td className="p-3">
                       {item.status === "published" ? (
