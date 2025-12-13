@@ -91,7 +91,7 @@ export default function PostsManagement() {
       ) : (
         <>
           <div className="flex items-center ">
-            <h1 className="font-bold text-3xl mr-2">Quản lý bài viết</h1>
+            <h1 className="font-bold text-3xl mr-2 my-2">Quản lý bài viết</h1>
             <Link
               className="group cursor-pointer outline-none hover:rotate-90 duration-300"
               title="Add New"
@@ -200,8 +200,9 @@ export default function PostsManagement() {
               <button
                 onClick={prevPage}
                 disabled={page === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                className="flex px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
+                <img src="/images/icon/right-arrow2.png" alt="right-arrow" className="w-6 h-6 -scale-x-100"/>
                 Prev
               </button>
 
@@ -212,9 +213,10 @@ export default function PostsManagement() {
               <button
                 onClick={nextPage}
                 disabled={page == pagination}
-                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                className="flex px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
                 Next
+                <img src="/images/icon/right-arrow2.png" alt="right-arrow" className="w-6 h-6"/>
               </button>
             </div>
           </div>

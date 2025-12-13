@@ -6,24 +6,24 @@ import { useEffect, useState } from "react";
 
 export default function AdminLayout({ children }) {
   const sidebarItems = [
-    { id: 1, title: "Posts", src: "/admin/posts", icon: "" },
-    { id: 2, title: "Website", src: "/admin/website", icon: "" },
-    { id: 3, title: "Users", src: "/admin/users", icon: "" },
+    { id: 1, title: "Bài Viết", src: "/admin/posts", icon: "" },
+    { id: 2, title: "Thông Tin Website", src: "/admin/website", icon: "" },
+    { id: 3, title: "Tài khoản", src: "/admin/users", icon: "" },
   ];
   const [open, setOpen] = useState(true);
-  const navigate = useRouter()
+  const navigate = useRouter();
   const openNavbar = () => {
     setOpen(!open);
   };
 
-  const handleLogout = async () =>{
+  const handleLogout = async () => {
     const res = await axios.post(`/api/logout`);
     if (res.status == 200) {
-      navigate.push(`/login`)
-    }else{
+      navigate.push(`/login`);
+    } else {
       console.log(res);
     }
-  }
+  };
 
   return (
     <div className="flex font-sans bg-[#F9FAFB]">
@@ -37,13 +37,14 @@ export default function AdminLayout({ children }) {
               onClick={openNavbar}
             ></img>
             <Link href={`/admin/`} className="text-xl font-semibold m-2 ml-10">
-              Admin Panel
+              Thống Kê
             </Link>
           </div>
 
-          <div className="flex items-center">
-            <p>Admin</p>
-            <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center ml-2 cursor-pointer" onClick={handleLogout}>
+          <div className="relative group cursor-pointer">
+            <div
+              className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center ml-2 cursor-pointer"
+            >
               <svg
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -56,6 +57,17 @@ export default function AdminLayout({ children }) {
                   fillRule="evenodd"
                 ></path>
               </svg>
+            </div>
+            {/* Dropdown */}
+            <div
+              className="absolute right-0 mt-1 w-40 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+            >
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-lg"
+              >
+                Đăng xuất
+              </button>
             </div>
           </div>
         </header>
@@ -100,7 +112,11 @@ export default function AdminLayout({ children }) {
             </div>
           </nav>
         </aside>
-        <main className={`p-6 ${open == true ? "ml-64" : "ml-16"} duration-300 h-fit`}>
+        <main
+          className={`p-6 ${
+            open == true ? "ml-64" : "ml-16"
+          } duration-300 h-fit`}
+        >
           {children}
         </main>
       </div>
