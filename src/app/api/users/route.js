@@ -1,18 +1,29 @@
-import { getPool } from '@/lib/mssql';
+import { getPool } from "@/lib/db";
 
-export async function GET(req) {
+export async function GET() {
   try {
-    const pool = await getPool();
-    const result = await pool.request().query('SELECT TOP 10 * FROM Users');
-    return new Response(JSON.stringify({ users: result.recordset }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const pool = getPool();
+
+    const [rows] = await pool.query(
+      "SELECT * FROM users"
+    );
+    console.error("Get users :", rows);
+    return new Response(
+      JSON.stringify({ users: rows }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (err) {
-    console.error('Get users error:', err);
-    return new Response(JSON.stringify({ message: 'Lỗi server' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    console.error("Get users error:", err);
+    // return new Response(
+    //   JSON.stringify({ message: "Lỗi servers" }),
+    //   {
+    //     status: 500,
+    //     headers: { "Content-Type": "application/json" },
+    //   }
+    // );
   }
 }
+

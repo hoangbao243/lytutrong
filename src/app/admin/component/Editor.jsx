@@ -415,15 +415,15 @@ export default function Editor({ content, onChange }) {
           {/* Content */}
           <EditorContent
             editor={editor}
-            className="max-h-150 min-h-50 overflow-auto p-4 bg-gray-100"
+            className="max-h-350 min-h-150 overflow-auto p-4 bg-gray-100"
           />
         </div>
         <div className="flex flex-col w-1/3 px-4 text-sm text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           <div className="flex flex-col">
-            <label htmlFor="category">Danh mục:</label>
+            <label htmlFor="category" className="p-2">Danh mục:</label>
             <select
               name="category"
-              className="border border-gray-200 p-1 rounded-md ml-4 text-black"
+              className="border border-gray-200 p-2 rounded-md ml-4 text-black"
               disabled={category[0] ? false : true}
               value={editPost?.category}
             >
@@ -436,10 +436,10 @@ export default function Editor({ content, onChange }) {
             </select>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="category">Trạng thái:</label>
+            <label htmlFor="category" className="p-2">Trạng thái:</label>
             <select
               name="category"
-              className="border border-gray-200 p-1 rounded-md ml-4 text-black"
+              className="border border-gray-200 p-2 rounded-md ml-4 text-black"
               value={editPost?.status}
             >
               <option value="1">Đã xuất bản</option>
@@ -448,15 +448,15 @@ export default function Editor({ content, onChange }) {
             </select>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="category">Hiển thị:</label>
+            <label htmlFor="category" className="p-2">Hiển thị:</label>
             <select
               name="category"
-              className="border border-gray-200 p-1 rounded-md ml-4 text-black"
+              className="border border-gray-200 p-2 rounded-md ml-4 text-black"
             >
               <option value="1">Công khai</option>
               <option value="2">Riêng tư</option>
             </select>
-            <div className="dark:bg-black/10 mt-1 ml-4">
+            <div className="dark:bg-black/10 mt-1 ml-4 p-2">
               <label className="flex items-center text-black ">
                 <input
                   className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
@@ -477,7 +477,7 @@ export default function Editor({ content, onChange }) {
             </label>
             <input
               type="file"
-              className="flex mt-1 ml-4 p-1 rounded-md border border-blue-300 border-input bg-white text-sm text-gray-400 file:border-0 file:bg-blue-600 file:text-white file:text-sm file:font-medium"
+              className="flex mt-1 ml-4 p-1 rounded-md border p-2 border-blue-300 border-input bg-white text-sm text-gray-400 file:border-0 file:bg-blue-600 file:text-white file:text-sm file:font-medium"
               onChange={(e) => handleAvatarImage(e.target.files[0])}
             ></input>
             {preview && (

@@ -8,8 +8,8 @@ export async function POST() {
   // Xóa cookie token
   response.cookies.set("token", "", {
     httpOnly: true,
-    secure: true,
-    sameSite: "strict",
+    secure: false,
+    sameSite: "lax",
     path: "/",
     maxAge: 0, // Hết hạn ngay lập tức
   });

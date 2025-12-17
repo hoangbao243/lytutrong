@@ -8,9 +8,6 @@ const ths = [
   "id",
   "Ảnh đại diện",
   "Tiêu đề",
-  "Nội dung",
-  "Mô tả",
-  "Mục lục",
   "Tác giả",
   "Trạng Thái",
   "Ngày đăng",
@@ -94,7 +91,7 @@ export default function PostsManagement() {
       ) : (
         <>
           <div className="flex items-center ">
-            <h1 className="font-bold text-3xl mr-2">Quản lý bài viết</h1>
+            <h1 className="font-bold text-3xl mr-2 my-2">Quản lý bài viết</h1>
             <Link
               className="group cursor-pointer outline-none hover:rotate-90 duration-300"
               title="Add New"
@@ -150,10 +147,6 @@ export default function PostsManagement() {
                       />
                     </td>
                     <td className="p-3 font-semibold w-50">{item?.caption}</td>
-                    <td className="m-4 line-clamp-5 overflow-auto w-80">
-                      {item?.description}
-                    </td>
-                    <td className="p-3">{item?.categoryId}</td>
                     <td className="p-3">{item?.userId}</td>
                     <td className="p-3">
                       {item.status === "published" ? (
@@ -207,8 +200,9 @@ export default function PostsManagement() {
               <button
                 onClick={prevPage}
                 disabled={page === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                className="flex px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
+                <img src="/images/icon/right-arrow2.png" alt="right-arrow" className="w-6 h-6 -scale-x-100"/>
                 Prev
               </button>
 
@@ -219,9 +213,10 @@ export default function PostsManagement() {
               <button
                 onClick={nextPage}
                 disabled={page == pagination}
-                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                className="flex px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
                 Next
+                <img src="/images/icon/right-arrow2.png" alt="right-arrow" className="w-6 h-6"/>
               </button>
             </div>
           </div>
