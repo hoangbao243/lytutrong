@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/thietk18/lytutrong.edu.vn
+    - /bin/cp -R * $DEPLOYPATH
