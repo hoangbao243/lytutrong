@@ -38,9 +38,6 @@ export default function LoginPage() {
         username,
         password,
       });
-      console.log(username, password);
-      console.log(res);
-      
 
       if (res.status == 200) {
         setError('')
@@ -53,7 +50,6 @@ export default function LoginPage() {
       }
       // Lỗi do network, timeout...
       setError(err.response.data.message)
-      console.log(err);
       
     }
   };

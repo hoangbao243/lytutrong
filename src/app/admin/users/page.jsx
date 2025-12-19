@@ -86,13 +86,13 @@ export default function page() {
                       <td className="p-3 px-5">
                         <input
                           type="text"
-                          defaultValue={item.Username}
+                          defaultValue={item.username}
                           className="bg-transparent py-2"
                           disabled
                         ></input>
                       </td>
                       <td className="p-3 px-5">
-                        {item.Username == "admin" ? (
+                        {item.username == "admin" ? (
                           ""
                         ) : (
                           <input
@@ -105,13 +105,13 @@ export default function page() {
                       <td className="p-3 px-5">
                         <input
                           type="text"
-                          defaultValue={item?.Role}
+                          defaultValue={item?.role}
                           className="bg-transparent py-2"
                           disabled
                         ></input>
                       </td>
                       <td className="p-3 px-5 flex justify-center">
-                        {item.Username == "admin" ? (
+                        {item.username == "admin" ? (
                           " "
                         ) : (
                           <>
