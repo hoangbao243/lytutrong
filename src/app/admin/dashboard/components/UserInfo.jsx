@@ -10,7 +10,7 @@ export default function UserInfo() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const res = await axios.get("/api/getuser");
+        const res = await axios.get("/api/users");
         setUsers(res.data.users);
         console.log(res);
       } catch (err) {
@@ -56,11 +56,11 @@ export default function UserInfo() {
           <tbody>
             {users && users.length > 0 ? (
               users.map((u) => (
-                <tr key={u.Id} className="hover:bg-gray-200 transition">
-                  <td className="p-3 border-b border-gray-300">{u.Username}</td>
-                  <td className="p-3 border-b border-gray-300">{u.Role}</td>
+                <tr key={u.id} className="hover:bg-gray-200 transition">
+                  <td className="p-3 border-b border-gray-300">{u.username}</td>
+                  <td className="p-3 border-b border-gray-300">{u.role}</td>
                   <td className="p-3 border-b border-gray-300">
-                    {formatVNDateUTC(u.LastLogin)}
+                    {formatVNDateUTC(u.lastlogin)}
                   </td>
                 </tr>
               ))

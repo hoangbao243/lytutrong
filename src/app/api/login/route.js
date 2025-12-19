@@ -1,4 +1,4 @@
-import { getPool } from "@/lib/mssql";
+import { getPool } from "@/lib/db"; // mysql2/promise
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -8,91 +8,94 @@ export async function POST(req) {
     const { username, password } = await req.json();
 
     if (!username || !password) {
-      return Response.json(
+      return NextResponse.json(
         { message: "Username và mật khẩu là bắt buộc" },
         { status: 400 }
       );
     }
 
-    const pool = await getPool();
+    const pool = getPool();
 
-    // Lấy user theo username
-    const result = await pool
-      .request()
-      .input("username", username)
-      .query(`
-        SELECT TOP 1 *
-        FROM Users
-        WHERE Username = @username AND IsActive = 1
-      `);
-
-    const user = result.recordset[0];
-
-
-    console.log(result);
+    // 🔹 Lấy user theo username
+    const [rows] = await pool.execute(
+      `
+      SELECT 
+        id,
+        username,
+        passwordHash,
+        role
+      FROM users
+      WHERE username = ? AND isActive = 1
+      LIMIT 1
+      `,
+      [username]
+    );
     
+    const user = rows[0];
+
     if (!user) {
-      return Response.json(
+      return NextResponse.json(
         { message: "Sai tài khoản hoặc mật khẩu!" },
         { status: 400 }
       );
     }
 
-    // So sánh mật khẩu
-    const isMatch = await bcrypt.compare(password, user.PasswordHash);
-    
+    // 🔹 So sánh mật khẩu
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+
     if (!isMatch) {
-      return Response.json(
+      return NextResponse.json(
         { message: "Sai tài khoản hoặc mật khẩu!" },
         { status: 401 }
       );
     }
 
-    await pool
-      .request()
-      .input("id", user.Id)
-      .query(`
-        UPDATE Users
-        SET LastLogin = GETDATE()
-        WHERE Id = @id
-      `);
+    // 🔹 Update LastLogin
+    await pool.execute(
+      `
+      UPDATE users
+      SET lastlogin = NOW()
+      WHERE id = ?
+      `,
+      [user.id]
+    );
 
-    // Tạo token
+    // 🔹 Tạo JWT
     const token = jwt.sign(
       {
-        id: user.Id,
-        username: user.Username,
-        role: user.Role,
+        id: user.id,
+        username: user.username,
+        role: user.role,
       },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    
-
-    const re = NextResponse.json({
+    // 🔹 Trả response + set cookie
+    const res = NextResponse.json({
       message: "Đăng nhập thành công",
       token,
       user: {
-        id: user.Id,
-        username: user.Username,
-        role: user.Role,
+        id: user.id,
+        username: user.username,
+        role: user.role,
       },
     });
 
-    re.cookies.set("token", token, {
+    res.cookies.set("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 ngày
     });
 
-    return re
-
+    return res;
   } catch (err) {
     console.error("Login error:", err);
-    console.error("Login error:awefawef");
-    return Response.json({ message: "Lỗi server" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Lỗi server" },
+      { status: 500 }
+    );
   }
 }

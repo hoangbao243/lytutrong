@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPool } from "@/lib/mssql";
+import { getPool } from "@/lib/db";
 
 const data = [
     {
@@ -191,20 +191,65 @@ Sau đây là những hình ảnh trong Lễ Bế giảng năm học 2024-2025 c
   ];
 
 export async function GET(request, { params }) {
-  const { id } = await params
+  try {
+    const { id } = params;
 
-  const item = data.find((n) => n.id === Number(id))
-  console.log(id);
-  
+    if (!id) {
+      return NextResponse.json(
+        { message: "Thiếu ID bài viết" },
+        { status: 400 }
+      );
+    }
 
-  if (!item) {
-    return Response.json({ ok: false, message: "News not founds" }, { status: 404 })
+    const pool = getPool();
+
+    const [rows] = await pool.execute(
+      `
+      SELECT
+        id,
+        src,
+        caption,
+        fulltext,
+        description,
+        categoryId,
+        userId,
+        status,
+        createDate,
+        updateDate,
+        featured
+      FROM posts
+      WHERE id = ?
+      LIMIT 1
+      `,
+      [id]
+    );
+
+    const post = rows[0];
+
+    if (!post) {
+      return NextResponse.json(
+        { message: "News not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      ok: true,
+      data: post,
+    });
+  } catch (error) {
+    console.error("Get post error:", error);
+    return NextResponse.json(
+      { message: "Lỗi server" },
+      { status: 500 }
+    );
   }
-
-  return Response.json({ ok: true, data: item,})
 }
 
-export async function DELETE(req, { params }) {
+/**
+ * DELETE /api/news/[id]
+ */
+export async function DELETE(request, { params }) {
   try {
     const { id } = params;
 
@@ -215,34 +260,30 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    const pool = await getPool();
+    const pool = getPool();
 
-    // Kiểm tra xem bài viết có tồn tại không
-    const check = await pool
-      .request()
-      .input("id", id)
-      .query(`
-        SELECT Id FROM Posts WHERE Id = @id
-      `);
+    // 🔹 Kiểm tra bài viết tồn tại
+    const [checkRows] = await pool.execute(
+      `SELECT id FROM posts WHERE id = ? LIMIT 1`,
+      [id]
+    );
 
-    if (check.recordset.length === 0) {
+    if (checkRows.length === 0) {
       return NextResponse.json(
         { message: "Bài viết không tồn tại" },
         { status: 404 }
       );
     }
 
-    // Xóa bài viết
-    await pool
-      .request()
-      .input("id", id)
-      .query(`
-        DELETE FROM Posts WHERE Id = @id
-      `);
+    // 🔹 Xóa bài viết
+    await pool.execute(
+      `DELETE FROM posts WHERE id = ?`,
+      [id]
+    );
 
     return NextResponse.json({
       message: "Xóa bài viết thành công",
-      deletedId: id,
+      deletedId: Number(id),
     });
   } catch (error) {
     console.error("Delete post error:", error);
