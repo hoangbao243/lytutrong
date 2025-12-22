@@ -32,7 +32,17 @@ export async function POST(req) {
       "banner.jpg"
     );
 
-    await writeFile(uploadPath, buffer);
+    await sharp(buffer)
+      .resize({
+        width: 1600,           // resize tối đa
+        withoutEnlargement: true,
+      })
+      .webp({
+        quality: 75,           // 70–80 là đẹp & nhẹ
+      })
+      .toFile(uploadPath);
+
+    // await writeFile(uploadPath, buffer);
 
     return Response.json({ ok: true, message: "Uploaded" });
   } catch (error) {

@@ -147,10 +147,10 @@ export default function Module() {
               {menuItem &&
                 Object.keys(menuItem[0])?.map((item, index) => (
                   <th key={index} className={`p-3`}>
-                    {item}
+                    {item == "title" ? "Danh mục" : item == "parent" ? "Danh mục cha" : item}
                   </th>
                 ))}
-              <th>Action</th>
+              <th>Hành động</th>
             </tr>
           </thead>
 
