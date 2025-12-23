@@ -430,7 +430,7 @@ export default function Editor({ content, onChange }) {
             <select
               name="category"
               className="border border-gray-200 p-2 rounded-md ml-4 text-black"
-              disabled={category[0] ? false : true}
+              disabled={category && category[0] ? false : true}
               value={editPost?.category}
             >
               {category &&
