@@ -11,19 +11,19 @@ export async function POST(req) {
     if (!file)
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
 
-    // 🔹 File → Buffer
+    // File → Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 🔹 Thư mục upload tạm
+    // Thư mục upload tạm
     const uploadDir = path.join(process.cwd(), "public/uploads/temp");
     await fs.mkdir(uploadDir, { recursive: true });
 
-    // 🔹 Tên file mới
+    // Tên file mới
     const fileName = Date.now() + "-" + file.name.replaceAll(" ", "_");
     const filePath = path.join(uploadDir, fileName);
 
-    // 🔹 NÉN + RESIZE + CONVERT WEBP
+    // NÉN + RESIZE + CONVERT WEBP
     await sharp(buffer)
       .resize({
         width: 1600,              // giới hạn chiều rộng
