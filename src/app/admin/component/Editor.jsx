@@ -119,10 +119,15 @@ export default function Editor({ content, onChange }) {
           console.log(newHTML);
         }
       }
+      // let html = editor.getHTML();
+      //   if (editor.commands.setContent(html)) {
+      //     const newHTML = editor.getHTML();
+      //     console.log(newHTML);
+      //   }
     } catch (error) {
       console.log(error);
     } finally {
-      navigate.push(`/admin/posts`);
+      // navigate.push(`/admin/posts`);
     }
   };
   //hủy bài đang viết
@@ -179,6 +184,7 @@ export default function Editor({ content, onChange }) {
     const result = await uploadPDF(file);
     setUploading(false);
     console.log("PDF URL:", file);
+    console.log("PDF URL:", result);
 
     // Chèn vào Tiptap
     editor

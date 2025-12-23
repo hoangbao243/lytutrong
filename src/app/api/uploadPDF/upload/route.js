@@ -24,13 +24,14 @@ export async function POST(req) {
     // Tạo đường dẫn tạm
     const tempDir = os.tmpdir();
     const tempPath = path.join(tempDir, `${Date.now()}-${file.name}`);
-
+    
     // Ghi file vào thư mục tạm
     await fs.promises.writeFile(tempPath, buffer);
 
     // Gọi hàm upload Google Drive của bạn
     const result = await uploadFile({ localPath: tempPath });
-
+    console.log("result....................", result);
+    
     // Xóa file tạm sau khi upload xong
     await fs.promises.unlink(tempPath);
 
