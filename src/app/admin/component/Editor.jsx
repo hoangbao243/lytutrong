@@ -59,8 +59,8 @@ export default function Editor({ content, onChange }) {
       const res = await axios.get(`/api/post/${id}`);
       if (res.status === 200) {
         setEditPost(res.data?.data);
-        console.log(res.data?.data);;
-        setFeatured(res.data?.data.featured)
+        console.log(res.data?.data);
+        setFeatured(res.data?.data.featured);
         editor.commands.setContent(res.data?.data?.description || "");
       }
     };
@@ -71,7 +71,7 @@ export default function Editor({ content, onChange }) {
     const getCategory = async () => {
       const res = await axios.get(`/api/category`);
       if (res.status == 200) {
-        setCategory(res.data.data);
+        setCategory(res.data);
       } else {
         console.log(res.status);
       }
@@ -79,6 +79,12 @@ export default function Editor({ content, onChange }) {
     console.log(id);
     getCategory();
   }, []);
+
+  
+
+  useEffect(()=>{
+    console.log(editPost);
+  },[editPost])
 
   if (!editor) return null;
   //gán link vào nội dung
@@ -117,6 +123,7 @@ export default function Editor({ content, onChange }) {
         if (editor.commands.setContent(html)) {
           const newHTML = editor.getHTML();
           console.log(newHTML);
+          setEditPost({ ...editPost, fulltext: newHTML})
         }
       }
       // let html = editor.getHTML();
@@ -167,7 +174,7 @@ export default function Editor({ content, onChange }) {
       headers: { "Content-Type": "multipart/form-data" },
     });
     console.log(res);
-    
+
     return res.data;
   };
   //up pdf vào temp
@@ -207,6 +214,21 @@ export default function Editor({ content, onChange }) {
     handleImageUpload(file);
     const imageUrl = URL.createObjectURL(file);
     setPreview(imageUrl);
+  };
+
+  const renderCategoryOptions = (items, level = 0) => {
+    return items.map((item) => (
+      <React.Fragment key={item.id}>
+        <option value={item.id}>
+          {"— ".repeat(level)}
+          {item.name}
+        </option>
+
+        {item.children &&
+          item.children.length > 0 &&
+          renderCategoryOptions(item.children, level + 1)}
+      </React.Fragment>
+    ));
   };
 
   return (
@@ -426,27 +448,33 @@ export default function Editor({ content, onChange }) {
         </div>
         <div className="flex flex-col w-1/3 px-4 text-sm text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           <div className="flex flex-col">
-            <label htmlFor="category" className="p-2">Danh mục:</label>
+            <label htmlFor="category" className="p-2">
+              Danh mục:
+            </label>
             <select
               name="category"
               className="border border-gray-200 p-2 rounded-md ml-4 text-black"
-              disabled={category && category[0] ? false : true}
-              value={editPost?.category}
+              disabled={!category || category.length === 0}
+              value={editPost?.category || ""}
+              onChange={(e) =>
+                setEditPost({ ...editPost, category: Number(e.target.value)})
+              }
             >
-              {category &&
-                category?.map((item) => (
-                  <option key={item.id} value={`${item.id}`}>
-                    {item.name}
-                  </option>
-                ))}
+              <option value="">-- Chọn danh mục --</option>
+              {category && renderCategoryOptions(category)}
             </select>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="category" className="p-2">Trạng thái:</label>
+            <label htmlFor="category" className="p-2">
+              Trạng thái:
+            </label>
             <select
               name="category"
               className="border border-gray-200 p-2 rounded-md ml-4 text-black"
-              value={editPost?.status}
+              defaultValue={editPost?.status}
+              onChange={(e) =>
+                    setEditPost({ ...editPost, status: Number(e.target.value)})
+                  }
             >
               <option value="1">Đã xuất bản</option>
               <option value="2">Chờ duyệt</option>
@@ -454,21 +482,16 @@ export default function Editor({ content, onChange }) {
             </select>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="category" className="p-2">Hiển thị:</label>
-            <select
-              name="category"
-              className="border border-gray-200 p-2 rounded-md ml-4 text-black"
-            >
-              <option value="1">Công khai</option>
-              <option value="2">Riêng tư</option>
-            </select>
+            
             <div className="dark:bg-black/10 mt-1 ml-4 p-2">
               <label className="flex items-center text-black ">
                 <input
                   className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
                   type="checkbox"
-                  onChange={e=>setFeatured(e.target.checked)}
-                  checked={featured}
+                  onChange={(e) =>
+                    setEditPost({ ...editPost, featured: e.target.checked})
+                  }
+                  defaultChecked={featured}
                 />
                 <p>Dán bài viết lên trang nhất</p>
               </label>
