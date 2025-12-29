@@ -1,4 +1,4 @@
-Name: lytutrong Deployment
+name: lytutrong Deployment
 
 on:
   push:
