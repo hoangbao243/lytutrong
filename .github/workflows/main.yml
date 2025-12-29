@@ -16,11 +16,15 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: 22
         script: |
+          set -e
           cd /home/lytutrong
           git fetch origin
-          git checkout product
-          git pull
-          npm install
+          git reset --hard origin/product
+
+          npm ci
           npm run build
-          pm2 reload lytutrong
+
+          pm2 delete lytutrong || true
+          pm2 start ecosystem.config.js --env production
+          pm2 save
         
