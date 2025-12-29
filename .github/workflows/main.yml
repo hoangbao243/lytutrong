@@ -1,0 +1,30 @@
+name: lytutrong Deployment
+
+on:
+  push:
+    branches: [product]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-lastest
+    steps:
+    - name: Deploy using ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: 22
+        script: |
+          set -e
+          cd /home/lytutrong
+          git fetch origin
+          git reset --hard origin/product
+
+          npm ci
+          npm run build
+
+          pm2 delete lytutrong || true
+          pm2 start ecosystem.config.js --env production
+          pm2 save
+        
