@@ -61,7 +61,7 @@ export default function Editor({ content, onChange }) {
         setEditPost(res.data?.data);
         console.log(res.data?.data);
         setFeatured(res.data?.data.featured);
-        editor.commands.setContent(res.data?.data?.description || "");
+        editor.commands.setContent(res.data?.data?.fulltext || "");
       }
     };
     id && getEditPost();

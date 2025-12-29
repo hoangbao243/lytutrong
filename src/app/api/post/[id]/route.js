@@ -192,7 +192,7 @@ Sau đây là những hình ảnh trong Lễ Bế giảng năm học 2024-2025 c
 
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(
@@ -205,21 +205,22 @@ export async function GET(request, { params }) {
 
     const [rows] = await pool.execute(
       `
-      SELECT
-        id,
-        src,
-        caption,
-        fulltext,
-        description,
-        categoryId,
-        userId,
-        status,
-        createDate,
-        updateDate,
-        featured
-      FROM posts
-      WHERE id = ?
-      LIMIT 1
+        SELECT
+          id,
+          src,
+          caption,
+          \`fulltext\`,
+          description,
+          categoryId,
+          userId,
+          \`status\`,
+          featured,
+          \`views\`,
+          createDate,
+          updateDate
+        FROM posts
+        WHERE id = ?
+        LIMIT 1;
       `,
       [id]
     );
