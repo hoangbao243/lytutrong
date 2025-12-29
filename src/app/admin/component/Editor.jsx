@@ -83,7 +83,7 @@ export default function Editor({ content, onChange }) {
   
 
   useEffect(()=>{
-    console.log(editPost);
+    console.log("editPost",editPost);
   },[editPost])
 
   if (!editor) return null;
