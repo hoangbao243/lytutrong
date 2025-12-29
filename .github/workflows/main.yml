@@ -1,0 +1,26 @@
+Name: lytutrong Deployment
+
+on:
+  push:
+    branches: [product]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-lastest
+    steps:
+    - name: Deploy using ssh
+      uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            cd /home/lytutrong
+            git fetch origin
+            git checkout product
+            git pull
+            npm install
+            npm run build
+            pm2 reload lytutrong
+        
