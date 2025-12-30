@@ -112,6 +112,8 @@ export default function Editor({ content, onChange }) {
         const moved = res.data.files;
         // lấy HTML hiện tại
         let html = editor.getHTML();
+        const text = htmlToText(html);
+        setEditPost({...editPost, description: text})
         // thay từng đường dẫn
         moved.forEach((file) => {
           html = html.replaceAll(file.old, file.new);
@@ -141,14 +143,24 @@ export default function Editor({ content, onChange }) {
     }
   };
 
+  //html => text
+  const htmlToText = (html) => {
+    if (!html) return "";
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    return doc.body.textContent || "";
+  }
+
   //đăng bài
   const handlePublish = async () => {
     try {
       await moveImage();
-      // const res = await axios.post(`/api/post`,editPost)
-      // if (res.status == 200) {
-      //   console.log(res);
-      // }
+      const res = await axios.post(`/api/post`, editPost);
+      if (res.status == 200) {
+        console.log(res);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -262,7 +274,9 @@ export default function Editor({ content, onChange }) {
           type="text"
           name="caption"
           className="border border-gray-400 p-2 rounded-md mb-4 text-black"
-          onChange={e=>setEditPost({ ...editPost, caption: e.target.value })}
+          onChange={(e) =>
+            setEditPost({ ...editPost, caption: e.target.value })
+          }
         />
       </div>
       <div className="flex">
@@ -487,7 +501,7 @@ export default function Editor({ content, onChange }) {
               disabled={!category || category.length === 0}
               value={editPost?.category || ""}
               onChange={(e) =>
-                setEditPost({ ...editPost, category: Number(e.target.value) })
+                setEditPost({ ...editPost, categoryId: Number(e.target.value) })
               }
             >
               <option value="">-- Chọn danh mục --</option>

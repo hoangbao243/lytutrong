@@ -228,9 +228,9 @@ export async function POST(req) {
       featured,
     } = body;
 
-    if (!title || !content) {
+    if (!caption || !fulltext) {
       return NextResponse.json(
-        { message: "Thiếu title hoặc content" },
+        { message: "Thiếu tiêu đề hoặc nội dung" },
         { status: 400 }
       );
     }
@@ -247,11 +247,11 @@ export async function POST(req) {
         src,
         caption,
         fulltext,
-        description,
-        categoryId,
-        userId,
-        status,
-        featured,
+        description ?? null,
+        categoryId == 0 ? 2 : categoryId,
+        userId ?? 1,
+        status ?? 1,
+        featured ?? 0,
       ]
     );
 
