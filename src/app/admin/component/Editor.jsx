@@ -61,7 +61,7 @@ export default function Editor({ content, onChange }) {
         setEditPost(res.data?.data);
         console.log(res.data?.data);
         setFeatured(res.data?.data.featured);
-        editor.commands.setContent(res.data?.data?.description || "");
+        editor.commands.setContent(res.data?.data?.fulltext || "");
       }
     };
     id && getEditPost();
@@ -80,11 +80,9 @@ export default function Editor({ content, onChange }) {
     getCategory();
   }, []);
 
-  
-
-  useEffect(()=>{
-    console.log("editPost",editPost);
-  },[editPost])
+  useEffect(() => {
+    console.log("editPost", editPost);
+  }, [editPost]);
 
   if (!editor) return null;
   //gán link vào nội dung
@@ -106,31 +104,63 @@ export default function Editor({ content, onChange }) {
   };
   //gỡ link
   const removeLink = () => editor.chain().focus().unsetLink().run();
-  //đăng bài
-  const handlePublish = async () => {
+  //chuyển ảnh từ temp -> images
+  const moveImage = async () => {
     try {
       const res = await axios.post(`/api/upload/confirm`);
       if (res.status == 200) {
         const moved = res.data.files;
         // lấy HTML hiện tại
         let html = editor.getHTML();
+        const text = htmlToText(html);
+        setEditPost({...editPost, description: text})
         // thay từng đường dẫn
         moved.forEach((file) => {
           html = html.replaceAll(file.old, file.new);
         });
         // cập nhật lại Tiptap
-        editor.commands.setContent(html);
-        if (editor.commands.setContent(html)) {
+        editor.commands.setContent(html, false);
+        // Update state SAU KHI editor đã có content
+        requestAnimationFrame(() => {
           const newHTML = editor.getHTML();
-          console.log(newHTML);
-          setEditPost({ ...editPost, fulltext: newHTML})
+          setEditPost((prev) => ({
+            ...prev,
+            fulltext: newHTML,
+          }));
+        });
+
+        // Update avatar
+        const avatar = moved.find((item) => item.old === editPost.src);
+        if (avatar) {
+          setEditPost((prev) => ({
+            ...prev,
+            src: avatar.new,
+          }));
         }
       }
-      // let html = editor.getHTML();
-      //   if (editor.commands.setContent(html)) {
-      //     const newHTML = editor.getHTML();
-      //     console.log(newHTML);
-      //   }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //html => text
+  const htmlToText = (html) => {
+    if (!html) return "";
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    return doc.body.textContent || "";
+  }
+
+  //đăng bài
+  const handlePublish = async () => {
+    try {
+      await moveImage();
+      const res = await axios.post(`/api/post`, editPost);
+      if (res.status == 200) {
+        console.log(res);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -211,9 +241,10 @@ export default function Editor({ content, onChange }) {
   };
   //Ảnh đại diện bài viết
   const handleAvatarImage = async (file) => {
-    handleImageUpload(file);
-    const imageUrl = URL.createObjectURL(file);
-    setPreview(imageUrl);
+    const imageUrl = await handleImageUpload(file);
+    const urlPreview = URL.createObjectURL(file);
+    setPreview(urlPreview);
+    setEditPost({ ...editPost, src: imageUrl });
   };
 
   const renderCategoryOptions = (items, level = 0) => {
@@ -235,6 +266,19 @@ export default function Editor({ content, onChange }) {
     <div>
       <p className="font-bold text-xl my-2">Bài Viết Mới</p>
 
+      <div className="flex flex-col">
+        <label htmlFor="caption" className="text-lg text-gray-500 font-medium">
+          Tiêu đề:
+        </label>
+        <input
+          type="text"
+          name="caption"
+          className="border border-gray-400 p-2 rounded-md mb-4 text-black"
+          onChange={(e) =>
+            setEditPost({ ...editPost, caption: e.target.value })
+          }
+        />
+      </div>
       <div className="flex">
         <div className="border border-gray-500 rounded-xl p-4 space-y-3 bg-white w-2/3">
           {uploading && (
@@ -457,7 +501,7 @@ export default function Editor({ content, onChange }) {
               disabled={!category || category.length === 0}
               value={editPost?.category || ""}
               onChange={(e) =>
-                setEditPost({ ...editPost, category: Number(e.target.value)})
+                setEditPost({ ...editPost, categoryId: Number(e.target.value) })
               }
             >
               <option value="">-- Chọn danh mục --</option>
@@ -473,8 +517,8 @@ export default function Editor({ content, onChange }) {
               className="border border-gray-200 p-2 rounded-md ml-4 text-black"
               defaultValue={editPost?.status}
               onChange={(e) =>
-                    setEditPost({ ...editPost, status: Number(e.target.value)})
-                  }
+                setEditPost({ ...editPost, status: Number(e.target.value) })
+              }
             >
               <option value="1">Đã xuất bản</option>
               <option value="2">Chờ duyệt</option>
@@ -482,14 +526,13 @@ export default function Editor({ content, onChange }) {
             </select>
           </div>
           <div className="flex flex-col">
-            
             <div className="dark:bg-black/10 mt-1 ml-4 p-2">
               <label className="flex items-center text-black ">
                 <input
                   className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
                   type="checkbox"
                   onChange={(e) =>
-                    setEditPost({ ...editPost, featured: e.target.checked})
+                    setEditPost({ ...editPost, featured: e.target.checked })
                   }
                   defaultChecked={featured}
                 />

@@ -61,6 +61,7 @@ var that = (module.exports = {
       };
     } catch (error) {
       console.error(error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
   },
   deleteFile: async (fileId) => {
@@ -107,14 +108,14 @@ var that = (module.exports = {
   },
   infoDrive: async () => {
     try {
-        const about = await drive.about.get({
+      const about = await drive.about.get({
         fields: "storageQuota", // lấy thông tin dung lượng
-        });
+      });
 
-        return about.data.storageQuota;
+      return about.data.storageQuota;
     } catch (error) {
-        console.log("Get Drive Info Error:", error);
-        return null;
+      console.log("Get Drive Info Error:", error);
+      return null;
     }
-    },
+  },
 });

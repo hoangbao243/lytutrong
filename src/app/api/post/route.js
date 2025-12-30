@@ -1,3 +1,6 @@
+import { NextResponse } from "next/server";
+import { getPool } from "@/lib/db";
+
 export async function GET(req) {
   await new Promise((r) => setTimeout(r, 500)); // simulate delay
 
@@ -210,52 +213,63 @@ Sau đây là những hình ảnh trong Lễ Bế giảng năm học 2024-2025 c
   });
 }
 
-// import { getPool } from "@/lib/mssql";
+export async function POST(req) {
+  try {
+    const body = await req.json();
 
-// export async function GET(request) {
-//   try {
-//     const pool = await getPool();
+    const {
+      src,
+      caption,
+      fulltext,
+      description,
+      categoryId,
+      userId = 1,
+      status,
+      featured,
+    } = body;
 
-//     // Lấy query params
-//     const { searchParams } = new URL(request.url);
-//     const page = parseInt(searchParams.get("page") || "1");
-//     const limit = parseInt(searchParams.get("limit") || "10");
-//     const offset = (page - 1) * limit;
+    if (!caption || !fulltext) {
+      return NextResponse.json(
+        { message: "Thiếu tiêu đề hoặc nội dung" },
+        { status: 400 }
+      );
+    }
 
-//     // Lấy tổng số bài viết
-//     const countResult = await pool
-//       .request()
-//       .query("SELECT COUNT(*) AS total FROM Posts");
+    const pool = await getPool();
 
-//     const totalItems = countResult.recordset[0].total;
+    const [result] = await pool.execute(
+      `
+      INSERT INTO posts
+      (src, caption, \`fulltext\`,description ,categoryId, userId, \`status\`, featured, \`views\`, createDate, updateDate)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())
+      `,
+      [
+        src,
+        caption,
+        fulltext,
+        description ?? null,
+        categoryId == 0 ? 2 : categoryId,
+        userId ?? 1,
+        status ?? 1,
+        featured ?? 0,
+      ]
+    );
 
-//     // Lấy dữ liệu chính
-//     const result = await pool
-//       .request()
-//       .input("limit", limit)
-//       .input("offset", offset)
-//       .query(`
-//         SELECT *
-//         FROM Posts
-//         ORDER BY CreatedAt DESC
-//         OFFSET @offset ROWS
-//         FETCH NEXT @limit ROWS ONLY
-//       `);
+    // Lấy bài vừa tạo
+    const [rows] = await pool.execute(
+      `SELECT * FROM posts WHERE id = ?`,
+      [result.insertId]
+    );
 
-//     return Response.json({
-//       success: true,
-//       posts: result.recordset,
-//       pagination: {
-//         page,
-//         limit,
-//         totalItems,
-//         totalPages: Math.ceil(totalItems / limit),
-//       },
-//     });
-//   } catch (error) {
-//     return Response.json(
-//       { success: false, message: error.message },
-//       { status: 500 }
-//     );
-//   }
-// }
+    return NextResponse.json({
+      message: "Tạo bài viết thành công",
+      data: rows[0],
+    });
+  } catch (error) {
+    console.error("CREATE POST ERROR:", error);
+    return NextResponse.json(
+      { message: "Lỗi server" },
+      { status: 500 }
+    );
+  }
+}
