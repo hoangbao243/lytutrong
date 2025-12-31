@@ -1,135 +1,18 @@
 "use client";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Search from "./search/Search";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Menu() {
-  const menuItem = [
-    {
-      id: 1,
-      title: "Trang chủ",
-      link: "/",
-    },
-    {
-      id: 2,
-      title: "Nhà trường",
-      link: "/about",
-      dropdownMenu: [
-        {
-          id: 8,
-          title: "Lịch sử hình thành",
-          link: "/post/8",
-        },
-        {
-          id: 9,
-          title: "Cơ cấu tổ chức",
-          link: "/post/9",
-        },
-        {
-          id: 10,
-          title: "Thành tích",
-          link: "/post/10",
-        },
-        {
-          id: 11,
-          title: "Các hoạt động",
-          link: "/post/11",
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "Đoàn thể",
-      link: "/post/3",
-      dropdownMenu: [
-        {
-          id: 20,
-          title: "Chi bộ",
-          link: "/post/20",
-        },
-        {
-          id: 21,
-          title: "Chi đoàn",
-          link: "/post/21",
-        },
-        {
-          id: 23,
-          title: "Liên đội",
-          link: "/post/23",
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: "Hoạt động giảng dạy",
-      link: "/post/4",
-    },
-    {
-      id: 5,
-      title: "thư viện",
-      link: "/post/5",
-      dropdownMenu: [
-        {
-          id: 12,
-          title: "Danh mục sách",
-          link: "/post/12",
-          subMenu: [
-            {
-              id: 16,
-              title: "Sách thiếu nhi",
-              link: "/post/16",
-            },
-            {
-              id: 17,
-              title: "Sách tham khảo",
-              link: "/post/17",
-            },
-            {
-              id: 18,
-              title: "Sách giáo viên",
-              link: "/post/18",
-            },
-            {
-              id: 19,
-              title: "Sách dùng chung",
-              link: "/post/19",
-            },
-          ],
-        },
-        {
-          id: 13,
-          title: "Giới thiệu sách",
-          link: "/post/13",
-        },
-        {
-          id: 14,
-          title: "Hoạt động thư viện",
-          link: "/post/14",
-        },
-        {
-          id: 15,
-          title: "Thư viện ảnh",
-          link: "/post/15",
-        },
-      ],
-    },
-    {
-      id: 6,
-      title: "Công khai",
-      link: "/post/6",
-    },
-    {
-      id: 7,
-      title: "Thực đơn",
-      link: "/post/7",
-    },
-  ];
   const { id } = useParams();
   const pathName = usePathname();
   const [openMobile, setOpenMobile] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [openSubDropdown, setOpenSubDropdown] = useState(null);
+  const [menu,setMenu] = useState([])
 
   const checkActive = (item) => {
     if (pathName === item.link) return true;
@@ -139,6 +22,21 @@ export default function Menu() {
       return true;
     return false;
   };
+
+  useEffect(()=>{
+    const getMenuItem = async () =>{
+      try {
+        const res = await axios.get(`/api/category`)
+      console.log(res.data);
+      if (res.status == 200) {
+        setMenu(res.data)
+      }
+      } catch (error) {
+        toast.error(error)
+      }
+    }
+    getMenuItem()
+  },[])
   return (
     <header className="w-full sticky top-0 z-50 max-w-7xl shadow-lg md:px-2">
       <div className="max-w-7xl bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-16">
@@ -174,7 +72,7 @@ export default function Menu() {
           `}
         >
           <ul className="flex flex-col md:flex-row xl:gap-2 w-full md:h-full">
-            {menuItem.map((item) => (
+            {menu && menu?.map((item) => (
               <li
                 key={item.id}
                 className={`relative group md:flex md:items-center  ${
@@ -184,22 +82,22 @@ export default function Menu() {
                 }`}
               >
                 <div
-                  className="flex md:flex-row justify-between hover:text-black md:h-full items-center md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 text-white hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
+                  className="flex md:flex-row justify-between hover:text-black md:h-full items-center text-white md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
                   onClick={() =>
                     setOpenDropdown(openDropdown === item.id ? null : item.id)
                   }
                 >
                   <Link
                     href={item?.id == 1 ? `/` : `/post/${item?.id}`}
-                    className={`uppercase md:text-[10px] lg:text-sm font-bold ${
+                    className={`flex uppercase w-full h-full items-center  md:text-[10px] lg:text-sm font-bold ${
                       checkActive(item) ? "text-red-600" : ""
                     }`}
                   >
-                    {item.title}
+                    {item.name}
                   </Link>
 
                   {/* Arrow SVG (thay cho lucide) */}
-                  {item.dropdownMenu && (
+                  {item.children[0] && (
                     <span className=" lg:ml-1 xl:ml-2 mr-4 md:mr-0 text-white">
                       <svg
                         className="w-2.5 h-2.5 ms-1 "
@@ -221,16 +119,16 @@ export default function Menu() {
                 </div>
 
                 {/* Dropdown Desktop */}
-                {item.dropdownMenu && (
+                {item.children[0] && (
                   <ul className="hidden md:absolute top-full md:group-hover:block bg-white shadow-lg rounded-md w-56 text-gray-700">
-                    {item.dropdownMenu.map((sub) => (
+                    {item.children?.map((sub) => (
                       <li key={sub.id} className="relative group/sub ">
                         <Link
                           href={`/post/${sub?.id}`}
                           className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
                         >
-                          {sub.title}
-                          {sub.subMenu && (
+                          {sub.name}
+                          {sub.children[0] && (
                             <span className="ml-2 text-black">
                               <svg
                                 className="w-2.5 h-2.5 "
@@ -252,15 +150,15 @@ export default function Menu() {
                         </Link>
 
                         {/* Submenu Desktop */}
-                        {sub.subMenu && (
+                        {sub.children[0] && (
                           <ul className="hidden absolute right-full xl:left-full top-4 bg-white shadow-lg rounded-md w-56 group-hover/sub:block">
-                            {sub.subMenu.map((s) => (
+                            {sub.children?.map((s) => (
                               <li key={s.id}>
                                 <Link
                                   href={`/post/${s.id}`}
                                   className="block px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
                                 >
-                                  {s.title}
+                                  {s.name}
                                 </Link>
                               </li>
                             ))}
@@ -272,14 +170,14 @@ export default function Menu() {
                 )}
 
                 {/* Dropdown Mobile */}
-                {item.dropdownMenu && (
+                {item.children[0] && (
                   <ul
                     className={`
                       md:hidden bg-amber-300 transition-all overflow-hidden duration-300
                       ${openDropdown === item.id ? "max-h-96" : "max-h-0"}
                     `}
                   >
-                    {item.dropdownMenu.map((sub) => (
+                    {item.children.map((sub) => (
                       <li key={sub.id} className="uppercase font-bold text-sm">
                         <div
                           className="flex justify-between items-center pl-10 py-2"
@@ -293,9 +191,9 @@ export default function Menu() {
                             href={`/post/${sub?.id}`}
                             className="  text-white"
                           >
-                            {sub.title}
+                            {sub.name}
                           </Link>
-                          {sub.subMenu && (
+                          {sub.children[0] && (
                             <span className="md:hidden ml-2 text-white">
                               <svg
                                 className="w-2.5 h-2.5 mr-4 "
@@ -317,20 +215,20 @@ export default function Menu() {
                         </div>
 
                         {/* Submenu mobile */}
-                        {sub.subMenu && (
+                        {sub.children && (
                           <ul
                             className={`
                       md:hidden bg-amber-300 transition-all overflow-hidden duration-300
                       ${openSubDropdown === sub.id ? "max-h-96" : "max-h-0"}
                     `}
                           >
-                            {sub.subMenu.map((s) => (
+                            {sub.children.map((s) => (
                               <li key={s.id} className="pl-10">
                                 <Link
                                   href={`/post/${s?.id}`}
                                   className="block px-10 py-2 text-white"
                                 >
-                                  {s.title}
+                                  {s.name}
                                 </Link>
                               </li>
                             ))}

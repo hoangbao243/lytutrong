@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
-import { TextStyle } from "@tiptap/extension-text-style";
+import { TextStyle, FontSize } from "@tiptap/extension-text-style";
 import { Highlight } from "@tiptap/extension-highlight";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Image } from "@tiptap/extension-image";
@@ -16,6 +16,7 @@ import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function Editor({ content, onChange }) {
+  const fontSizes = Array.from({ length: 33 }, (_, i) => i + 8);
   const [uploading, setUploading] = useState(false);
   const [editPost, setEditPost] = useState();
   const [preview, setPreview] = useState(null);
@@ -32,6 +33,7 @@ export default function Editor({ content, onChange }) {
       }),
       Highlight,
       TextStyle.configure({}),
+      FontSize,
       Color.configure({ types: ["textStyle"] }),
       Image,
       Iframe,
@@ -111,7 +113,8 @@ export default function Editor({ content, onChange }) {
     if (!post) return "Bạn chưa viết bài!";
     if (!post.categoryId) return "Chưa chọn danh mục!";
     if (!post.src) return "Chưa có ảnh đại diện!";
-    if (!post.caption || post.caption == "") return "Hãy nhập tiêu đề cho bài viết!";
+    if (!post.caption || post.caption == "")
+      return "Hãy nhập tiêu đề cho bài viết!";
     if (
       !post.fulltext ||
       editPost.fulltext.replace(/<[^>]+>/g, "").trim() === ""
@@ -173,8 +176,7 @@ export default function Editor({ content, onChange }) {
         toast.error(error);
         return;
       }
-      
-      
+
       if (!updatedPost) return;
       if (!id) {
         const res = await axios.post(`/api/post`, updatedPost);
@@ -187,7 +189,6 @@ export default function Editor({ content, onChange }) {
         if (res.status == 200) {
           toast.success(res?.data?.message);
           console.log("ok");
-          
         }
       }
       setEditPost(updatedPost);
@@ -319,6 +320,20 @@ export default function Editor({ content, onChange }) {
           )}
           {/* Toolbar */}
           <div className="flex flex-wrap gap-2 border-b pb-2">
+            {/* Cỡ chữ */}
+            <select
+              onChange={(e) =>
+                editor.chain().focus().setFontSize(`${e.target.value}px`).run()
+              }
+              defaultValue=""
+              className="border px-2 py-1 rounded"
+            >
+              {fontSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
             {/* Undo / Redo */}
             <button
               onClick={() => editor.chain().focus().undo().run()}

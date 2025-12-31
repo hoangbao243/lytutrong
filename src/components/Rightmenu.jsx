@@ -87,7 +87,7 @@ export default function Rightmenu() {
           announcementData={data?.filter((item) => item.categoryId == 4)}
           title={`Các Văn Bản`}
         ></Announcement>
-        <Fanpage></Fanpage>
+        {/* <Fanpage></Fanpage> */}
       </div>
     </div>
   );
