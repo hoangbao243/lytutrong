@@ -10,7 +10,12 @@ export async function GET(req) {
       src: "/images/AnhTinTuc/2025/9/PCCC1.jpg",
       caption:
         "TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026",
-      fulltext: "fulltext",
+      fulltext: `Ngày 22/09/2025, tại Trường Tiểu học Lý Tự Trọng đã diễn ra buổi tập huấn phòng cháy chữa cháy và cứu nạn cứu hộ năm học 2025-2026.
+Mở đầu chương trình, các em học sinh đã có dịp giao lưu, trò chuyện cùng Thiếu tá Trần Phước Hùng – Phó đội trưởng Đội PCCC & CNCH khu vực 1. Đồng chí đã chia sẻ những kiến thức và kỹ năng quan trọng về cách nhận biết nguy cơ cháy nổ, các biện pháp phòng tránh cũng như những bước cần làm để đảm bảo an toàn khi sự cố xảy ra.
+Sau phần chia sẻ, là các em học sinh và quý thầy cô bước vào phần diễn tập thực tế. Khi hồi chuông báo cháy vang lên, toàn bộ học sinh đã nhanh chóng xếp hàng, di chuyển trật tự theo sự hướng dẫn của các thầy cô giáo xuống khu vực tập kết an toàn. Sự nghiêm túc, kỷ luật của các em cho thấy tinh thần cảnh giác và ý thức trách nhiệm cao trong việc bảo vệ bản thân.
+Ngay sau đó, lực lượng PCCC đã triển khai phương án dập lửa: xe cứu hỏa hú còi tiến thẳng vào sân trường, các chiến sĩ nhanh chóng thao tác, kéo vòi rồng phun nước để “dập tắt đám cháy giả định”. Đồng thời, tình huống cứu nạn cứu hộ cũng được mô phỏng, giúp học sinh tận mắt chứng kiến cách lực lượng chức năng phối hợp khẩn trương, chính xác để bảo đảm an toàn cho mọi người.
+Buổi tập huấn đã để lại nhiều ấn tượng sâu sắc, giúp học sinh không chỉ được trang bị kiến thức mà còn rèn luyện kỹ năng thực tế, tạo sự tự tin, bình tĩnh khi đối mặt với những tình huống nguy hiểm.
+Một ngày học bổ ích, thiết thực và đầy trải nghiệm!`,
       description: `Ngày 22/09/2025, tại Trường Tiểu học Lý Tự Trọng đã diễn ra buổi tập huấn phòng cháy chữa cháy và cứu nạn cứu hộ năm học 2025-2026.
 Mở đầu chương trình, các em học sinh đã có dịp giao lưu, trò chuyện cùng Thiếu tá Trần Phước Hùng – Phó đội trưởng Đội PCCC & CNCH khu vực 1. Đồng chí đã chia sẻ những kiến thức và kỹ năng quan trọng về cách nhận biết nguy cơ cháy nổ, các biện pháp phòng tránh cũng như những bước cần làm để đảm bảo an toàn khi sự cố xảy ra.
 Sau phần chia sẻ, là các em học sinh và quý thầy cô bước vào phần diễn tập thực tế. Khi hồi chuông báo cháy vang lên, toàn bộ học sinh đã nhanh chóng xếp hàng, di chuyển trật tự theo sự hướng dẫn của các thầy cô giáo xuống khu vực tập kết an toàn. Sự nghiêm túc, kỷ luật của các em cho thấy tinh thần cảnh giác và ý thức trách nhiệm cao trong việc bảo vệ bản thân.

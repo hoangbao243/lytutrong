@@ -13,13 +13,13 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { Color } from "@tiptap/extension-text-style";
 import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Editor({ content, onChange }) {
   const [uploading, setUploading] = useState(false);
   const [editPost, setEditPost] = useState();
   const [preview, setPreview] = useState(null);
   const [category, setCategory] = useState([]);
-  const [featured, setFeatured] = useState(false);
   const { id } = useParams();
   const navigate = useRouter();
   const editor = useEditor({
@@ -55,16 +55,17 @@ export default function Editor({ content, onChange }) {
 
   useEffect(() => {
     if (!editor) return; // editor chưa khởi tạo
+    const content = editor.getHTML();
     const getEditPost = async () => {
       const res = await axios.get(`/api/post/${id}`);
       if (res.status === 200) {
         setEditPost(res.data?.data);
         console.log(res.data?.data);
-        setFeatured(res.data?.data.featured);
+        setPreview(res.data?.data?.src);
         editor.commands.setContent(res.data?.data?.fulltext || "");
       }
     };
-    id && getEditPost();
+    id ? getEditPost() : setEditPost({ ...editPost, fulltext: content });
   }, [id, editor]);
 
   useEffect(() => {
@@ -76,6 +77,7 @@ export default function Editor({ content, onChange }) {
         console.log(res.status);
       }
     };
+
     console.log(id);
     getCategory();
   }, []);
@@ -104,6 +106,19 @@ export default function Editor({ content, onChange }) {
   };
   //gỡ link
   const removeLink = () => editor.chain().focus().unsetLink().run();
+  //validate post
+  const validatePost = (post) => {
+    if (!post) return "Bạn chưa viết bài!";
+    if (!post.categoryId) return "Chưa chọn danh mục!";
+    if (!post.src) return "Chưa có ảnh đại diện!";
+    if (!post.caption || post.caption == "") return "Hãy nhập tiêu đề cho bài viết!";
+    if (
+      !post.fulltext ||
+      editPost.fulltext.replace(/<[^>]+>/g, "").trim() === ""
+    )
+      return "Nội dung không được để trống";
+    return null;
+  };
   //chuyển ảnh từ temp -> images
   const moveImage = async () => {
     try {
@@ -113,7 +128,7 @@ export default function Editor({ content, onChange }) {
         // lấy HTML hiện tại
         let html = editor.getHTML();
         const text = htmlToText(html);
-        setEditPost({...editPost, description: text})
+        setEditPost({ ...editPost, description: text });
         // thay từng đường dẫn
         moved.forEach((file) => {
           html = html.replaceAll(file.old, file.new);
@@ -121,22 +136,17 @@ export default function Editor({ content, onChange }) {
         // cập nhật lại Tiptap
         editor.commands.setContent(html, false);
         // Update state SAU KHI editor đã có content
-        requestAnimationFrame(() => {
-          const newHTML = editor.getHTML();
-          setEditPost((prev) => ({
-            ...prev,
-            fulltext: newHTML,
-          }));
-        });
-
+        const newHTML = editor.getHTML();
         // Update avatar
-        const avatar = moved.find((item) => item.old === editPost.src);
-        if (avatar) {
-          setEditPost((prev) => ({
-            ...prev,
-            src: avatar.new,
-          }));
-        }
+        const avatar = moved.find((item) => item.old == editPost.src);
+        return {
+          ...editPost,
+          description: text,
+          fulltext: newHTML,
+          src: avatar ? avatar.new : editPost.src,
+        };
+      } else {
+        return null;
       }
     } catch (error) {
       console.log(error);
@@ -151,18 +161,39 @@ export default function Editor({ content, onChange }) {
     const doc = parser.parseFromString(html, "text/html");
 
     return doc.body.textContent || "";
-  }
+  };
 
   //đăng bài
   const handlePublish = async () => {
     try {
-      await moveImage();
-      const res = await axios.post(`/api/post`, editPost);
-      if (res.status == 200) {
-        console.log(res);
+      const updatedPost = await moveImage();
+      console.log("updatedPost", updatedPost);
+      const error = validatePost(updatedPost);
+      if (error) {
+        toast.error(error);
+        return;
       }
+      
+      
+      if (!updatedPost) return;
+      if (!id) {
+        const res = await axios.post(`/api/post`, updatedPost);
+        if (res.status == 200) {
+          console.log(res);
+          toast.success("Đăng bài thành công");
+        }
+      } else {
+        const res = await axios.put(`/api/post/${id}`, updatedPost);
+        if (res.status == 200) {
+          toast.success(res?.data?.message);
+          console.log("ok");
+          
+        }
+      }
+      setEditPost(updatedPost);
     } catch (error) {
       console.log(error);
+      toast.error("Có lỗi xảy ra", error);
     } finally {
       // navigate.push(`/admin/posts`);
     }
@@ -172,7 +203,6 @@ export default function Editor({ content, onChange }) {
     try {
       const res = await axios.post(`/api/upload/cleanup`);
       if (res.status == 200) {
-        console.log("ok");
         navigate.push(`/admin/posts`);
       } else {
         console.log(res.status);
@@ -265,7 +295,7 @@ export default function Editor({ content, onChange }) {
   return (
     <div>
       <p className="font-bold text-xl my-2">Bài Viết Mới</p>
-
+      <Toaster position="top-right" reverseOrder={true} />
       <div className="flex flex-col">
         <label htmlFor="caption" className="text-lg text-gray-500 font-medium">
           Tiêu đề:
@@ -274,6 +304,7 @@ export default function Editor({ content, onChange }) {
           type="text"
           name="caption"
           className="border border-gray-400 p-2 rounded-md mb-4 text-black"
+          defaultValue={editPost?.caption}
           onChange={(e) =>
             setEditPost({ ...editPost, caption: e.target.value })
           }
@@ -487,7 +518,7 @@ export default function Editor({ content, onChange }) {
           {/* Content */}
           <EditorContent
             editor={editor}
-            className="max-h-350 min-h-150 overflow-auto p-4 bg-gray-100"
+            className="overflow-auto max-h-140 min-h-125 p-4 bg-gray-100"
           />
         </div>
         <div className="flex flex-col w-1/3 px-4 text-sm text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -499,7 +530,7 @@ export default function Editor({ content, onChange }) {
               name="category"
               className="border border-gray-200 p-2 rounded-md ml-4 text-black"
               disabled={!category || category.length === 0}
-              value={editPost?.category || ""}
+              value={editPost?.categoryId}
               onChange={(e) =>
                 setEditPost({ ...editPost, categoryId: Number(e.target.value) })
               }
@@ -515,7 +546,7 @@ export default function Editor({ content, onChange }) {
             <select
               name="category"
               className="border border-gray-200 p-2 rounded-md ml-4 text-black"
-              defaultValue={editPost?.status}
+              value={editPost?.status}
               onChange={(e) =>
                 setEditPost({ ...editPost, status: Number(e.target.value) })
               }
@@ -531,10 +562,10 @@ export default function Editor({ content, onChange }) {
                 <input
                   className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
                   type="checkbox"
+                  checked={editPost?.featured ?? false}
                   onChange={(e) =>
                     setEditPost({ ...editPost, featured: e.target.checked })
                   }
-                  defaultChecked={featured}
                 />
                 <p>Dán bài viết lên trang nhất</p>
               </label>
@@ -563,10 +594,16 @@ export default function Editor({ content, onChange }) {
         </div>
       </div>
       <div className="flex gap-2 mt-3">
-        <button onClick={handlePublish} className="bg-green-300 p-2 rounded">
-          Đăng bài
+        <button
+          onClick={handlePublish}
+          className="bg-green-300 p-2 rounded cursor-pointer"
+        >
+          {id ? "Cập nhật" : "Đăng bài"}
         </button>
-        <button onClick={handleCancel} className="bg-red-300 p-2 rounded">
+        <button
+          onClick={handleCancel}
+          className="bg-red-300 p-2 rounded cursor-pointer"
+        >
           Hủy
         </button>
       </div>
