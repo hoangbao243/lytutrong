@@ -10,13 +10,20 @@ function buildTree(categories, parentId = null) {
     }));
 }
 
-export async function GET() {
+export async function GET(req) {
   const pool = getPool();
   try {
+    const { searchParams } = new URL(req.url);
+    const flat = searchParams.get("flat");
     const [rows] = await pool.query(
       "SELECT id, name, parent FROM categories"
     );
 
+    //lấy mảng phẳng
+    if (flat) {
+      return NextResponse.json(rows);
+    }
+    //lấy mảng phân cấp
     const tree = buildTree(rows);
 
     return NextResponse.json(tree);
