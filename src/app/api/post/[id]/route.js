@@ -4,6 +4,7 @@ import { getPool } from "@/lib/db";
 export async function GET(request, { params }) {
   try {
     const { id } = await params;
+    const pool = getPool();
 
     if (!id) {
       return NextResponse.json(
@@ -11,8 +12,33 @@ export async function GET(request, { params }) {
         { status: 400 }
       );
     }
+    if (id == 7 ) {
+      const [rows] = await pool.execute(
+        `
+      SELECT *
+      FROM posts
+      WHERE categoryId = ?
+        AND status = 1
+      ORDER BY updateDate DESC
+      LIMIT 1
+      `,
+        [id]
+      );
+      const post = rows[0];
+      if (!post) {
+        return NextResponse.json(
+          { message: "News not found" },
+          { status: 404 }
+        );
+      }
 
-    const pool = getPool();
+      return NextResponse.json({
+        ok: true,
+        data: post,
+      });
+    }
+
+    
 
     const [rows] = await pool.execute(
       `
@@ -31,6 +57,7 @@ export async function GET(request, { params }) {
           updateDate
         FROM posts
         WHERE id = ?
+          AND status = 1
         LIMIT 1;
       `,
       [id]
@@ -39,10 +66,7 @@ export async function GET(request, { params }) {
     const post = rows[0];
 
     if (!post) {
-      return NextResponse.json(
-        { message: "News not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "News not found" }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -51,10 +75,7 @@ export async function GET(request, { params }) {
     });
   } catch (error) {
     console.error("Get post error:", error);
-    return NextResponse.json(
-      { message: "Lỗi server" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Lỗi server" }, { status: 500 });
   }
 }
 
@@ -88,10 +109,7 @@ export async function DELETE(request, { params }) {
     }
 
     // 🔹 Xóa bài viết
-    await pool.execute(
-      `DELETE FROM posts WHERE id = ?`,
-      [id]
-    );
+    await pool.execute(`DELETE FROM posts WHERE id = ?`, [id]);
 
     return NextResponse.json({
       message: "Xóa bài viết thành công",
@@ -99,10 +117,7 @@ export async function DELETE(request, { params }) {
     });
   } catch (error) {
     console.error("Delete post error:", error);
-    return NextResponse.json(
-      { message: "Lỗi server" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Lỗi server" }, { status: 500 });
   }
 }
 
@@ -139,10 +154,9 @@ export async function PUT(req, { params }) {
     const pool = await getPool();
 
     // 1️⃣ Check bài viết tồn tại
-    const [exists] = await pool.execute(
-      `SELECT id FROM posts WHERE id = ?`,
-      [id]
-    );
+    const [exists] = await pool.execute(`SELECT id FROM posts WHERE id = ?`, [
+      id,
+    ]);
 
     if (exists.length === 0) {
       return NextResponse.json(
@@ -180,10 +194,7 @@ export async function PUT(req, { params }) {
     );
 
     // 3️⃣ Lấy lại bài vừa update
-    const [rows] = await pool.execute(
-      `SELECT * FROM posts WHERE id = ?`,
-      [id]
-    );
+    const [rows] = await pool.execute(`SELECT * FROM posts WHERE id = ?`, [id]);
 
     return NextResponse.json({
       message: "Cập nhật bài viết thành công",
@@ -191,9 +202,6 @@ export async function PUT(req, { params }) {
     });
   } catch (error) {
     console.error("UPDATE POST ERROR:", error);
-    return NextResponse.json(
-      { message: "Lỗi server" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Lỗi server" }, { status: 500 });
   }
 }
