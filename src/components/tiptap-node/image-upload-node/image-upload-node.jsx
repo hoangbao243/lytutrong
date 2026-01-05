@@ -5,6 +5,7 @@ import { Button } from "@/components/tiptap-ui-primitive/button"
 import { CloseIcon } from "@/components/tiptap-icons/close-icon"
 import "@/components/tiptap-node/image-upload-node/image-upload-node.scss"
 import { focusNextNode, isValidPosition } from "@/lib/tiptap-utils"
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Custom hook for managing multiple file uploads with progress tracking and cancellation
@@ -20,7 +21,7 @@ function useFileUpload(options) {
     }
 
     const abortController = new AbortController()
-    const fileId = crypto.randomUUID()
+    const fileId = uuidv4();
 
     const newFileItem = {
       id: fileId,

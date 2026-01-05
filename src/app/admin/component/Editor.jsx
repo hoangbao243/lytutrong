@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { TextStyle, FontSize } from "@tiptap/extension-text-style";
@@ -14,6 +14,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Color } from "@tiptap/extension-text-style";
 import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 import toast, { Toaster } from "react-hot-toast";
+import youtube from "@tiptap/extension-youtube";
 
 export default function Editor({ content, onChange }) {
   const fontSizes = Array.from({ length: 33 }, (_, i) => i + 8);
@@ -21,6 +22,8 @@ export default function Editor({ content, onChange }) {
   const [editPost, setEditPost] = useState();
   const [preview, setPreview] = useState(null);
   const [category, setCategory] = useState([]);
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const { id } = useParams();
   const navigate = useRouter();
   const editor = useEditor({
@@ -46,6 +49,14 @@ export default function Editor({ content, onChange }) {
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
+      }),
+      youtube.configure({
+        controls: true,
+        nocookie: true,
+        modestBranding: true,
+        HTMLAttributes: {
+          class: "youtube-embed",
+        },
       }),
     ],
     content: content || "<p>Nhập nội dung...</p>",
@@ -79,9 +90,18 @@ export default function Editor({ content, onChange }) {
         console.log(res.status);
       }
     };
-
-    console.log(id);
     getCategory();
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -112,7 +132,6 @@ export default function Editor({ content, onChange }) {
   const validatePost = (post) => {
     if (!post) return "Bạn chưa viết bài!";
     if (!post.categoryId) return "Chưa chọn danh mục!";
-    if (!post.src) return "Chưa có ảnh đại diện!";
     if (!post.caption || post.caption == "")
       return "Hãy nhập tiêu đề cho bài viết!";
     if (
@@ -171,11 +190,11 @@ export default function Editor({ content, onChange }) {
     try {
       const updatedPost = await moveImage();
       console.log("updatedPost", updatedPost);
-      const error = validatePost(updatedPost);
-      if (error) {
-        toast.error(error);
-        return;
-      }
+      // const error = validatePost(updatedPost);
+      // if (error) {
+      //   toast.error(error);
+      //   return;
+      // }
 
       if (!updatedPost) return;
       if (!id) {
@@ -292,7 +311,6 @@ export default function Editor({ content, onChange }) {
       </React.Fragment>
     ));
   };
-
   return (
     <div>
       <p className="font-bold text-xl my-2">Bài Viết Mới</p>
@@ -320,20 +338,6 @@ export default function Editor({ content, onChange }) {
           )}
           {/* Toolbar */}
           <div className="flex flex-wrap gap-2 border-b pb-2">
-            {/* Cỡ chữ */}
-            <select
-              onChange={(e) =>
-                editor.chain().focus().setFontSize(`${e.target.value}px`).run()
-              }
-              defaultValue=""
-              className="border px-2 py-1 rounded"
-            >
-              {fontSizes.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
             {/* Undo / Redo */}
             <button
               onClick={() => editor.chain().focus().undo().run()}
@@ -358,6 +362,7 @@ export default function Editor({ content, onChange }) {
             <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
 
             {/* Text styles */}
+
             <button
               onClick={() => editor.chain().focus().toggleBold().run()}
               className={`font-bold text-xl text-gray-400 cursor-pointer`}
@@ -386,7 +391,6 @@ export default function Editor({ content, onChange }) {
             {/* Highlight */}
             <button
               onClick={() => editor.chain().focus().toggleHighlight().run()}
-              className={``}
             >
               <img
                 src="/images/icon/highlight.png"
@@ -399,18 +403,49 @@ export default function Editor({ content, onChange }) {
             <input
               type="color"
               onInput={handleColor}
-              value={editor?.getAttributes("textStyle")?.color}
+              value={editor?.getAttributes("textStyle")?.color || "#000000"}
               className="w-7 h-7 mt-1.5"
             />
 
-            {/* Heading */}
             <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+            {/* Cỡ chữ */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setOpen(!open)}
+                className="flex w-25 h-11 border justify-center items-center gap-2 border-gray-400 py-1 rounded"
+              >
+                <p className="text-[18px] text-gray-500">Cỡ chữ</p>
+                <img
+                  src="/images/icon/arrow-down-2.png"
+                  className="w-2 h-2"
+                  alt="down-arrow"
+                />
+              </button>
+
+              {open && (
+                <div className="absolute z-50 w-full border bg-white rounded shadow max-h-36 overflow-y-auto">
+                  {fontSizes.map((size) => (
+                    <div
+                      key={size}
+                      onClick={() => {
+                        editor.chain().focus().setFontSize(`${size}px`).run();
+                        setOpen(false);
+                      }}
+                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {size}px
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Heading */}
             <select
               onChange={(e) => {
                 const level = Number(e.target.value);
                 editor.chain().focus().setHeading({ level }).run();
               }}
-              className="border p-1 rounded border-gray-400 text-gray-500 text-xl"
+              className="border p-1 rounded border-gray-400 text-gray-500 text-xl "
             >
               <option value="0" className="text-gray-400">
                 Paragraph
@@ -528,6 +563,26 @@ export default function Editor({ content, onChange }) {
                 className="hover:scale-110 transition w-7 h-7"
               />
             </label>
+            <p className="w-0.5 h-10 bg-gray-300 mx-2"></p>
+
+            <button
+              onClick={() => {
+                const url = prompt("Dán link YouTube");
+                if (!url) return;
+
+                editor
+                  .chain()
+                  .focus()
+                  .setYoutubeVideo({
+                    src: url,
+                    width: 640,
+                    height: 360,
+                  })
+                  .run();
+              }}
+            >
+              🎬 YouTube
+            </button>
           </div>
 
           {/* Content */}

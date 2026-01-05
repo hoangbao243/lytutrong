@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import AnotherPosts from "@/components/list-another-posts/AnotherPosts";
 
 export default function Postpage() {
   const [post, setPost] = useState();
@@ -17,6 +18,7 @@ export default function Postpage() {
   const [breadcrumb, setBreadcrumb] = useState(null);
   const [title, setTitle] = useState("");
   const [postTime, setPostTime] = useState("");
+  const [listPosts,setListPosts] = useState([])
 
   const getDate = (time) => {
     const date = new Date(time);
@@ -47,6 +49,12 @@ export default function Postpage() {
                 item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
             );
           setTitle(preTitle.join(" "));
+            
+          //lấy các bài viết khác
+          const res1 = await axios.get(`/api/post/category/${response.data.data.categoryId}`);
+          if (res1.status == 200) {
+            setListPosts(res1.data.data)
+          }
         }
       } catch (error) {
         toast.error("Lỗi bài viết!");
@@ -60,18 +68,11 @@ export default function Postpage() {
       const List = [];
       try {
         const res = await axios.get(`/api/category?flat=1`);
-        // console.log("res...........", res.data);
-
         let current = res.data.find((c) => c.id == post.categoryId);
-        // console.log("current................",current);
-
         while (current) {
           List.unshift(current);
           current = res.data.find((c) => c.id == current.parent);
         }
-        // console.log("current................",current);
-        // console.log("current................",List);
-
         setBreadcrumb(List);
       } catch (error) {
         console.log("Error:", error);
@@ -106,7 +107,7 @@ export default function Postpage() {
                 </span>
               ))}
             </div>
-            <div className="flex flex-col font-bold text-3xl px-4 my-2">
+            <div className="flex flex-col font-bold text-3xl px-4 my-2 mt-4">
               {post && title}
               <span className="text-sm my-1 font-normal text-gray-400">
                 {post && postTime}
@@ -117,6 +118,10 @@ export default function Postpage() {
                 __html: (post && post?.fulltext) || "",
               }}
             />
+            <div className="mt-4 text-xl">
+              <h3>Các bài khác: </h3>
+              {listPosts && <AnotherPosts data={listPosts}></AnotherPosts>}
+            </div>
           </div>
           <div className="flex flex-col items-center lg:w-1/4 w-full pl-2 py-2">
             <Rightmenu></Rightmenu>

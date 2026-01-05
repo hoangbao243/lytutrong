@@ -249,7 +249,7 @@ export async function POST(req) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())
       `,
       [
-        src,
+        src ?? null,
         caption,
         fulltext,
         description ?? null,

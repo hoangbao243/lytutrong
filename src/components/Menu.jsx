@@ -12,7 +12,7 @@ export default function Menu() {
   const [openMobile, setOpenMobile] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [openSubDropdown, setOpenSubDropdown] = useState(null);
-  const [menu,setMenu] = useState([])
+  const [menu, setMenu] = useState([]);
 
   const checkActive = (item) => {
     if (pathName === item.link) return true;
@@ -23,20 +23,25 @@ export default function Menu() {
     return false;
   };
 
-  useEffect(()=>{
-    const getMenuItem = async () =>{
+  useEffect(() => {
+    const getMenuItem = async () => {
+      const menu = 1;
       try {
-        const res = await axios.get(`/api/category`)
-      console.log(res.data);
-      if (res.status == 200) {
-        setMenu(res.data)
-      }
+        const res = await axios.get(`/api/category`, {
+          params: {
+            menu,
+          },
+        });
+        console.log(res.data);
+        if (res.status == 200) {
+          setMenu(res.data);
+        }
       } catch (error) {
-        toast.error(error)
+        toast.error(error);
       }
-    }
-    getMenuItem()
-  },[])
+    };
+    getMenuItem();
+  }, []);
   return (
     <header className="w-full sticky top-0 z-50 max-w-7xl shadow-lg md:px-2">
       <div className="max-w-7xl bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-16">
@@ -72,174 +77,178 @@ export default function Menu() {
           `}
         >
           <ul className="flex flex-col md:flex-row xl:gap-2 w-full md:h-full">
-            {menu && menu?.map((item) => (
-              <li
-                key={item.id}
-                className={`relative group md:flex md:items-center  ${
-                  checkActive(item)
-                    ? "text-red-600 bg-[#FFB300] md:border-b-2 md:border-black"
-                    : ""
-                }`}
-              >
-                <div
-                  className="flex md:flex-row justify-between hover:text-black md:h-full items-center text-white md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
-                  onClick={() =>
-                    setOpenDropdown(openDropdown === item.id ? null : item.id)
-                  }
+            {menu &&
+              menu?.map((item) => (
+                <li
+                  key={item.id}
+                  className={`relative group md:flex md:items-center  ${
+                    checkActive(item)
+                      ? "text-red-600 bg-[#FFB300] md:border-b-2 md:border-black"
+                      : ""
+                  }`}
                 >
-                  <Link
-                    href={item?.id == 1 ? `/` : `/post/${item?.id}`}
-                    className={`flex uppercase w-full h-full items-center  md:text-[10px] lg:text-sm font-bold ${
-                      checkActive(item) ? "text-red-600" : ""
-                    }`}
+                  <div
+                    className="flex md:flex-row justify-between hover:text-black md:h-full items-center text-white md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
+                    onClick={() =>
+                      setOpenDropdown(openDropdown === item.id ? null : item.id)
+                    }
                   >
-                    {item.name}
-                  </Link>
+                    <Link
+                      href={item?.id == 1 ? `/` : `/post/${item?.id}`}
+                      className={`flex uppercase w-full h-full items-center  md:text-[10px] lg:text-sm font-bold ${
+                        checkActive(item) ? "text-red-600" : ""
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
 
-                  {/* Arrow SVG (thay cho lucide) */}
-                  {item.children[0] && (
-                    <span className=" lg:ml-1 xl:ml-2 mr-4 md:mr-0 text-white">
-                      <svg
-                        className="w-2.5 h-2.5 ms-1 "
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 10 6"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="m1 1 4 4 4-4"
-                        />
-                      </svg>
-                    </span>
-                  )}
-                </div>
-
-                {/* Dropdown Desktop */}
-                {item.children[0] && (
-                  <ul className="hidden md:absolute top-full md:group-hover:block bg-white shadow-lg rounded-md w-56 text-gray-700">
-                    {item.children?.map((sub) => (
-                      <li key={sub.id} className="relative group/sub ">
-                        <Link
-                          href={`/post/${sub?.id}`}
-                          className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
+                    {/* Arrow SVG (thay cho lucide) */}
+                    {item.children[0] && (
+                      <span className=" lg:ml-1 xl:ml-2 mr-4 md:mr-0 text-white">
+                        <svg
+                          className="w-2.5 h-2.5 ms-1 "
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 10 6"
                         >
-                          {sub.name}
-                          {sub.children[0] && (
-                            <span className="ml-2 text-black">
-                              <svg
-                                className="w-2.5 h-2.5 "
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 10 6"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="m1 1 4 4 4-4"
-                                />
-                              </svg>
-                            </span>
-                          )}
-                        </Link>
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="m1 1 4 4 4-4"
+                          />
+                        </svg>
+                      </span>
+                    )}
+                  </div>
 
-                        {/* Submenu Desktop */}
-                        {sub.children[0] && (
-                          <ul className="hidden absolute right-full xl:left-full top-4 bg-white shadow-lg rounded-md w-56 group-hover/sub:block">
-                            {sub.children?.map((s) => (
-                              <li key={s.id}>
-                                <Link
-                                  href={`/post/${s.id}`}
-                                  className="block px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
+                  {/* Dropdown Desktop */}
+                  {item.children[0] && (
+                    <ul className="hidden md:absolute top-full md:group-hover:block bg-white shadow-lg rounded-md w-56 text-gray-700">
+                      {item.children?.map((sub) => (
+                        <li key={sub.id} className="relative group/sub ">
+                          <Link
+                            href={`/post/${sub?.id}`}
+                            className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
+                          >
+                            {sub.name}
+                            {sub.children[0] && (
+                              <span className="ml-2 text-black">
+                                <svg
+                                  className="w-2.5 h-2.5 "
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 10 6"
                                 >
-                                  {s.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                                  <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m1 1 4 4 4-4"
+                                  />
+                                </svg>
+                              </span>
+                            )}
+                          </Link>
 
-                {/* Dropdown Mobile */}
-                {item.children[0] && (
-                  <ul
-                    className={`
+                          {/* Submenu Desktop */}
+                          {sub.children[0] && (
+                            <ul className="hidden absolute right-full xl:left-full top-4 bg-white shadow-lg rounded-md w-56 group-hover/sub:block">
+                              {sub.children?.map((s) => (
+                                <li key={s.id}>
+                                  <Link
+                                    href={`/post/${s.id}`}
+                                    className="block px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
+                                  >
+                                    {s.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* Dropdown Mobile */}
+                  {item.children[0] && (
+                    <ul
+                      className={`
                       md:hidden bg-amber-300 transition-all overflow-hidden duration-300
                       ${openDropdown === item.id ? "max-h-96" : "max-h-0"}
                     `}
-                  >
-                    {item.children.map((sub) => (
-                      <li key={sub.id} className="uppercase font-bold text-sm">
-                        <div
-                          className="flex justify-between items-center pl-10 py-2"
-                          onClick={() =>
-                            setOpenSubDropdown(
-                              openSubDropdown === sub.id ? null : sub.id
-                            )
-                          }
+                    >
+                      {item.children.map((sub) => (
+                        <li
+                          key={sub.id}
+                          className="uppercase font-bold text-sm"
                         >
-                          <Link
-                            href={`/post/${sub?.id}`}
-                            className="  text-white"
+                          <div
+                            className="flex justify-between items-center pl-10 py-2"
+                            onClick={() =>
+                              setOpenSubDropdown(
+                                openSubDropdown === sub.id ? null : sub.id
+                              )
+                            }
                           >
-                            {sub.name}
-                          </Link>
-                          {sub.children[0] && (
-                            <span className="md:hidden ml-2 text-white">
-                              <svg
-                                className="w-2.5 h-2.5 mr-4 "
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 10 6"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="m1 1 4 4 4-4"
-                                />
-                              </svg>
-                            </span>
-                          )}
-                        </div>
+                            <Link
+                              href={`/post/${sub?.id}`}
+                              className="  text-white"
+                            >
+                              {sub.name}
+                            </Link>
+                            {sub.children[0] && (
+                              <span className="md:hidden ml-2 text-white">
+                                <svg
+                                  className="w-2.5 h-2.5 mr-4 "
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 10 6"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m1 1 4 4 4-4"
+                                  />
+                                </svg>
+                              </span>
+                            )}
+                          </div>
 
-                        {/* Submenu mobile */}
-                        {sub.children && (
-                          <ul
-                            className={`
+                          {/* Submenu mobile */}
+                          {sub.children && (
+                            <ul
+                              className={`
                       md:hidden bg-amber-300 transition-all overflow-hidden duration-300
                       ${openSubDropdown === sub.id ? "max-h-96" : "max-h-0"}
                     `}
-                          >
-                            {sub.children.map((s) => (
-                              <li key={s.id} className="pl-10">
-                                <Link
-                                  href={`/post/${s?.id}`}
-                                  className="block px-10 py-2 text-white"
-                                >
-                                  {s.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
+                            >
+                              {sub.children.map((s) => (
+                                <li key={s.id} className="pl-10">
+                                  <Link
+                                    href={`/post/${s?.id}`}
+                                    className="block px-10 py-2 text-white"
+                                  >
+                                    {s.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
             <Search></Search>
           </ul>
         </nav>
