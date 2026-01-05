@@ -4,15 +4,15 @@ import { getPool } from "@/lib/db";
 export async function GET(request, { params }) {
   try {
     const { id } = await params;
-    const pool = getPool();
-
+    const pool = await getPool();
+    const isCategory = id >= 1 && id <= 23;
     if (!id) {
       return NextResponse.json(
         { message: "Thiếu ID bài viết" },
         { status: 400 }
       );
     }
-    if (id == 7 ) {
+    if (isCategory) {
       const [rows] = await pool.execute(
         `
       SELECT *

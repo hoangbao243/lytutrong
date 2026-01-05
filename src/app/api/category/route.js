@@ -11,12 +11,21 @@ function buildTree(categories, parentId = null) {
 }
 
 export async function GET(req) {
-  const pool = getPool();
+  const pool = await getPool();
   try {
     const { searchParams } = new URL(req.url);
+    console.log("searchParams.........",searchParams);
+    if (searchParams.get("menu") == `1`) {
+      const [rows] = await pool.query(
+      "SELECT id, name, parent, menu FROM categories WHERE menu = 1"
+      );
+      const tree = buildTree(rows);
+      return NextResponse.json(tree);
+    }
+    
     const flat = searchParams.get("flat");
     const [rows] = await pool.query(
-      "SELECT id, name, parent FROM categories"
+      "SELECT id, name, parent, menu FROM categories"
     );
 
     //lấy mảng phẳng
