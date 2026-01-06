@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import {getPool} from "@/lib/db";
+import { getPool } from "@/lib/db";
 
 export async function GET(request, { params }) {
   try {
@@ -13,7 +13,35 @@ export async function GET(request, { params }) {
       );
     }
 
+    const { searchParams } = new URL(request.url);
+    const limit = Number(searchParams.get("limit"));
     const pool = await getPool();
+
+    if (limit) {
+      const [rows] = await pool.execute(
+        `
+      SELECT
+        id,
+        src,
+        caption,
+        description,
+        categoryId,
+        createDate,
+        updateDate,
+        views
+      FROM posts
+      WHERE categoryId = ?
+        AND status = 1
+      ORDER BY updateDate DESC
+      LIMIT ?
+      `,
+        [categoryId, limit]
+      );
+      return NextResponse.json({
+        ok: true,
+        data: rows,
+      });
+    }
 
     const [rows] = await pool.execute(
       `
@@ -30,6 +58,7 @@ export async function GET(request, { params }) {
       WHERE categoryId = ?
         AND status = 1
       ORDER BY updateDate DESC
+      LIMIT 18446744073709551615 OFFSET 1
       `,
       [categoryId]
     );
@@ -40,9 +69,6 @@ export async function GET(request, { params }) {
     });
   } catch (error) {
     console.error("Get posts by category error:", error);
-    return NextResponse.json(
-      { message: "Lỗi server" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Lỗi server" }, { status: 500 });
   }
 }

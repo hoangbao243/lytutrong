@@ -4,27 +4,6 @@ import Slideshow from "@/components/slideshow/Slideshow";
 
 export default function Organization(props) {
   const data = props.props || [];
-  const slides = [
-    {
-      id: 1,
-      src: "/images/banner.png",
-      alt: "Slide banner lytutrong",
-      caption:
-        "TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026",
-    },
-    {
-      id: 2,
-      src: "/images/banner.png",
-      alt: "Slide banner lytutrong",
-      caption: "bbb",
-    },
-    {
-      id: 3,
-      src: "/images/banner.png",
-      alt: "Slide banner lytutrong",
-      caption: "ccc",
-    },
-  ];
   return (
     <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow ">
       <div className="flex h-fit w-full justify-between items-center border-b-2 border-blue-400 text-2xl uppercase">
@@ -46,10 +25,10 @@ export default function Organization(props) {
 
       <div className=" grid grid-cols-2 gap-2">
         <div className="h-56 w-full col-span-2 flex transition-transform duration-700 ease-in-out rounded-lg my-2">
-          <Slideshow data={slides.slice(0, 3)} height={`h-[14rem]`} bottom="bottom-4" text="text-sm" width="w-fit"></Slideshow>
+          <Slideshow data={data?.slice(0, 3)} height={`h-[14rem]`} bottom="bottom-4" text="text-sm" width="w-fit"></Slideshow>
         </div>
         {data &&
-          data.slice(4)?.map((item) => (
+          data?.slice(3)?.map((item) => (
             <div
               key={item?.id}
               className="flex w-full gap-2 h-[15rem] cursor-pointer transition-all duration-500 hover:translate-y-2 bg-neutral-50 rounded-lg shadow-xlitems-center justify-evenly"

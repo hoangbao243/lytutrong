@@ -32,7 +32,7 @@ export default function PostsManagement() {
     setLoading(true);
     const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
     if (res.status == 200) {
-      setPosts(res?.data?.data || []);
+      setPosts(res?.data?.data);
       setPagination(res?.data?.totalPages || 1);
     }
   };
@@ -149,7 +149,7 @@ export default function PostsManagement() {
                     <td className="p-3 font-semibold w-50">{item?.caption}</td>
                     <td className="p-3">{item?.userId}</td>
                     <td className="p-3">
-                      {item.status === "published" ? (
+                      {item.status == 1 ? (
                         <span className="px-3 py-1 bg-green-200 text-green-700 text-sm rounded">
                           Published
                         </span>
