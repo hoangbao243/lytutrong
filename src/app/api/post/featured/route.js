@@ -13,7 +13,7 @@ export async function GET(req) {
       description,
       categoryId,
       createDate,
-      DATE_FORMAT(updateDate, '%d/%m/%Y %H:%i:%s') AS updateDate,
+      updateDate,
       views,
       status,
       featured

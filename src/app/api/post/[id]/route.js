@@ -135,6 +135,7 @@ export async function PUT(req, { params }) {
       userId = 1,
       status,
       featured,
+      notification,
     } = body;
 
     if (!id) {
@@ -177,6 +178,7 @@ export async function PUT(req, { params }) {
         userId = ?,
         \`status\` = ?,
         featured = ?,
+        notification = ?,
         updateDate = NOW()
       WHERE id = ?
       `,
@@ -189,6 +191,7 @@ export async function PUT(req, { params }) {
         userId ?? 1,
         status ?? 1,
         featured ?? 0,
+        notification ?? 0,
         id,
       ]
     );

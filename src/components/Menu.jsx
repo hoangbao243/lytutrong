@@ -32,7 +32,6 @@ export default function Menu() {
             menu,
           },
         });
-        console.log(res.data);
         if (res.status == 200) {
           setMenu(res.data);
         }

@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Announcement from "@/components/announcement/Announcement";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import Mealmenu from "@/components/mealMenu/Mealmenu";
 import Menu from "@/components/Menu";
 import Rightmenu from "@/components/Rightmenu";
 import { useParams } from "next/navigation";
@@ -11,28 +9,13 @@ import axios from "axios";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import AnotherPosts from "@/components/list-another-posts/AnotherPosts";
+import { capitalizeTitle, formatDateTime } from "@/utils";
 
 export default function Postpage() {
   const [post, setPost] = useState();
   const { id } = useParams();
   const [breadcrumb, setBreadcrumb] = useState(null);
-  const [title, setTitle] = useState("");
-  const [postTime, setPostTime] = useState("");
   const [listPosts,setListPosts] = useState([])
-
-  const getDate = (time) => {
-    const date = new Date(time);
-    const formatted = date.toLocaleString("vi-VN", {
-      timeZone: "Asia/Ho_Chi_Minh",
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-    return formatted;
-  };
 
   useEffect(() => {
     const getPost = async () => {
@@ -40,16 +23,6 @@ export default function Postpage() {
         const response = await axios.get(`/api/post/${id}`);
         if (response.status == 200) {
           setPost(response.data.data);
-          const time = getDate(response?.data?.data?.updateDate)
-          setPostTime(time)
-          const preTitle = response.data.data.caption
-            ?.split(" ")
-            ?.map(
-              (item) =>
-                item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
-            );
-          setTitle(preTitle.join(" "));
-            
           //lấy các bài viết khác
           const res1 = await axios.get(`/api/post/category/${response.data.data.categoryId}`);
           if (res1.status == 200) {
@@ -108,9 +81,9 @@ export default function Postpage() {
               ))}
             </div>
             <div className="flex flex-col font-bold text-3xl px-4 my-2 mt-4">
-              {post && title}
+              {post && capitalizeTitle(post?.caption)}
               <span className="text-sm my-1 font-normal text-gray-400">
-                {post && postTime}
+                {post && formatDateTime(post?.createDate)}
               </span>
             </div>
             <div

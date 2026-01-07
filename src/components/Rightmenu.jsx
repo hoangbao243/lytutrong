@@ -1,93 +1,67 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Imagelibrary from "./imageLibrary/Imagelibrary";
 import Mealmenu from "@/components/mealMenu/Mealmenu";
 import Announcement from "@/components/announcement/Announcement";
 import Honoree from "./honoree/Honoree";
 import Fanpage from "./fanpage/Fanpage";
+import axios from "axios";
 
 export default function Rightmenu() {
-  const data = [
-    {
-      id: 31,
-      src: "/images/11.png",
-      caption:
-        "TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026",
-      createDate: "01-01-2025",
-      userId: 1,
-      categoryId: 3,
-      description:
-        "TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026 TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026 TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026 TẬP HUẤN PHÒNG CHÁY CHỮA CHÁY & CỨU NẠN CỨU HỘ NĂM HỌC 2025 - 2026",
-    },
-    {
-      id: 32,
-      src: "/images/11.png",
-      caption:
-        "Thông báo về việc đề nghị phê duyệt phương án giá dịch vụ năm học 2025-2026",
-      createDate: "01-02-2025",
-      userId: 1,
-      categoryId: 3,
-    },
-    {
-      id: 33,
-      src: "/images/11.png",
-      caption:
-        "Kế hoạch thực hiện quy định công khai trong các hoạt động của cơ sở giáo dục, NH 2025-2026",
-      createDate: "01-03-2025",
-      userId: 1,
-      categoryId: 3,
-    },
-    {
-      id: 34,
-      src: "/images/11.png",
-      caption:
-        "TRƯỜNG TIỂU HỌC LÝ TỰ TRỌNG HÂN HOAN CHÀO ĐÓN NĂM HỌC MỚI 2025-2026",
-      createDate: "01-04-2025",
-      userId: 1,
-      categoryId: 3,
-    },
-    {
-      id: 35,
-      src: "/images/AnhTinTuc/2025/9/KG-1.jpg",
-      caption:
-        "Thông báo về việc đề nghị phê duyệt phương án giá dịch vụ năm học 2025-2026",
-      createDate: "01-02-2025",
-      userId: 1,
-      categoryId: 4,
-    },
-    {
-      id: 36,
-      src: "/images/AnhTinTuc/2025/9/KG-2.jpg",
-      caption:
-        "Kế hoạch thực hiện quy định công khai trong các hoạt động của cơ sở giáo dục, NH 2025-2026",
-      createDate: "01-03-2025",
-      userId: 1,
-      categoryId: 4,
-    },
-    {
-      id: 37,
-      src: "/images/AnhTinTuc/2025/9/KG-3.jpg",
-      caption:
-        "TRƯỜNG TIỂU HỌC LÝ TỰ TRỌNG HÂN HOAN CHÀO ĐÓN NĂM HỌC MỚI 2025-2026",
-      createDate: "01-04-2025",
-      userId: 1,
-      categoryId: 4,
-    },
-  ];
+  const [student, setStudent] = useState([])
+  const [notification, setNotification] = useState([])
+  const [document, setDocument] = useState([])
+
+  useEffect(() => {
+    //thành tích học sinh
+    const getHonoree = async () => {
+      const res = await axios.get(`/api/post/by-category-name`, {
+        params: {
+          name: "Thành tích học sinh",
+          limit: 1
+        }
+      })
+      if (res.status == 200) {
+        setStudent(res?.data?.data)
+      }
+    }
+    //văn bản - thông báo
+    const getNotification = async () => {
+      const res = await axios.get(`/api/post/notification`)
+      if (res.status == 200) {
+        setNotification(res?.data?.data)
+      }
+    }
+    //các văn bản
+    const getDocument = async () => {
+      const res = await axios.get(`/api/post/by-category-name`, {
+        params: {
+          name: "Các văn bản",
+          limit: 4
+        }
+      })
+      if (res.status == 200) {
+        setDocument(res?.data?.data)
+      }
+    }
+    getDocument()
+    getNotification()
+    getHonoree()
+  }, [])
   return (
     <div className="h-full">
       <div className="w-full h-full flex flex-col">
-        <Honoree></Honoree>
+        <Honoree data={student[0]}></Honoree>
         <Imagelibrary></Imagelibrary>
         <Announcement
-          announcementData={data?.filter((item) => item.categoryId == 3)}
+          announcementData={notification}
           title={`Văn Bản - Thông Báo`}
         ></Announcement>
         <Mealmenu></Mealmenu>
         <Announcement
-          announcementData={data?.filter((item) => item.categoryId == 4)}
+          announcementData={document}
           title={`Các Văn Bản`}
         ></Announcement>
-        {/* <Fanpage></Fanpage> */}
+        <Fanpage></Fanpage>
       </div>
     </div>
   );

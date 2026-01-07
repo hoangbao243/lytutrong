@@ -641,6 +641,21 @@ export default function Editor({ content, onChange }) {
               </label>
             </div>
           </div>
+          <div className="flex flex-col">
+            <div className="dark:bg-black/10 mt-1 ml-4 p-2">
+              <label className="flex items-center text-black ">
+                <input
+                  className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
+                  type="checkbox"
+                  checked={editPost?.notification ?? false}
+                  onChange={(e) =>
+                    setEditPost({ ...editPost, notification: e.target.checked })
+                  }
+                />
+                <p>Thông báo</p>
+              </label>
+            </div>
+          </div>
           <div className="flex flex-col mt-1">
             <label
               htmlFor="category"
