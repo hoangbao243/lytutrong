@@ -282,7 +282,7 @@ export default function Editor({ content, onChange }) {
           <iframe
             src="${result.previewLink}"
             width="100%"
-            height="500px"
+            height="700px"
             title="Embedded Content"
           ></iframe>
         `
