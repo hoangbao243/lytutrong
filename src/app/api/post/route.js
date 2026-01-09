@@ -55,6 +55,7 @@ export async function POST(req) {
       userId = 1,
       status,
       featured,
+      notification,
     } = body;
 
     if (!caption || !fulltext) {
@@ -69,8 +70,8 @@ export async function POST(req) {
     const [result] = await pool.execute(
       `
       INSERT INTO posts
-      (src, caption, \`fulltext\`,description ,categoryId, userId, \`status\`, featured, \`views\`, createDate, updateDate)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())
+      (src, caption, \`fulltext\`,description ,categoryId, userId, \`status\`, featured, notification,  \`views\`, createDate, updateDate)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())
       `,
       [
         src ?? null,
@@ -81,6 +82,7 @@ export async function POST(req) {
         userId ?? 1,
         status ?? 1,
         featured ?? 0,
+        notification ?? 0,
       ]
     );
 

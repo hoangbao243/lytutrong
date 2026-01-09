@@ -73,7 +73,7 @@ export default function Editor({ content, onChange }) {
       const res = await axios.get(`/api/post/${id}`);
       if (res.status === 200) {
         setEditPost(res.data?.data);
-        console.log(res.data?.data);
+        console.log("res.data?.data...............",res.data?.data);
         setPreview(res.data?.data?.src);
         editor.commands.setContent(res.data?.data?.fulltext || "");
       }
@@ -282,7 +282,7 @@ export default function Editor({ content, onChange }) {
           <iframe
             src="${result.previewLink}"
             width="100%"
-            height="500px"
+            height="700px"
             title="Embedded Content"
           ></iframe>
         `
@@ -638,6 +638,21 @@ export default function Editor({ content, onChange }) {
                   }
                 />
                 <p>Dán bài viết lên trang nhất</p>
+              </label>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <div className="dark:bg-black/10 mt-1 ml-4 p-2">
+              <label className="flex items-center text-black ">
+                <input
+                  className="dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-7 h-7 mr-2"
+                  type="checkbox"
+                  checked={editPost?.notification ?? false}
+                  onChange={(e) =>
+                    setEditPost({ ...editPost, notification: e.target.checked })
+                  }
+                />
+                <p>Thông báo</p>
               </label>
             </div>
           </div>

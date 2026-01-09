@@ -5,41 +5,13 @@ export async function GET(request, { params }) {
   try {
     const { id } = await params;
     const pool = await getPool();
-    const isCategory = id >= 1 && id <= 23;
     if (!id) {
       return NextResponse.json(
         { message: "Thiếu ID bài viết" },
         { status: 400 }
       );
     }
-    if (isCategory) {
-      const [rows] = await pool.execute(
-        `
-      SELECT *
-      FROM posts
-      WHERE categoryId = ?
-        AND status = 1
-      ORDER BY updateDate DESC
-      LIMIT 1
-      `,
-        [id]
-      );
-      const post = rows[0];
-      if (!post) {
-        return NextResponse.json(
-          { message: "News not found" },
-          { status: 404 }
-        );
-      }
-
-      return NextResponse.json({
-        ok: true,
-        data: post,
-      });
-    }
-
     
-
     const [rows] = await pool.execute(
       `
         SELECT
@@ -52,6 +24,7 @@ export async function GET(request, { params }) {
           userId,
           \`status\`,
           featured,
+          notification,
           \`views\`,
           createDate,
           updateDate
@@ -135,6 +108,7 @@ export async function PUT(req, { params }) {
       userId = 1,
       status,
       featured,
+      notification,
     } = body;
 
     if (!id) {
@@ -177,6 +151,7 @@ export async function PUT(req, { params }) {
         userId = ?,
         \`status\` = ?,
         featured = ?,
+        notification = ?,
         updateDate = NOW()
       WHERE id = ?
       `,
@@ -189,6 +164,7 @@ export async function PUT(req, { params }) {
         userId ?? 1,
         status ?? 1,
         featured ?? 0,
+        notification ?? 0,
         id,
       ]
     );

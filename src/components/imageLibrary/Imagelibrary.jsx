@@ -10,7 +10,7 @@ export default function Imagelibrary() {
             Thư viện ảnh
           </div>
         </div>
-        <Link href={"#"} className="w-full p-2">
+        <Link href={"/pages/library"} className="w-full p-2">
           <img
             src="/images/thuvienanh.png"
             className="w-full shadow-lg shadow-amber-200/40"

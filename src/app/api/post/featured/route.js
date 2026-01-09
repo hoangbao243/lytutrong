@@ -13,13 +13,14 @@ export async function GET(req) {
       description,
       categoryId,
       createDate,
-      DATE_FORMAT(updateDate, '%d/%m/%Y %H:%i:%s') AS updateDate,
+      updateDate,
       views,
       status,
       featured
     FROM posts
     WHERE status = 1
-    ORDER BY featured DESC
+      AND featured = 1
+    ORDER BY updateDate DESC
     LIMIT 4
     `
   );

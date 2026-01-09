@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 const PAGE_SIZE = 6;
 
 export default function AnotherPosts(data) {
-  console.log("data................", data);
   const [page, setPage] = useState(1);
 
   const totalPages = Math.ceil((data?.data?.length || 0) / PAGE_SIZE);
@@ -36,35 +35,36 @@ export default function AnotherPosts(data) {
       ))}
 
       {/* PAGINATION */}
-      <div className="flex mt-4 justify-center">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className="px-3 py-1 mr-4 border rounded disabled:opacity-40"
-        >
-          <img src="/images/icon/right-arrow2.png" className="w-5 h-5 rotate-180" alt="" />
-        </button>
-
-        {Array.from({ length: totalPages }).map((_, i) => (
+      {
+        data.data[0] && <div className="flex mt-4 justify-center">
           <button
-            key={i}
-            onClick={() => setPage(i + 1)}
-            className={`border border-gray-300 w-10 h-10 ${
-              page === i + 1 ? "bg-red-400 text-white" : ""
-            }`}
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="px-3 py-1 mr-4 border rounded disabled:opacity-40"
           >
-            {i + 1}
+            <img src="/images/icon/right-arrow2.png" className="w-5 h-5 rotate-180" alt="" />
           </button>
-        ))}
 
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          className="px-3 py-1 ml-4 border rounded disabled:opacity-40"
-        >
-          <img src="/images/icon/right-arrow2.png" className="w-5 h-5" alt="" />
-        </button>
-      </div>
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`border border-gray-300 w-10 h-10 ${page === i + 1 ? "bg-red-400 text-white" : ""
+                }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+            className="px-3 py-1 ml-4 border rounded disabled:opacity-40"
+          >
+            <img src="/images/icon/right-arrow2.png" className="w-5 h-5" alt="" />
+          </button>
+        </div>
+      }
     </div>
   );
 }
