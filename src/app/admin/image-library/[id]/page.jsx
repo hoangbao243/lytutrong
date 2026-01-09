@@ -1,43 +1,27 @@
 "use client"
+import axios from "axios";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import React from "react";
-
-const images = [
-  {
-    id: 1,
-    image_url: "/images/AnhTinTuc/2025/10/Thuc_don-T5.jpg",
-    sort_order: 1,
-    created_at: "2026-01-07 10:30",
-  },
-  {
-    id: 2,
-    image_url: "/images/AnhTinTuc/2025/10/Thuc_don-T6.jpg",
-    sort_order: 2,
-    created_at: "2026-01-07 10:31",
-  },
-  {
-    id: 3,
-    image_url: "/images/AnhTinTuc/2025/10/Thuc_don-T7.jpg",
-    sort_order: 3,
-    created_at: "2026-01-07 10:31",
-  },
-  {
-    id: 4,
-    image_url: "/images/AnhTinTuc/2025/10/Thuc_don-T8.jpg",
-    sort_order: 4,
-    created_at: "2026-01-07 10:31",
-  },
-];
+import React, { useEffect, useState } from "react";
 
 export default function page() {
-    const {id} = useParams()
-    console.log(id);
-    
+  const [data,setData] = useState()  
+  const {id} = useParams()
+
+  useEffect(()=>{
+    const getData = async ()=>{
+      const res = await axios.get(`/api/image-post/${id}`)
+      if (res) {
+        console.log("ré```````````````",res);
+        setData(res.data.data)
+      }
+    }
+    getData()
+  },[])
   return (
-    <div className="overflow-x-auto border rounded-lg">
+    <div className="overflow-x-auto border border-gray-300 rounded-lg">
       <table className="w-full">
-        <thead className="bg-gray-100 text-gray-700">
+        <thead className="bg-gray-300 text-gray-700">
           <tr>
             <th className="px-4 py-3 w-16 text-left">ID</th>
             <th className="px-4 py-3 text-left">Ảnh</th>
@@ -47,15 +31,15 @@ export default function page() {
           </tr>
         </thead>
 
-        <tbody className="divide-y">
-          {images.map((img) => (
-            <tr key={img.id} className="hover:bg-gray-50">
+        <tbody className="divide-y divide-gray-300">
+          {data && data.map((img, index) => (
+            <tr key={img.id} className={`hover:bg-gray-50 ${index%2==0 ? "bg-gray-200" : ""}`}>
               <td className="px-4 py-3">{img.id}</td>
 
               <td className="px-4 py-3">
-                <div className="relative w-28 h-20 rounded-md overflow-hidden border">
+                <div className="relative w-28 h-20 rounded-md overflow-hidden border border-gray-300 shadow-2xl">
                   <Image
-                    src={img.image_url}
+                    src={img.src}
                     loading="eager"
                     alt="Post image"
                     sizes="true"
@@ -71,7 +55,7 @@ export default function page() {
                 {img.created_at}
               </td>
 
-              <td className="px-4 py-3 text-center space-x-2">
+              <td className="flex mt-4 px-4 py-3 text-center space-x-2">
                 <button className="px-3 py-1 text-sm text-blue-600 hover:underline">
                   Sửa
                 </button>
