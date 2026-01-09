@@ -8,7 +8,8 @@ export default function AdminLayout({ children }) {
   const sidebarItems = [
     { id: 1, title: "Bài Viết", src: "/admin/posts", icon: "" },
     { id: 2, title: "Thông Tin Website", src: "/admin/website", icon: "" },
-    { id: 3, title: "Tài khoản", src: "/admin/users", icon: "" },
+    { id: 3, title: "Thư viện ảnh", src: "/admin/image-library", icon: "" },
+    { id: 4, title: "Tài khoản", src: "/admin/users", icon: "" },
   ];
   const [open, setOpen] = useState(true);
   const navigate = useRouter();

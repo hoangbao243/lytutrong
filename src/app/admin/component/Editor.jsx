@@ -73,7 +73,7 @@ export default function Editor({ content, onChange }) {
       const res = await axios.get(`/api/post/${id}`);
       if (res.status === 200) {
         setEditPost(res.data?.data);
-        console.log(res.data?.data);
+        console.log("res.data?.data...............",res.data?.data);
         setPreview(res.data?.data?.src);
         editor.commands.setContent(res.data?.data?.fulltext || "");
       }

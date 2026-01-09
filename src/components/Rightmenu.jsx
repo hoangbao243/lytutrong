@@ -61,7 +61,7 @@ export default function Rightmenu() {
           announcementData={document}
           title={`Các Văn Bản`}
         ></Announcement>
-        <Fanpage></Fanpage>
+        {/* <Fanpage></Fanpage> */}
       </div>
     </div>
   );

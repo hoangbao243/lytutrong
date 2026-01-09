@@ -19,7 +19,8 @@ export async function GET(req) {
       featured
     FROM posts
     WHERE status = 1
-    ORDER BY featured DESC
+      AND featured = 1
+    ORDER BY updateDate DESC
     LIMIT 4
     `
   );

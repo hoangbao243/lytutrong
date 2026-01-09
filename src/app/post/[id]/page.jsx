@@ -20,11 +20,12 @@ export default function Postpage() {
   useEffect(() => {
     const getPost = async () => {
       try {
-        const response = await axios.get(`/api/post/${id}`);
-        if (response.status == 200) {
-          setPost(response.data.data);
+        let res = []
+        id >= 1 && id <= 23 ? res = await axios.get(`/api/post/menu/${id}`) : res = await axios.get(`/api/post/${id}`);
+        if (res.status == 200) {
+          setPost(res.data.data);
           //lấy các bài viết khác
-          const res1 = await axios.get(`/api/post/category/${response.data.data.categoryId}`);
+          const res1 = await axios.get(`/api/post/category/${res.data.data.categoryId}`);
           if (res1.status == 200) {
             setListPosts(res1.data.data)
           }
@@ -41,7 +42,7 @@ export default function Postpage() {
       const List = [];
       try {
         const res = await axios.get(`/api/category?flat=1`);
-        let current = res.data.find((c) => c.id == post.categoryId);
+        let current = res.data.find((c) => c.id == post?.categoryId);
         while (current) {
           List.unshift(current);
           current = res.data.find((c) => c.id == current.parent);

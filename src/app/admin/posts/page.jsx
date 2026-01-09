@@ -3,6 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import DeleteModal from "../component/DeleteModal";
+import { formatDateTime } from "@/utils";
 
 const ths = [
   "id",
@@ -159,8 +160,8 @@ export default function PostsManagement() {
                         </span>
                       )}
                     </td>
-                    <td className="p-3">{item?.createDate}</td>
-                    <td className="p-3">{item?.updateDate}</td>
+                    <td className="p-3">{formatDateTime(item?.createDate)}</td>
+                    <td className="p-3">{formatDateTime(item?.updateDate)}</td>
 
                     <td className="p-3">
                       {item.featured ? (
