@@ -1,41 +1,30 @@
+"use client"
+import { formatDateTime } from "@/utils";
+import axios from "axios";
 import Link from "next/link";
-import React from "react";
-const posts = [
-  {
-    id: 1,
-    title: "Bài viết số 1",
-    content: "Nội dung bài viết số 1...",
-    created_at: "2026-01-07 10:30",
-  },
-  {
-    id: 2,
-    title: "Bài viết số 2",
-    content: "Nội dung bài viết số 2...",
-    created_at: "2026-01-07 10:30",
-  },
-  {
-    id: 3,
-    title: "Bài viết số 3",
-    content: "Nội dung bài viết số 3...",
-    created_at: "2026-01-07 10:30",
-  },
-  {
-    id: 4,
-    title: "Bài viết số 4",
-    content: "Nội dung bài viết số 4...",
-    created_at: "2026-01-07 10:30",
-  },
-];
+import React, { useEffect, useState } from "react";
+
 export default function page() {
+  const [list, setList] = useState([])
+  useEffect(()=>{
+    const getList = async () =>{
+      const res = await axios.get(`/api/image-post`)
+      if (res.status == 200) {
+        setList(res.data.data)
+        console.log("res.............",res);
+      }
+    }
+    getList()
+  },[])
 
   return (
     <div>
       <div className="flex items-center ">
-        <h1 className="font-bold text-3xl mr-2 my-2">Quản lý bài viết</h1>
+        <h1 className="font-bold text-3xl mr-2 my-2">Thư viện ảnh</h1>
         <Link
           className="group cursor-pointer outline-none hover:rotate-90 duration-300"
           title="Add New"
-          href={`/admin/newpost`}
+          href={`/admin/image-library/new-image-post`}
         >
           <svg
             className="stroke-gray-400 fill-none group-hover:fill-gray-500 group-active:stroke-gray-200 group-active:fill-gray-600 group-active:duration-0 duration-300"
@@ -54,7 +43,7 @@ export default function page() {
         </Link>
       </div>
       <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-gray-100 text-gray-700">
+        <thead className="bg-gray-300 text-gray-700">
           <tr>
             <th className="px-4 py-3 text-left w-16">ID</th>
             <th className="px-4 py-3 text-left">Tiêu đề</th>
@@ -64,9 +53,9 @@ export default function page() {
           </tr>
         </thead>
 
-        <tbody className="divide-y">
-          {posts && posts?.map((post) => (
-            <tr key={post.id} className="hover:bg-gray-50">
+        <tbody className="divide-y divide-gray-300">
+          {list && list?.map((post,index) => (
+            <tr key={post.id} className={`hover:bg-gray-200 ${index%2 == 0 ? `bg-gray-200` : ``}`}>
               <td className="px-4 py-3">{post.id}</td>
 
               <td className="px-4 py-3 font-medium">
@@ -74,11 +63,11 @@ export default function page() {
               </td>
 
               <td className="px-4 py-3 text-gray-600 line-clamp-2">
-                {post.content}
+                {post.description}
               </td>
 
               <td className="px-4 py-3 text-sm text-gray-500">
-                {post.created_at}
+                {formatDateTime(post.createDate)}
               </td>
               <td>
                 <Link href={`/admin/image-library/${post.id}`} className="p-4">

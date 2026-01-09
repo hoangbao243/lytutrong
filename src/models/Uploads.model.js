@@ -7,6 +7,7 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URL = process.env.REDIRECT_URL;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 const FOLDER_ID = `172vo7gY1g2Hqb5kkzfWSymnIEpzTfy2w`;
+const FOLDER_IMAGES = `1rb7BuAy2WBD2yyeAMjSREONeYTR338Hk`
 // const TEMP_FOLDER_ID = `1P9Z5HnX8fT3UPQ8ezYaxZJGqUrijOVoz`
 
 const oauth2Client = new google.auth.OAuth2(
@@ -118,4 +119,49 @@ var that = (module.exports = {
       return null;
     }
   },
+  uploadImage: async ({ localPath }) => {
+  try {
+    const fileName = path.basename(localPath);
+
+    // Xác định mime type theo đuôi file
+    const ext = path.extname(fileName).toLowerCase();
+    const mimeTypes = {
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".png": "image/png",
+      ".webp": "image/webp",
+      ".gif": "image/gif",
+    };
+
+    const mimeType = mimeTypes[ext] || "image/jpeg";
+
+    const createFile = await drive.files.create({
+      requestBody: {
+        name: fileName,
+        mimeType,
+        parents: [FOLDER_IMAGES],
+      },
+      media: {
+        mimeType,
+        body: fs.createReadStream(localPath),
+      },
+    });
+
+    const fileId = createFile.data.id;
+
+    // public file
+    const previewLink = await that.setFilePublic(fileId);
+
+    return {
+      fileId,
+      previewLink,
+    };
+  } catch (error) {
+    console.error("UPLOAD IMAGE ERROR:", error);
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
+  }
+},
 });
