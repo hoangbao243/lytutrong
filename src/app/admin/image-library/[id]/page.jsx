@@ -13,6 +13,7 @@ export default function page() {
       const res = await axios.get(`/api/image-post/${id}`)
       if (res) {
         console.log("ré```````````````",res);
+        console.log("ré```````````````",res);
         setData(res.data.data)
       }
     }
