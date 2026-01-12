@@ -34,7 +34,7 @@ export default function Module() {
       alert(err.response?.data?.message || "Không thể xóa danh mục");
     } finally {
       setOpenDeleteModal(false);
-      setLoading(true)
+      setLoading(false)
     }
   };
 
