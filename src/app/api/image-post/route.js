@@ -95,6 +95,16 @@ export async function POST(req) {
       order++;
     }
 
+    if (imageUrls[0] && postId) {
+      await conn.execute(
+        `
+        UPDATE library_image_posts
+        SET src = ? WHERE id = ?
+        `,
+        [imageUrls[0], postId]
+      );
+    }
+
     await conn.commit();
 
     return NextResponse.json({
@@ -115,7 +125,7 @@ export async function POST(req) {
 
 export async function GET(req) {
   const pool = await getPool();
-
+  
   const [rows] = await pool.execute(
     `
     SELECT

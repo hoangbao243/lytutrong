@@ -16,9 +16,19 @@ export async function GET(req, { params }) {
       `,
       [id]
     );
+    const title = await pool.execute(
+      `
+      SELECT
+        title
+      FROM library_image_posts
+      WHERE id = ?
+      `,
+      [id]
+    );
 
     return NextResponse.json({
       data: rows,
+      title: title[0],
     });
   } catch (error) {
     console.error("GET IMAGE POSTS ERROR:", error);
