@@ -1,21 +1,53 @@
-"use client"
+"use client";
 import { formatDateTime } from "@/utils";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import DeleteModal from "../component/DeleteModal";
 
 export default function page() {
-  const [list, setList] = useState([])
-  useEffect(()=>{
-    const getList = async () =>{
-      const res = await axios.get(`/api/image-post`)
+  const [list, setList] = useState([]);
+  const [deleteId, setDeleteId] = useState();
+  const [loading, setLoading] = useState();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const getList = async () => {
+      const res = await axios.get(`/api/image-post`);
       if (res.status == 200) {
-        setList(res.data.data)
-        console.log("res.............",res);
+        setList(res.data.data);
+        console.log("res.............", res);
       }
+    };
+
+  const onDelete = (id) => {
+    setDeleteId(id);
+    setOpenDeleteModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      setLoading(true);
+      const res = await axios.delete(`/api/image-post/${id}`);
+      console.log(res);
+
+      if (res.status == 200) {
+        alert("Xóa thành công!!!");
+        getList();
+      }
+      return res.data
+      // reload list
+    } catch (err) {
+      alert(err.response?.data?.message || "Không thể xóa danh mục");
+      throw err;
+    } finally {
+      setOpenDeleteModal(false);
+      setLoading(false);
     }
-    getList()
-  },[])
+  };
+
+  useEffect(() => {
+    getList();
+  }, []);
 
   return (
     <div>
@@ -54,34 +86,48 @@ export default function page() {
         </thead>
 
         <tbody className="divide-y divide-gray-300">
-          {list && list?.map((post,index) => (
-            <tr key={post.id} className={`hover:bg-gray-200 ${index%2 == 0 ? `bg-gray-200` : ``}`}>
-              <td className="px-4 py-3">{post.id}</td>
+          {list &&
+            list?.map((post, index) => (
+              <tr
+                key={post.id}
+                className={`hover:bg-gray-200 ${
+                  index % 2 == 0 ? `bg-gray-200` : ``
+                }`}
+              >
+                <td className="px-4 py-3">{post.id}</td>
 
-              <td className="px-4 py-3 font-medium">
-                {post.title}
-              </td>
+                <td className="px-4 py-3 font-medium">{post.title}</td>
 
-              <td className="px-4 py-3 text-gray-600 line-clamp-2">
-                {post.description}
-              </td>
+                <td className="px-4 py-3 text-gray-600 line-clamp-2">
+                  {post.description}
+                </td>
 
-              <td className="px-4 py-3 text-sm text-gray-500">
-                {formatDateTime(post.createDate)}
-              </td>
-              <td>
-                <Link href={`/admin/image-library/${post.id}`} className="p-4">
-                  Sửa
-                </Link>
-                <button className="p-4">
-                  Xóa
-                </button>
-              </td>
-            </tr>
-          ))}
+                <td className="px-4 py-3 text-sm text-gray-500">
+                  {formatDateTime(post.createDate)}
+                </td>
+                <td className="flex gap-2 mt-3">
+                  <Link
+                    href={`/admin/image-library/${post.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Sửa
+                  </Link>
+                  <button
+                    className="text-red-600 hover:underline cursor-pointer"
+                    onClick={() => onDelete(post.id)}
+                  >
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
+      <DeleteModal
+        open={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        onConfirm={() => handleDelete(deleteId)}
+      ></DeleteModal>
     </div>
-
   );
 }
