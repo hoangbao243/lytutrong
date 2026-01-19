@@ -17,7 +17,7 @@ export async function GET(req, { params }) {
         *
       FROM image_posts
       WHERE post_id = ?
-      ORDER BY createDate ASC
+      ORDER BY sort_order ASC
       `,
       [id]
     );

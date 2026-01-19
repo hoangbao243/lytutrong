@@ -3,7 +3,8 @@ import axios from "axios";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import DeleteModal from "../../component/DeleteModal";
 
 export default function page() {
   const [data, setData] = useState();
@@ -11,6 +12,8 @@ export default function page() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState();
 
   const getData = async () => {
     const res = await axios.get(`/api/image-post/${id}`);
@@ -45,7 +48,44 @@ export default function page() {
     }
   };
 
-  const handlePublish = () => {};
+  const onDelete = (id) => {
+    setDeleteId(id);
+    setOpenDeleteModal(true);
+  };
+
+  const handleDeleteImage = async (id) => {
+    try {
+      setLoading(true);
+      const res = await axios.delete(`/api/image-post/image/${id}`);
+      if (res.status == 200) {
+        toast.success(res.data.message);
+        console.log("ressssssssssssss", res);
+        getData();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setOpenDeleteModal(false);
+      setLoading(false);
+    }
+  };
+
+  const handlePublish = async () => {
+    try {
+      const res = await axios.put(
+        `/api/image-post/image/${id}`,
+        updateData
+      );
+
+      if (res.status == 200) {
+        toast.success("Cập nhật thành công");
+      }
+    } catch (error) {
+      console.log(error);
+      
+      toast.error(error?.message);
+    }
+  };
 
   const handleCancel = () => {};
 
@@ -92,6 +132,7 @@ export default function page() {
 
   const onDragEnd = () => {
     draggedItem.current = null;
+    setUpdateData({ ...updateData, images: items });
     setData(items);
   };
 
@@ -123,17 +164,32 @@ export default function page() {
           }
         />
         <div>
-          <div className="grid w-full max-w-xs items-center gap-1.5 mb-4">
-            <label className="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Thêm ảnh
-            </label>
-            <input
-              className="flex w-full rounded-md border border-blue-300 border-input bg-white text-sm text-gray-400 file:border-0 file:bg-blue-600 file:text-white file:text-sm file:font-medium"
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
-            />
+          <div className="max-w-40 rounded-lg overflow-hidden">
+            <div className="md:flex">
+              <div className="w-full pb-3">
+                <div className="relative h-20 rounded-lg border-2 border-gray-400 bg-gray-100 flex justify-center items-center shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                  <div className="absolute flex flex-col items-center">
+                    <img
+                      alt="File Icon"
+                      className="w-10 h-10"
+                      src="/images/icon/image.png"
+                    />
+                    <span className="block text-gray-500 font-semibold">
+                      Thêm ảnh
+                    </span>
+                  </div>
+
+                  <input
+                    name=""
+                    className="h-full w-full opacity-0 cursor-pointer"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -186,7 +242,10 @@ export default function page() {
                   </td>
 
                   <td className="flex mt-4 px-4 py-3 text-center space-x-2">
-                    <button className="px-3 py-1 text-sm text-red-600 hover:underline">
+                    <button
+                      className="px-3 py-1 text-sm text-red-600 hover:underline"
+                      onClick={() => onDelete(img.id)}
+                    >
                       Xoá
                     </button>
                   </td>
@@ -209,6 +268,12 @@ export default function page() {
           Hủy
         </button>
       </div>
+      <DeleteModal
+        open={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        onConfirm={() => handleDeleteImage(deleteId)}
+      ></DeleteModal>
+      <Toaster position="top-right" reverseOrder={false} />
     </>
   );
 }

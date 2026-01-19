@@ -17,11 +17,22 @@ export default function Menu() {
   const [loading, setLoading] = useState(true);
 
   const checkActive = (item) => {
-    if (pathName === item.link) return true;
-    if (id == item.id) return true;
-    if (item?.dropdownMenu?.some((d) => d.id == id)) return true;
-    if (item?.dropdownMenu?.some((d) => d?.subMenu?.some((s) => s.id == id)))
-      return true;
+    // active trang chủ
+    if (pathName === "/" && item.id === 1) return true;
+
+    // chỉ xử lý active theo id khi ở /post/[id]
+    const isPostPage = pathName.startsWith("/post/");
+
+    if (isPostPage) {
+      if (id == item.id) return true;
+
+      if (item?.children?.some((d) => d.id == id)) return true;
+
+      if (item?.children?.some((d) => d?.children?.some((s) => s.id == id))) {
+        return true;
+      }
+    }
+
     return false;
   };
 
@@ -98,7 +109,7 @@ export default function Menu() {
                         className="flex md:flex-row justify-between hover:text-black md:h-full items-center text-white md:px-2 lg:px-3 xl:px-4 px-4 py-3 md:py-2 hover:bg-zinc-700 md:hover:bg-transparent cursor-pointer"
                         onClick={() =>
                           setOpenDropdown(
-                            openDropdown === item.id ? null : item.id
+                            openDropdown === item.id ? null : item.id,
                           )
                         }
                       >
@@ -201,7 +212,7 @@ export default function Menu() {
                                 className="flex justify-between items-center pl-10 py-2"
                                 onClick={() =>
                                   setOpenSubDropdown(
-                                    openSubDropdown === sub.id ? null : sub.id
+                                    openSubDropdown === sub.id ? null : sub.id,
                                   )
                                 }
                               >
