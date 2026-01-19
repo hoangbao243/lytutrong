@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function page() {
   const [title, setTitle] = useState("");
@@ -25,8 +26,9 @@ export default function page() {
     });
 
     const res = await axios.post(`/api/image-post`,formData)
-    if (res) {
+    if (res.status == 200) {
       console.log("res.............",res);
+      toast.success("Đăng thành công!")
     }
 
     // TODO: gọi API / Server Action

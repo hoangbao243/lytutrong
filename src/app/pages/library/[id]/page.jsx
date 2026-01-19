@@ -19,6 +19,8 @@ export default function ImageGallery() {
       const getImages = async () => {
         const res = await axios.get(`/api/image-post/${id}`);
         if (res.status == 200) {
+          console.log(res.data);
+          
           setTitle(res?.data?.title[0]);
           setImages(res?.data?.data);
         }
@@ -28,6 +30,7 @@ export default function ImageGallery() {
       toast.error(error);
     } finally {
       setLoading(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [id]);
 
