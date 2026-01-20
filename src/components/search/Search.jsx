@@ -10,7 +10,6 @@ export default function SearchDropdown() {
 
   const handleSearch = () => {
     if (!keyword.trim()) return;
-
     router.push(`/pages/searching?q=${encodeURIComponent(keyword.trim())}&page=1`);
   };
 
@@ -33,7 +32,7 @@ export default function SearchDropdown() {
   };
 
   return (
-    <div className="relative mt-2.5 hidden md:block" ref={ref}>
+    <div className="relative mt-1.5" ref={ref}>
       {/* Icon search */}
       <button
         onClick={() => setOpen(!open)}
@@ -46,8 +45,7 @@ export default function SearchDropdown() {
       {open && (
         <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-white shadow-xl rounded-xl p-3 animate-drop z-50">
           <div className="flex items-center gap-2">
-                    <img src="/images/icon/search.png" className="w-7 h-7" alt="" />
-
+            
             <input
               type="text"
               value={keyword}
@@ -56,6 +54,7 @@ export default function SearchDropdown() {
               placeholder="Tìm kiếm..."
               className="flex-1 outline-none"
             />
+            <img src="/images/icon/search.png" className="w-7 h-7 cursor-pointer" alt="" onClick={handleSearch}/>
           </div>
         </div>
       )}
