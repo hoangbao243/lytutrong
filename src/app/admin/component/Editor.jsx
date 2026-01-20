@@ -15,6 +15,8 @@ import { Color } from "@tiptap/extension-text-style";
 import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 import toast, { Toaster } from "react-hot-toast";
 import youtube from "@tiptap/extension-youtube";
+import { formatForDateTimeLocal } from "@/utils";
+
 
 export default function Editor({ content, onChange }) {
   const fontSizes = Array.from({ length: 33 }, (_, i) => i + 8);
@@ -73,7 +75,7 @@ export default function Editor({ content, onChange }) {
       const res = await axios.get(`/api/post/${id}`);
       if (res.status === 200) {
         setEditPost(res.data?.data);
-        console.log("res.data?.data...............",res.data?.data);
+        console.log("res.data?.data...............", res.data?.data);
         setPreview(res.data?.data?.src);
         editor.commands.setContent(res.data?.data?.fulltext || "");
       }
@@ -105,7 +107,7 @@ export default function Editor({ content, onChange }) {
   }, []);
 
   useEffect(() => {
-    console.log("editPost", editPost);
+    console.log("editPost;;;;;;;;;;;;;;;;;;;;;;;;", editPost);
   }, [editPost]);
 
   if (!editor) return null;
@@ -285,7 +287,7 @@ export default function Editor({ content, onChange }) {
             height="700px"
             title="Embedded Content"
           ></iframe>
-        `
+        `,
       )
       .run();
   };
@@ -311,6 +313,7 @@ export default function Editor({ content, onChange }) {
       </React.Fragment>
     ));
   };
+
   return (
     <div>
       <p className="font-bold text-xl my-2">Bài Viết Mới</p>
@@ -598,7 +601,7 @@ export default function Editor({ content, onChange }) {
             </label>
             <select
               name="category"
-              className="border border-gray-200 p-2 rounded-md ml-4 text-black"
+              className="border border-gray-300 p-2 rounded-md ml-4 text-black"
               disabled={!category || category.length === 0}
               value={editPost?.categoryId}
               onChange={(e) =>
@@ -615,7 +618,7 @@ export default function Editor({ content, onChange }) {
             </label>
             <select
               name="category"
-              className="border border-gray-200 p-2 rounded-md ml-4 text-black"
+              className="border border-gray-300 p-2 rounded-md ml-4 text-black"
               value={editPost?.status}
               onChange={(e) =>
                 setEditPost({ ...editPost, status: Number(e.target.value) })
@@ -625,6 +628,18 @@ export default function Editor({ content, onChange }) {
               <option value="2">Chờ duyệt</option>
               <option value="3">Bản nháp</option>
             </select>
+          </div>
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium mb-1">Ngày đăng</label>
+
+            <input
+              type="datetime-local"
+              value={formatForDateTimeLocal(editPost?.publish_date)}
+              onChange={(e) =>
+                setEditPost({ ...editPost, publish_date: e.target.value })
+              }
+              className="border border-gray-300 rounded ml-4 p-2"
+            />
           </div>
           <div className="flex flex-col">
             <div className="dark:bg-black/10 mt-1 ml-4 p-2">

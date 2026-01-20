@@ -9,9 +9,27 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  //lăn lên trên cùng
+  const scrollToTop = (duration = 350) => {
+    const start = window.scrollY;
+    const startTime = performance.now();
+
+    // easing chậm – mềm
+    const easeInOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
+
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeInOutSine(progress);
+      window.scrollTo(0, start * (1 - eased));
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
   };
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 200) {
@@ -30,9 +48,7 @@ export default function Home() {
         <Menu />
 
         {/* RESPONSIVE MAIN LAYOUT */}
-        <section
-          className="flex h-fit w-full md:p-2 flex-col lg:flex-row gap-4"
-        >
+        <section className="flex h-fit w-full md:p-2 flex-col lg:flex-row gap-4">
           {/* LEFT: MAIN + NEWS */}
           <div className="flex flex-col w-full lg:w-3/4">
             <Main />
@@ -47,7 +63,7 @@ export default function Home() {
       </main>
 
       <div
-        onClick={scrollToTop}
+        onClick={(e) => scrollToTop()}
         className={`fixed bottom-6 right-3 z-50 p-3 rounded-full bg-[#7cbf96c7] text-white shadow-xl transition-all duration-300 hover:bg-[#7cbf96] ${
           visible
             ? "opacity-100 translate-y-0"

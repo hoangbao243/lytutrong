@@ -16,7 +16,8 @@ export async function GET(req) {
       updateDate,
       views,
       status,
-      featured
+      featured,
+      publish_date
     FROM posts
     WHERE status = 1
     ORDER BY updateDate DESC
@@ -56,6 +57,7 @@ export async function POST(req) {
       status,
       featured,
       notification,
+      publish_date,
     } = body;
 
     if (!caption || !fulltext) {
@@ -70,8 +72,8 @@ export async function POST(req) {
     const [result] = await pool.execute(
       `
       INSERT INTO posts
-      (src, caption, \`fulltext\`,description ,categoryId, userId, \`status\`, featured, notification,  \`views\`, createDate, updateDate)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())
+      (src, caption, \`fulltext\`,description ,categoryId, userId, \`status\`, featured, notification,  \`views\`, createDate, updateDate, publish_date)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW(), ?)
       `,
       [
         src ?? null,
@@ -83,6 +85,7 @@ export async function POST(req) {
         status ?? 1,
         featured ?? 0,
         notification ?? 0,
+        publish_date ?? new Date()
       ]
     );
 
