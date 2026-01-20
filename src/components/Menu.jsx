@@ -71,14 +71,18 @@ export default function Menu() {
                 alt="Home"
               />
             </Link>
-
+            <div>
             {/* MOBILE BUTTON */}
-            <button
+            <div className="flex gap-4 md:hidden px-4">
+              <Search/>
+              <button
               className="md:hidden text-white text-3xl"
               onClick={() => setOpenMobile(!openMobile)}
             >
               ☰
             </button>
+            </div>
+            
 
             {/* MENU LIST */}
             <nav
@@ -92,9 +96,12 @@ export default function Menu() {
                 ? "opacity-100 visible translate-y-0 md:translate-y-0"
                 : "opacity-0 md:opacity-100 invisible md:static translate-y-10 md:translate-y-0"
             }
-          `}
+            `}
             >
+              
               <ul className="flex flex-col md:flex-row xl:gap-2 w-full md:h-full">
+                {/* Mobile */}
+      
                 {menu &&
                   menu?.map((item) => (
                     <li
@@ -269,9 +276,12 @@ export default function Menu() {
                       )}
                     </li>
                   ))}
-                <Search></Search>
+                {/* Tablet + Desktop */}
+                <div className="hidden md:block">
+                  <Search></Search>
+                </div>
               </ul>
-            </nav>
+            </nav></div>
           </>
         )}
       </div>

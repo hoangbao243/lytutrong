@@ -35,6 +35,7 @@ export default function SearchingPage() {
         console.error(err);
       } finally {
         setLoading(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     };
 
@@ -55,7 +56,7 @@ export default function SearchingPage() {
 
       {!loading && data.length === 0 && <p>Không tìm thấy kết quả</p>}
 
-      <ul className="grid grid-cols-2 gap-2">
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {data.map((item, index) => (
           <div key={index} className="group flex mb-12 flex-col justify-start items-start gap-2 w-5/6 h-64 duration-500 relative rounded-lg p-4 bg-[#d7ebe9] hover:-translate-y-2 hover:shadow-xl shadow-gray-400">
             <div
