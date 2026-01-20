@@ -21,6 +21,7 @@ export default function Schoolnews(props) {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  const MAX = 160;
 
   return (
     <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow pb-3">
@@ -43,25 +44,31 @@ export default function Schoolnews(props) {
 
       <div className="flex flex-row grid grid-cols-2 gap-2">
         <div className="h-56 w-full flex transition-transform duration-700 ease-in-out rounded-lg md:col-span-1 col-span-2">
-          <Slideshow data={Data.slice(0, 3)} height="h-56" text="text-sm" bottom='bottom-4' width="w-full"></Slideshow>
+          <Slideshow
+            data={Data.slice(0, 3)}
+            height="h-56"
+            text="text-sm"
+            bottom="bottom-4"
+            width="w-full"
+          ></Slideshow>
         </div>
         {Data &&
           Data.slice(sliceCount).map((item) => (
-            <div key={item?.id} className="flex w-full gap-4 h-[14rem]">
+            <div key={item?.id} className="flex w-full gap-4 min-h-56">
               <Link
                 href={`/post/${item?.id}`}
-                className="bg-white rounded-xl shadow-md p-4 overflow-hidden leading-relaxed"
+                className="bg-white rounded-xl shadow-md p-4 overflow-hidden leading-relaxed clearfix"
               >
                 <img
                   src={item?.src}
                   alt="Thumbnail"
-                  className="float-left w-40 h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
+                  className="float-left w-40 min-h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
                 />
                 <h3 className="font-bold text-blue-700 hover:underline line-clamp-2 text-sm md:text-base">
                   {item?.caption?.charAt(0)?.toUpperCase() +
                     item?.caption?.slice(1)?.toLowerCase()}
                 </h3>
-                <p className="text-gray-600 h-full text-sm text-justify [text-align-last:start] [hyphens:auto] [word-spacing:0.01em] leading-relaxed">
+                <p className="text-gray-600 text-sm text-justify h-36.5 leading-6.5">
                   {item?.description}
                 </p>
               </Link>

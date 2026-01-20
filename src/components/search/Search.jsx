@@ -1,9 +1,19 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
 export default function SearchDropdown() {
   const [open, setOpen] = useState(false);
+  const [keyword, setKeyword] = useState("");
   const ref = useRef(null);
+  const router = useRouter()
+
+  const handleSearch = () => {
+    if (!keyword.trim()) return;
+
+    router.push(`/pages/searching?q=${encodeURIComponent(keyword.trim())}&page=1`);
+  };
+
 
   // Click bên ngoài để đóng
   useEffect(() => {
@@ -15,6 +25,12 @@ export default function SearchDropdown() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   return (
     <div className="relative mt-2.5 hidden md:block" ref={ref}>
@@ -34,6 +50,9 @@ export default function SearchDropdown() {
 
             <input
               type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Tìm kiếm..."
               className="flex-1 outline-none"
             />

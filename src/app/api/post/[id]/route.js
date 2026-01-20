@@ -27,7 +27,8 @@ export async function GET(request, { params }) {
           notification,
           \`views\`,
           createDate,
-          updateDate
+          updateDate,
+          publish_date
         FROM posts
         WHERE id = ?
           AND status = 1
@@ -109,6 +110,7 @@ export async function PUT(req, { params }) {
       status,
       featured,
       notification,
+      publish_date,
     } = body;
 
     if (!id) {
@@ -152,7 +154,8 @@ export async function PUT(req, { params }) {
         \`status\` = ?,
         featured = ?,
         notification = ?,
-        updateDate = NOW()
+        updateDate = NOW(),
+        publish_date = ?
       WHERE id = ?
       `,
       [
@@ -165,6 +168,7 @@ export async function PUT(req, { params }) {
         status ?? 1,
         featured ?? 0,
         notification ?? 0,
+        publish_date ?? new Date(),
         id,
       ]
     );
