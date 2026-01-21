@@ -20,6 +20,7 @@ export async function GET(req) {
       publish_date
     FROM posts
     WHERE status = 1
+    AND publish_date <= NOW()
     ORDER BY updateDate DESC
     `
   );

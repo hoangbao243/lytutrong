@@ -1,5 +1,6 @@
 "use client";
 import Loader from "@/components/loader/Loader";
+import { formatDateTime } from "@/utils";
 import React, { useEffect, useState } from "react";
 
 export default function TopPosts(data) {
@@ -50,7 +51,7 @@ export default function TopPosts(data) {
                         </td>
 
                         <td className="py-3 text-gray-900">
-                          {post.createDate}
+                          {formatDateTime(post.publish_date)}
                         </td>
                       </tr>
                     ))}

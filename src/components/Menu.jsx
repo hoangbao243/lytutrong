@@ -58,7 +58,7 @@ export default function Menu() {
   }, []);
   return (
     <header className="w-full sticky top-0 z-50 max-w-7xl shadow-lg md:px-2">
-      <div className="max-w-7xl bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-16">
+      <div className="max-w-7xl bg-[url(/images/bg-menu.png)] mx-auto px-4 flex items-center justify-between md:justify-center h-full">
         {loading == true ? (
           <Loader2></Loader2>
         ) : (
