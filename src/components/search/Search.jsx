@@ -32,7 +32,7 @@ export default function SearchDropdown() {
   };
 
   return (
-    <div className="relative mt-1.5" ref={ref}>
+    <div className="relative my-2.5" ref={ref}>
       {/* Icon search */}
       <button
         onClick={() => setOpen(!open)}

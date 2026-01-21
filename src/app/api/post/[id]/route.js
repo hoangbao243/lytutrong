@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getPool } from "@/lib/db";
+import { cookies } from "next/headers";
 
 export async function GET(request, { params }) {
   try {
@@ -10,6 +11,33 @@ export async function GET(request, { params }) {
         { message: "Thiếu ID bài viết" },
         { status: 400 }
       );
+    }
+    const cookieStore = await cookies();
+    const viewedKey = `viewed_post_${id}`;
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const hasViewed = cookieStore.get(viewedKey);
+
+     // 🔹 Nếu CHƯA xem → tăng view
+    if (!hasViewed) {
+      await pool.execute(
+        `
+        INSERT INTO views (year, month, views)
+        VALUES (?, ?, 1)
+        ON DUPLICATE KEY UPDATE views = views + 1
+        `,
+        [year, month]
+      );
+
+      await pool.execute(
+      `
+      UPDATE posts
+      SET views = views + 1
+      WHERE id = ?
+      `,
+      [id]
+    );
     }
     
     const [rows] = await pool.execute(
@@ -43,10 +71,15 @@ export async function GET(request, { params }) {
       return NextResponse.json({ message: "News not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       ok: true,
       data: post,
     });
+    res.cookies.set(viewedKey, "1", {
+    maxAge: 60 * 30, // 30 phút
+    path: "/",
+    });
+    return res;
   } catch (error) {
     console.error("Get post error:", error);
     return NextResponse.json({ message: "Lỗi server" }, { status: 500 });
@@ -155,8 +188,8 @@ export async function PUT(req, { params }) {
         featured = ?,
         notification = ?,
         updateDate = NOW(),
-        publish_date = ?
       WHERE id = ?
+      AND publish_date <= NOW()
       `,
       [
         src,

@@ -1,21 +1,18 @@
-export async function GET() {
-  const viewsbyMonth = [
-    { month: "Jan", views: 123 },
-    { month: "Feb", views: 555 },
-    { month: "Mar", views: 177 },
-    { month: "Apr", views: 163 },
-    { month: "May", views: 59 },
-    { month: "Jun", views: 122 },
-    { month: "Jul", views: 199 },
-    { month: "Aug", views: 166 },
-    { month: "Sep", views: 823 },
-    { month: "Oct", views: 275 },
-    { month: "Nov", views: 168 },
-    { month: "Dec", views: 522 },
-  ];
+import { NextResponse } from "next/server";
+import { getPool } from "@/lib/db";
 
-  return Response.json({
-    success: true,
-    data: viewsbyMonth,
-  });
+export async function GET() {
+  const pool = await getPool();
+
+  const [rows] = await pool.execute(
+    `
+    SELECT year, month, views
+    FROM views
+    WHERE year = YEAR(NOW())
+    ORDER BY month ASC
+    LIMIT 12;
+    `,
+  );
+
+  return NextResponse.json(rows);
 }

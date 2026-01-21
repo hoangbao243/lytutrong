@@ -1,9 +1,39 @@
+import axios from "axios";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Footer() {
-  const views = 2025;
+  const [footer, setFooter] = useState([])
+  const [views, setViews] = useState(0)
   const digits = views.toString().split("");
+
+  useEffect(()=>{
+    const getData = async () =>{
+      try {
+        const res = await axios.get(`/api/footer`)
+        if (res.status == 200) {
+          setFooter(res?.data?.rows[0])
+        }
+      } catch (error) {
+        toast.error(error)
+      }
+    }
+    const getView = async () =>{
+      try {
+        const res2 = await axios.get(`/api/views`)
+        if (res2.status == 200) {
+          console.log(res2);
+          setViews(res2.data[0].total)
+        }
+      } catch (error) {
+        toast.error(error.message)
+      }
+    }
+    getView()
+    getData()
+  },[])
+
   return (
     <footer className="flex flex-col justify-center mx-auto md:flex-row bg-[#e4eeed] md:h-30 h-full w-full m-2 mb-4 max-w-7xl rounded-lg border border-gray-300">
       <img
@@ -16,11 +46,11 @@ export default function Footer() {
           <span className="mx-auto md:mx-0">
             Trưởng ban biên tập:{" "}
             <span className="text-emerald-600">
-              Cô Trần Thị Lệ - Hiệu Trưởng
+              {footer.principal} - Hiệu Trưởng
             </span>
           </span>
           <span className="mx-2 md:mx-0">
-            Bản quyền © 2025 Trường Tiểu Học Lý Tự Trọng - Đà Nẵng
+            Bản quyền © {footer.year} Trường Tiểu Học Lý Tự Trọng - Đà Nẵng
           </span>
           <span className="hidden md:inline mx-auto md:mx-0">
             Thiết kế bởi{" "}
@@ -40,9 +70,9 @@ export default function Footer() {
           Thông tin liên hệ
         </p>
         <span className="mx-auto md:mx-0">
-          Địa chỉ: 12 lý tự trọng, P.Hải Châu, TP Đà Nẵng
+          Địa chỉ: {footer.address}
         </span>
-        <span className="mx-auto md:mx-0">Số điện thoại: 0985.145.906</span>
+        <span className="mx-auto md:mx-0">Số điện thoại: {footer.phone}</span>
       </div>
       <p className="w-0 h-0 md:w-0.5 md:h-2/3 md:my-auto md:mx-1 mx-auto my-1 bg-emerald-500"></p>
 

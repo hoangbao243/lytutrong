@@ -1,18 +1,20 @@
 "use client";
 import Loader from "@/components/loader/Loader";
+import { monthToText } from "@/utils";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 export default function ChartViews() {
   const [viewsData, setViewsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const CurreYear = new Date().getFullYear()
   useEffect(() => {
     const getViewsData = async () => {
       try {
         const res = await axios.get(`/api/views/bymonth`);
         if (res.status == 200) {
-          console.log(res.data.data);
-          setViewsData(res.data.data);
+          console.log("yeardddddddddđ",res.data);
+          setViewsData(res?.data);
         }
       } catch (error) {
         console.log(error);
@@ -56,7 +58,7 @@ export default function ChartViews() {
                       />
 
                       <p className="font-bold text-gray-600 text-[10px] sm:text-xs">
-                        {item?.month}
+                        {monthToText(item?.month)}
                       </p>
                     </div>
                   );
@@ -65,7 +67,7 @@ export default function ChartViews() {
           </div>
 
           <p className="font-bold uppercase p-1 mt-3 text-sm sm:text-lg">
-            Lượt xem mỗi tháng
+            Lượt xem năm {CurreYear}
           </p>
         </>
       )}
