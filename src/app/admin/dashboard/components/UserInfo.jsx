@@ -12,7 +12,6 @@ export default function UserInfo() {
       try {
         const res = await axios.get("/api/users");
         setUsers(res.data.users);
-        console.log(res);
       } catch (err) {
         console.log("Load users error:", err);
       }finally{

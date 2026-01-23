@@ -23,7 +23,6 @@ export default function Footer() {
       try {
         const res2 = await axios.get(`/api/views`)
         if (res2.status == 200) {
-          console.log(res2);
           setViews(res2.data[0].total)
         }
       } catch (error) {

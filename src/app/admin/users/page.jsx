@@ -1,15 +1,16 @@
 "use client";
 import Loader from "@/components/loader/Loader";
 import axios from "axios";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Adduser from "./components/Adduser";
+import { useAuth } from "@/contex/AuthContext";
 
 export default function page() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [newUsers, setNewUsers] = useState([]);
+  const { user } = useAuth()
 
   useEffect(() => {
     const getUsers = async () => {
@@ -27,6 +28,10 @@ export default function page() {
     };
     getUsers();
   }, []);
+
+  useEffect(()=>{
+    console.log(user?.role)
+  },[user])
 
   const handleAddUser = (newUser) => {
     setNewUsers((prev) => [...prev, newUser]);
