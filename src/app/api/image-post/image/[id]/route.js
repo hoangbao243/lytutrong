@@ -10,15 +10,14 @@ export async function DELETE(req, { params }) {
     }
 
     //  xóa
-    const [result] = await pool.query(
-      "DELETE FROM image_posts WHERE id = ?",
-      [Number(id)]
-    );
+    const [result] = await pool.query("DELETE FROM image_posts WHERE id = ?", [
+      Number(id),
+    ]);
 
     if (result.affectedRows === 0) {
       return NextResponse.json(
         { message: "Bài viết không tồn tại" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -28,7 +27,7 @@ export async function DELETE(req, { params }) {
   } catch (error) {
     return NextResponse.json(
       { message: "Lỗi khi xóa category", error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -43,14 +42,29 @@ export async function PUT(req, { params }) {
     // =========================
     // 1. Update library_image_posts
     // =========================
-    await pool.execute(
-      `
-      UPDATE library_image_posts
-      SET title = ?, description = ?
-      WHERE id = ?
-      `,
-      [title, description, id]
-    );
+    const fields = [];
+    const values = [];
+    if (title !== undefined) {
+      fields.push("title = ?");
+      values.push(title);
+    }
+    if (description !== undefined) {
+      fields.push("description = ?");
+      values.push(description);
+    }
+
+    if (fields.length > 0) {
+      values.push(id);
+
+      await pool.execute(
+        `
+        UPDATE library_image_posts
+        SET ${fields.join(", ")}
+        WHERE id = ?
+        `,
+        values,
+      );
+    }
 
     // =========================
     // 2. Update sort_order từng ảnh
@@ -63,8 +77,8 @@ export async function PUT(req, { params }) {
           SET sort_order = ?
           WHERE id = ? AND post_id = ?
           `,
-          [index + 1, img.id, id] // ✅ sort_order = index + 1
-        )
+          [index + 1, img.id, id], // ✅ sort_order = index + 1
+        ),
       );
 
       await Promise.all(updatePromises);
@@ -78,7 +92,7 @@ export async function PUT(req, { params }) {
 
     return Response.json(
       { message: "Update failed", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

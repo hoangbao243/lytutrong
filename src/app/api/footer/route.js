@@ -12,7 +12,7 @@ export async function GET(req) {
     `,
   );
 
-  return Response.json({
+  return NextResponse.json({
     rows,
   });
 }
@@ -28,9 +28,9 @@ export async function PUT(req) {
       phone
     } = body;
 
-    if (!caption || !fulltext) {
+    if (!principal || !year || !address || !phone) {
       return NextResponse.json(
-        { message: "Thiếu tiêu đề hoặc nội dung" },
+        { message:"Vui lòng điền đủ thông tin "},
         { status: 400 }
       );
     }
@@ -52,7 +52,7 @@ export async function PUT(req) {
     // 2️⃣ Update bài viết
     await pool.execute(
       `
-      UPDATE posts SET
+      UPDATE footer SET
         principal = ?,
         year = ?,
         address = ?,
@@ -68,11 +68,11 @@ export async function PUT(req) {
     );
 
     // 3️⃣ Lấy lại bài vừa update
-    const [rows] = await pool.execute(`SELECT * FROM posts WHERE id = ?`, [id]);
+    const [rows] = await pool.execute(`SELECT * FROM footer WHERE id = ?`, [1]);
 
     return NextResponse.json({
       message: "Cập nhật bài viết thành công",
-      data: rows[0],
+      data: rows,
     });
   } catch (error) {
     console.error("UPDATE POST ERROR:", error);

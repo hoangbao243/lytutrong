@@ -1,4 +1,5 @@
 "use client";
+import { AuthContext } from "@/contex/AuthContext";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ export default function AdminLayout({ children }) {
     { id: 4, title: "Tài khoản", src: "/admin/users", icon: "" },
   ];
   const [open, setOpen] = useState(true);
+  const [user, setUser] = useState(null);
   const navigate = useRouter();
   const openNavbar = () => {
     setOpen(!open);
@@ -25,6 +27,16 @@ export default function AdminLayout({ children }) {
       console.log(res);
     }
   };
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await axios.get(`/api/admin/me`);
+      if (res.status == 200) {
+        setUser(res.data);
+      }
+    };
+    getUser();
+  }, []);
 
   return (
     <div className="flex font-sans bg-[#F9FAFB]">
@@ -43,9 +55,7 @@ export default function AdminLayout({ children }) {
           </div>
 
           <div className="relative group cursor-pointer">
-            <div
-              className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center ml-2 cursor-pointer"
-            >
+            <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center ml-2 cursor-pointer">
               <svg
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -60,9 +70,7 @@ export default function AdminLayout({ children }) {
               </svg>
             </div>
             {/* Dropdown */}
-            <div
-              className="absolute right-0 mt-1 w-40 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-            >
+            <div className="absolute right-0 mt-1 w-40 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-lg"
@@ -75,7 +83,7 @@ export default function AdminLayout({ children }) {
         <aside
           className={`${
             open == true ? "w-64" : "w-16"
-          } duration-300 space-y-5 h-full fixed border-r-1 border-gray-300 bg-gray-200/50`}
+          } duration-300 space-y-5 h-full fixed border-r border-gray-300 bg-gray-200/50`}
         >
           <nav className=" space-y-3 text-black">
             <div className="py-1.5">
@@ -118,7 +126,9 @@ export default function AdminLayout({ children }) {
             open == true ? "ml-64" : "ml-16"
           } duration-300 h-fit`}
         >
-          {children}
+          <AuthContext.Provider value={{ user }}>
+            {children}
+          </AuthContext.Provider>
         </main>
       </div>
     </div>

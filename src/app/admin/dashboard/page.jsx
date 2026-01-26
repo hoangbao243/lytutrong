@@ -22,8 +22,6 @@ export default function Dashboard() {
       const getTopNewPost = async () =>{
         const res = await axios.get(`/api/post/topnew`)
         if (res.status == 200) {
-          console.log("aaaaaaaaaaa",res?.data);
-          
           setTopNewsPost(res?.data)
         }
       }

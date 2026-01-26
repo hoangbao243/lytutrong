@@ -13,7 +13,6 @@ export default function ChartViews() {
       try {
         const res = await axios.get(`/api/views/bymonth`);
         if (res.status == 200) {
-          console.log("yeardddddddddđ",res.data);
           setViewsData(res?.data);
         }
       } catch (error) {
