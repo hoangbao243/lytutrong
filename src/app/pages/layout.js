@@ -39,7 +39,6 @@ export default function PagesLayout({ children }) {
       <main className="flex flex-col min-h-screen w-full max-w-7xl bg-white dark:bg-black">
         <Header />
         <Menu />
-
         {/* RESPONSIVE MAIN LAYOUT */}
         <section
           className="flex h-fit w-full md:p-2 flex-col lg:flex-row gap-4"

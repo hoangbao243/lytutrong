@@ -83,7 +83,7 @@ export default function AdminLayout({ children }) {
         <aside
           className={`${
             open == true ? "w-64" : "w-16"
-          } duration-300 space-y-5 h-full fixed border-r-1 border-gray-300 bg-gray-200/50`}
+          } duration-300 space-y-5 h-full fixed border-r border-gray-300 bg-gray-200/50`}
         >
           <nav className=" space-y-3 text-black">
             <div className="py-1.5">
