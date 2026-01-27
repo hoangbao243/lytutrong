@@ -188,8 +188,8 @@ export async function PUT(req, { params }) {
         featured = ?,
         notification = ?,
         updateDate = NOW(),
+        publish_date = ?
       WHERE id = ?
-      AND publish_date <= NOW()
       `,
       [
         src,

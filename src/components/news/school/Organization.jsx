@@ -12,7 +12,7 @@ export default function Organization(props) {
           {props.title}
         </div>
         <Link
-          href={`#`}
+          href={`/pages/category/tin-tuc-doan-doi`}
           className="flex text-[14px] capitalize text-gray-400 font-medium mt-4 mr-4"
         >
           <img

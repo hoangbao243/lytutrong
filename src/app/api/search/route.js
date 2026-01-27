@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPool } from "@/lib/db";
 
-const LIMIT = 6;
+const LIMIT = 8;
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);

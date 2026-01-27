@@ -70,7 +70,7 @@ export default function News() {
           Tin nổi bật
         </div>
         <Link
-          href={`#`}
+          href={`/pages/category/tin-noi-bat`}
           className="flex text-[14px] capitalize text-gray-400 font-medium mt-4 mr-4"
         >
           <img
@@ -89,7 +89,7 @@ export default function News() {
               key={item?.id}
               className="flex flex-col justify-between transform transition duration-300 hover:scale-110 rounded-lg shadow-lg h-68 w-full hover:shadow-xl bg-white hover:text-blue-500"
             >
-              <div className="bg-gradient-to-br from-rose-100 via-purple-200 to-purple-200 m-2 h-3/6 rounded-lg">
+              <div className="bg-linear-to-br from-rose-100 via-purple-200 to-purple-200 m-2 h-3/6 rounded-lg">
                 <img
                   src={item?.src}
                   alt="lytutrongnews"
