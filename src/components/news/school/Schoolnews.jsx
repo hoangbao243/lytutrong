@@ -30,7 +30,7 @@ export default function Schoolnews(props) {
           {props.title}
         </div>
         <Link
-          href={`#`}
+          href={`/pages/category/tin-tuc-nha-truong`}
           className="flex text-[14px] capitalize text-gray-400 font-medium mt-4 mr-4"
         >
           <img

@@ -11,7 +11,7 @@ export default function Schoolnews2(props) {
           {props.title}
         </div>
         <Link
-          href={`#`}
+          href={`/pages/category/hoat-dong-giang-day`}
           className="flex text-[14px] capitalize text-gray-400 font-medium mt-4 mr-4"
         >
           <img
