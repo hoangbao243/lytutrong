@@ -9,7 +9,7 @@ export async function GET(request, { params }) {
     if (!id) {
       return NextResponse.json(
         { message: "Thiếu ID bài viết" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const cookieStore = await cookies();
@@ -18,8 +18,70 @@ export async function GET(request, { params }) {
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
     const hasViewed = cookieStore.get(viewedKey);
+    let post = null;
 
-     // 🔹 Nếu CHƯA xem → tăng view
+    /* ===============================
+      TH1 CHECK ID CÓ PHẢI CATEGORY KHÔNG
+    =============================== */
+    const [[category]] = await pool.execute(
+      `SELECT id, name FROM categories WHERE id = ? LIMIT 1`,
+      [id],
+    );
+
+    if (category) {
+      const [[latestPost]] = await pool.execute(
+        `
+        SELECT p.*
+        FROM posts p
+        JOIN categories c ON c.id = p.categoryId
+        WHERE (c.id = ? OR c.parent = ?)
+          AND p.status = 1
+          AND p.publish_date <= NOW()
+        ORDER BY p.publish_date DESC
+        LIMIT 1
+        `,
+        [id, id],
+      );
+
+      if (!latestPost) {
+        return NextResponse.json({
+          type: "category",
+          category,
+          data: null,
+          message: "Chưa có bài viết",
+        });
+      }
+
+      post = latestPost;
+    }
+    /* ===============================
+      TH2 ID là BÀI VIẾT
+    =============================== */
+    if (!post) {
+      const [[postById]] = await pool.execute(
+        `
+        SELECT *
+        FROM posts
+        WHERE id = ?
+          AND status = 1
+          AND publish_date <= NOW()
+        ORDER BY publish_date DESC
+        LIMIT 1
+        `,
+        [id],
+      );
+
+      if (!postById) {
+        return NextResponse.json(
+          { message: "Không tìm thấy bài viết" },
+          { status: 404 },
+        );
+      }
+
+      post = postById;
+    }
+
+    // 🔹 Nếu CHƯA xem → tăng view
     if (!hasViewed) {
       await pool.execute(
         `
@@ -27,57 +89,27 @@ export async function GET(request, { params }) {
         VALUES (?, ?, 1)
         ON DUPLICATE KEY UPDATE views = views + 1
         `,
-        [year, month]
+        [year, month],
       );
 
       await pool.execute(
-      `
+        `
       UPDATE posts
       SET views = views + 1
       WHERE id = ?
       `,
-      [id]
-    );
-    }
-    
-    const [rows] = await pool.execute(
-      `
-        SELECT
-          id,
-          src,
-          caption,
-          \`fulltext\`,
-          description,
-          categoryId,
-          userId,
-          \`status\`,
-          featured,
-          notification,
-          \`views\`,
-          createDate,
-          updateDate,
-          publish_date
-        FROM posts
-        WHERE id = ?
-          AND status = 1
-        LIMIT 1;
-      `,
-      [id]
-    );
-
-    const post = rows[0];
-
-    if (!post) {
-      return NextResponse.json({ message: "News not found" }, { status: 404 });
+        [post.id],
+      );
     }
 
     const res = NextResponse.json({
       ok: true,
+      type: category ? "category" : "post",
       data: post,
     });
     res.cookies.set(viewedKey, "1", {
-    maxAge: 60 * 30, // 30 phút
-    path: "/",
+      maxAge: 60 * 30, // 30 phút
+      path: "/",
     });
     return res;
   } catch (error) {
@@ -96,7 +128,7 @@ export async function DELETE(request, { params }) {
     if (!id) {
       return NextResponse.json(
         { message: "Thiếu ID bài viết!" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -105,13 +137,13 @@ export async function DELETE(request, { params }) {
     // 🔹 Kiểm tra bài viết tồn tại
     const [checkRows] = await pool.execute(
       `SELECT id FROM posts WHERE id = ? LIMIT 1`,
-      [id]
+      [id],
     );
 
     if (checkRows.length === 0) {
       return NextResponse.json(
         { message: "Bài viết không tồn tại" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -149,14 +181,14 @@ export async function PUT(req, { params }) {
     if (!id) {
       return NextResponse.json(
         { message: "Thiếu ID bài viết" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!caption || !fulltext) {
       return NextResponse.json(
         { message: "Thiếu tiêu đề hoặc nội dung" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -170,7 +202,7 @@ export async function PUT(req, { params }) {
     if (exists.length === 0) {
       return NextResponse.json(
         { message: "Bài viết không tồn tại" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -203,7 +235,7 @@ export async function PUT(req, { params }) {
         notification ?? 0,
         publish_date ?? new Date(),
         id,
-      ]
+      ],
     );
 
     // 3️⃣ Lấy lại bài vừa update

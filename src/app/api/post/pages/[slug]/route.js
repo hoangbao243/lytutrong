@@ -8,7 +8,7 @@ export async function GET(req, { params }) {
     if (!slug) {
       return NextResponse.json(
         { ok: false, message: "Thiếu slug" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -59,20 +59,16 @@ export async function GET(req, { params }) {
     }
 
     // =========================
-    // CASE 2: tin-tuc-nha-truong / hoat-dong-giang-day
+    // CASE 2: category
     // =========================
-    else if (
-      slug === "tin-tuc-nha-truong" ||
-      slug === "hoat-dong-giang-day"
-    ) {
+    else if (slug === "tin-tuc-nha-truong") {
       countSql = `
         SELECT COUNT(*) AS total
         FROM posts 
         WHERE status = 1
           AND categoryId = 2
-          AND p.publish_date <= NOW()
+          AND publish_date <= NOW()
       `;
-
       dataSql = `
         SELECT
           id,
@@ -89,11 +85,68 @@ export async function GET(req, { params }) {
         FROM posts
         WHERE status = 1
           AND categoryId = 2
-          AND p.publish_date <= NOW()
+          AND publish_date <= NOW()
         ORDER BY publish_date DESC
         LIMIT ? OFFSET ?
       `;
-
+      sqlParams = [limit, offset];
+    } else if (slug === "hoat-dong-giang-day") {
+      countSql = `
+        SELECT COUNT(*) AS total
+        FROM posts 
+        WHERE status = 1
+          AND categoryId = 4
+          AND publish_date <= NOW()
+      `;
+      dataSql = `
+        SELECT
+          id,
+          src,
+          caption,
+          description,
+          categoryId,
+          createDate,
+          updateDate,
+          views,
+          status,
+          featured,
+          publish_date
+        FROM posts
+        WHERE status = 1
+          AND categoryId = 4
+          AND publish_date <= NOW()
+        ORDER BY publish_date DESC
+        LIMIT ? OFFSET ?
+      `;
+      sqlParams = [limit, offset];
+    } else if (slug === "tin-tuc-doan-doi") {
+      countSql = `
+        SELECT COUNT(*) AS total
+        FROM posts 
+        WHERE status = 1
+          AND categoryId = 3
+          AND publish_date <= NOW()
+      `;
+      dataSql = `
+        SELECT
+          id,
+          src,
+          caption,
+          description,
+          categoryId,
+          createDate,
+          updateDate,
+          views,
+          status,
+          featured,
+          publish_date
+        FROM posts
+        WHERE status = 1
+          AND categoryId = 3
+          AND publish_date <= NOW()
+        ORDER BY publish_date DESC
+        LIMIT ? OFFSET ?
+      `;
       sqlParams = [limit, offset];
     }
 
@@ -103,14 +156,14 @@ export async function GET(req, { params }) {
     else {
       return NextResponse.json(
         { ok: false, message: "Slug không hợp lệ" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // ===== Execute =====
     const [[{ total }]] = await pool.execute(
       countSql,
-      slug === "tin-noi-bat" ? [] : [slug]
+      slug === "tin-noi-bat" ? [] : [slug],
     );
 
     const [rows] = await pool.execute(dataSql, sqlParams);
@@ -129,7 +182,7 @@ export async function GET(req, { params }) {
     console.error("Get posts by slug error:", error);
     return NextResponse.json(
       { ok: false, message: "Lỗi server" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

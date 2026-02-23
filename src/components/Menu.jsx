@@ -157,7 +157,7 @@ export default function Menu() {
                           {item.children?.map((sub) => (
                             <li key={sub.id} className="relative group/sub ">
                               <Link
-                                href={`/post/${sub?.id}`}
+                                href={sub.name == "Thư viện ảnh" ? `/pages/library` : `/post/${sub?.id}`}
                                 className="flex items-center justify-between px-4 py-2 hover:bg-zinc-100 hover:text-red-400"
                               >
                                 {sub.name}
@@ -224,7 +224,7 @@ export default function Menu() {
                                 }
                               >
                                 <Link
-                                  href={`/post/${sub?.id}`}
+                                  href={sub.name == "Thư viện ảnh" ? `/pages/library` : `/post/${sub?.id}`}
                                   className="  text-white"
                                 >
                                   {sub.name}

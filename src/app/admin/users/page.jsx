@@ -4,17 +4,21 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Adduser from "./components/Adduser";
 import { useAuth } from "@/contex/AuthContext";
+import toast, { Toaster } from "react-hot-toast";
+import DeleteModal from "../component/DeleteModal";
 
 export default function page() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [newUsers, setNewUsers] = useState([]);
-  const { user } = useAuth()
+  const { user } = useAuth();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState();
 
-  useEffect(() => {
-    const getUsers = async () => {
+  const getUsers = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(`/api/users`);
         if (res.status == 200) {
           console.log(res);
@@ -26,17 +30,51 @@ export default function page() {
         setLoading(false);
       }
     };
+
+  useEffect(() => {
     getUsers();
   }, []);
 
-  useEffect(()=>{
-    console.log(user?.role)
-  },[user])
+  useEffect(() => {
+    console.log("users.........",users);
+  }, [users]);
 
-  const handleAddUser = (newUser) => {
-    setNewUsers((prev) => [...prev, newUser]);
-    console.log(newUser);
+  const handleAddUser = async (newUser) => {
+    try {
+      const res = await axios.post(`/api/admin/register`, newUser);
+      if (res.status == 200 || res.status == 201) {
+        toast.success("Tạo tài khoản thành công!");
+        getUsers()
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
     // Gọi API add user
+  };
+
+  const onDelete = (id) => {
+    setDeleteId(id);
+    setOpenDeleteModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      setLoading(true)
+      const res = await axios.delete(`/api/users/${id}`);
+      console.log(res);
+
+      if (res.status == 200) {
+        toast.success("Xóa thành công!");
+        getUsers()
+      }
+      // reload list
+    } catch (err) {
+      console.log("err",err);
+      toast.error(err.response?.data?.message || "Không thể xóa danh mục");
+    } finally {
+      setOpenDeleteModal(false);
+      setLoading(false)
+    }
   };
 
   return (
@@ -46,6 +84,7 @@ export default function page() {
       ) : (
         <>
           <div className="p-4 flex items-center">
+            <Toaster position="top-right"></Toaster>
             <h1 className="text-3xl">Users</h1>
             <button
               className="group cursor-pointer outline-none hover:rotate-90 duration-300 ml-4 mt-1"
@@ -83,15 +122,15 @@ export default function page() {
                   <th>Hành động</th>
                 </tr>
                 {users &&
-                  users.map((item, index) => (
+                  users.map((item) => (
                     <tr
-                      key={index}
+                      key={item.id}
                       className="border-b border-gray-300 hover:bg-orange-100 bg-gray-100"
                     >
                       <td className="p-3 px-5">
                         <input
                           type="text"
-                          defaultValue={item.username}
+                          value={item.username}
                           className="bg-transparent py-2"
                           disabled
                         ></input>
@@ -122,13 +161,14 @@ export default function page() {
                           <>
                             <button
                               type="button"
-                              className="mr-3 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                              className="mr-3 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline cursor-pointer"
                             >
                               Save
                             </button>
                             <button
                               type="button"
-                              className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                              className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline cursor-pointer"
+                              onClick={() => onDelete(item.id)}
                             >
                               Delete
                             </button>
@@ -139,6 +179,11 @@ export default function page() {
                   ))}
               </tbody>
             </table>
+            <DeleteModal
+              open={openDeleteModal}
+              onClose={() => setOpenDeleteModal(false)}
+              onConfirm={() => handleDelete(deleteId)}
+            ></DeleteModal>
           </div>
         </>
       )}

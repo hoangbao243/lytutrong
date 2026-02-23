@@ -11,7 +11,8 @@ export async function GET() {
       FROM posts
       WHERE notification = 1
         AND status = 1
-      ORDER BY updateDate DESC
+        AND publish_date <= NOW()
+      ORDER BY publish_date DESC
       LIMIT 4
     `
   );

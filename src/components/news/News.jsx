@@ -102,7 +102,7 @@ export default function News() {
               </div>
 
               <span className="text-gray-600 text-[14px] ml-4 my-1">
-                {item?.updateDate && formatDateTime(item?.updateDate)}
+                {item?.publish_date && formatDateTime(item?.publish_date)}
               </span>
             </Link>
           ))}

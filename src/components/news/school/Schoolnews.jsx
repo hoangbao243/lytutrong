@@ -24,7 +24,7 @@ export default function Schoolnews(props) {
   const MAX = 160;
 
   return (
-    <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow pb-3">
+    <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow pb-3 rounded-xl">
       <div className="flex h-fit w-full justify-between items-center border-b-2 border-blue-400 text-2xl uppercase">
         <div className="w-fit p-2 font-bold text-xl text-white bg-blue-400 rounded-t-xl">
           {props.title}

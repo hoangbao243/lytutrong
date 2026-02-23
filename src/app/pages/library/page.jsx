@@ -4,6 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function GalleryPage() {
   const [data, setData] = useState([]);
@@ -13,39 +14,29 @@ export default function GalleryPage() {
   const limit = 8;
 
   const getDataGallery = async () => {
-    
-    const res = await axios.get(`/api/image-post?page=${page}&limit=${limit}`);
-    if (res.status == 200) {
-      console.log(res?.data?.data);
-      setData(res?.data?.data);
-      setPagination(res?.data?.totalPages || 1);
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        `/api/image-post?page=${page}&limit=${limit}`,
+      );
+      if (res.status == 200) {
+        console.log(res?.data?.data);
+        setData(res?.data?.data);
+        setPagination(res?.data?.totalPages || 1);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    try {
-      getDataGallery();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    getDataGallery();
   }, []);
 
-  useEffect(()=>{
-    console.log(loading);
-    
-  },[loading])
-
   useEffect(() => {
-    try {
-      setLoading(true);
-      getDataGallery();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    getDataGallery();
   }, [page]);
 
   const nextPage = () => {
@@ -82,7 +73,7 @@ export default function GalleryPage() {
                     className="group block w-50 wrap rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-lg transition"
                   >
                     {/* Image */}
-                    <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                    <div className="relative aspect-4/3 overflow-hidden bg-gray-100">
                       <Image
                         src={post.src}
                         alt={post.title}
@@ -108,7 +99,7 @@ export default function GalleryPage() {
                       <div className="flex items-center justify-between text-xs text-gray-500 pt-2">
                         <span>
                           {new Date(post.createDate).toLocaleDateString(
-                            "vi-VN"
+                            "vi-VN",
                           )}
                         </span>
                       </div>
@@ -118,7 +109,7 @@ export default function GalleryPage() {
             </div>
 
             {/* PAGINATION */}
-            <div className="flex items-center gap-3 mt-4">
+            <div className="flex items-center justify-center gap-3 mt-4">
               <button
                 onClick={prevPage}
                 disabled={page === 1}
