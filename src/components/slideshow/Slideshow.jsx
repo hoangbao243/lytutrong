@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from 'react'
  *  - height: Tailwind-compatible height class or CSS (default 'h-[50vh]')
  */
 export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]', bottom = "bottom-4", width = "w-fit", text="text-base"}) {
-  const slides = data
+  const slides = data;
   const [index, setIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const timerRef = useRef(null)
@@ -43,7 +43,7 @@ export default function Slideshow({ data, interval = 4000, height = 'h-[40vh]', 
         className="h-full flex transition-transform duration-700 ease-in-out"
         style={{ width: `${slides?.length * 100}%`, transform: `translateX(-${index * (100 / slides?.length)}%)` }}
       >
-        {slides.map((s) => (
+        {slides && slides.map((s) => (
           <div
             key={s.id}
             className="shrink-0 w-full relative flex items-center justify-center"

@@ -77,9 +77,9 @@ export default function FooterSetting() {
             ))}
         <button
           type="submit"
-          className="p-2 bg-blue-300 rounded-2xl cursor-pointer"
+          className="p-2 bg-blue-200 hover:bg-blue-300 hover:shadow rounded-xl mt-2 cursor-pointer"
         >
-          submit
+          Cập nhật
         </button>
       </form>
       <Toaster position="top-right" reverseOrder={false}></Toaster>

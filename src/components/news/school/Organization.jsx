@@ -6,7 +6,7 @@ import PostCard from "@/components/postCard/PostCard";
 export default function Organization(props) {
   const data = props.props || [];
   return (
-    <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow ">
+    <div className="w-full h-full flex flex-col justify-start gap-2 bg-neutral-50 shadow rounded-xl">
       <div className="flex h-fit w-full justify-between items-center border-b-2 border-blue-400 text-2xl uppercase">
         <div className="w-fit p-2 font-bold text-xl text-white bg-blue-400 rounded-t-xl">
           {props.title}

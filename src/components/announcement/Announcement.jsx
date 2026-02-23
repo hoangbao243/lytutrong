@@ -29,7 +29,7 @@ export default function Announcement(props) {
                     {item.caption && capitalizeTitle(item.caption)}
                   </Link>
                   <span className="text-[12px] text-gray-500">
-                    {item.updateDate && formatDateTime(item.updateDate)}
+                    {item.publish_date && formatDateTime(item.publish_date)}
                   </span>
                 </div>
               </li>
@@ -44,7 +44,7 @@ export default function Announcement(props) {
                   {item.caption && capitalizeTitle(item.caption)}
                 </Link>
                 <span className="text-[12px] text-gray-500">
-                  {item.updateDate && formatDateTime(item.updateDate)}
+                  {item.publish_date && formatDateTime(item.publish_date)}
                 </span>
               </li>
             )) : <Loader2></Loader2>}

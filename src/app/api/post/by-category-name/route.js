@@ -23,7 +23,8 @@ export async function GET(req) {
     JOIN categories c ON p.categoryId = c.id
     WHERE c.name = ?
       AND p.status = 1
-    ORDER BY p.updateDate DESC
+      AND p.publish_date <= NOW()
+    ORDER BY p.publish_date DESC
     LIMIT ?
     `,
     [name, limit]

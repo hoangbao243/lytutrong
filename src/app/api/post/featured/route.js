@@ -16,11 +16,13 @@ export async function GET(req) {
       updateDate,
       views,
       status,
-      featured
+      featured,
+      publish_date
     FROM posts
     WHERE status = 1
       AND featured = 1
-    ORDER BY updateDate DESC
+      AND publish_date <= NOW()
+    ORDER BY publish_date DESC
     LIMIT 4
     `
   );

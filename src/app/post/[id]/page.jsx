@@ -20,8 +20,7 @@ export default function Postpage() {
   useEffect(() => {
     const getPost = async () => {
       try {
-        let res = []
-        id >= 1 && id <= 23 ? res = await axios.get(`/api/post/menu/${id}`) : res = await axios.get(`/api/post/${id}`);
+        const res = await axios.get(`/api/post/${id}`);
         if (res.status == 200) {
           setPost(res.data.data);
           //lấy các bài viết khác
@@ -58,7 +57,9 @@ export default function Postpage() {
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-7xl flex-col items-start bg-white dark:bg-black">
-        <Header></Header>
+        <div className="w-full md:px-2 bg-transparent">
+          <Header></Header>
+        </div>
         <Menu></Menu>
         <section className="flex flex-col lg:flex-row w-full p-2 h-1/3">
           <div className="flex flex-col w-full lg:w-3/4 md:mx-5">

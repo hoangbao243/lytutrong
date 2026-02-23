@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import "../globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -37,16 +37,14 @@ export default function PagesLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen items-center md:mt-2 justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-col min-h-screen w-full max-w-7xl bg-white dark:bg-black">
-        <Header />
+        <div className="md:px-2">
+          <Header />
+        </div>
         <Menu />
         {/* RESPONSIVE MAIN LAYOUT */}
-        <section
-          className="flex h-fit w-full md:p-2 flex-col lg:flex-row gap-4"
-        >
+        <section className="flex h-fit w-full md:p-2 flex-col lg:flex-row gap-4">
           {/* LEFT: MAIN + NEWS */}
-          <div className="flex flex-col w-full lg:w-3/4">
-            {children}
-          </div>
+          <div className="flex flex-col w-full lg:w-3/4">{children}</div>
 
           {/* RIGHT: RIGHTMENU */}
           <div className="flex flex-col items-center w-full lg:w-1/4">
@@ -56,10 +54,11 @@ export default function PagesLayout({ children }) {
       </main>
       <div
         onClick={scrollToTop}
-        className={`fixed bottom-6 right-3 z-50 p-3 rounded-full bg-[#7cbf96c7] text-white shadow-xl transition-all duration-300 hover:bg-[#7cbf96] ${visible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-10 pointer-events-none"
-          }`}
+        className={`fixed bottom-6 right-3 z-50 p-3 rounded-full bg-[#7cbf96c7] text-white shadow-xl transition-all duration-300 hover:bg-[#7cbf96] ${
+          visible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10 pointer-events-none"
+        }`}
       >
         <img src="/images/icon/up-arrow.png" className="w-4 h-4"></img>
       </div>

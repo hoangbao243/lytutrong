@@ -1,4 +1,5 @@
 import { getPool } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -8,7 +9,7 @@ export async function GET() {
       "SELECT id, username, isActive, lastlogin, role FROM users ORDER BY id DESC"
     );
     console.error("Get users :", rows);
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ users: rows }),
       {
         status: 200,
@@ -17,7 +18,7 @@ export async function GET() {
     );
   } catch (err) {
     console.error("Get users error:", err);
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ message: "Lỗi servers" }),
       {
         status: 500,
