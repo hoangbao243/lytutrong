@@ -21,7 +21,7 @@ export async function GET(req) {
     FROM posts
     WHERE status = 1
     AND publish_date <= NOW()
-    ORDER BY publish_date DESC
+    ORDER BY id DESC
     `
   );
 

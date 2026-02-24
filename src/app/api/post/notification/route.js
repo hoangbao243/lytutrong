@@ -9,7 +9,7 @@ export async function GET() {
     `
     SELECT *
       FROM posts
-      WHERE notification = 1
+      WHERE notification = 1 or categoryId = 11
         AND status = 1
         AND publish_date <= NOW()
       ORDER BY publish_date DESC
