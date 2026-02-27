@@ -11,32 +11,30 @@ export default function page() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-  const [newUsers, setNewUsers] = useState([]);
-  const { user } = useAuth();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
 
   const getUsers = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`/api/users`);
-        if (res.status == 200) {
-          console.log(res);
-          setUsers(res.data.users);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
+    try {
+      setLoading(true);
+      const res = await axios.get(`/api/users`);
+      if (res.status == 200) {
+        console.log(res);
+        setUsers(res.data.users);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getUsers();
   }, []);
 
   useEffect(() => {
-    console.log("users.........",users);
+    console.log("users.........", users);
   }, [users]);
 
   const handleAddUser = async (newUser) => {
@@ -44,7 +42,7 @@ export default function page() {
       const res = await axios.post(`/api/admin/register`, newUser);
       if (res.status == 200 || res.status == 201) {
         toast.success("Tạo tài khoản thành công!");
-        getUsers()
+        getUsers();
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -59,21 +57,51 @@ export default function page() {
 
   const handleDelete = async (id) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await axios.delete(`/api/users/${id}`);
       console.log(res);
 
       if (res.status == 200) {
         toast.success("Xóa thành công!");
-        getUsers()
+        getUsers();
       }
       // reload list
     } catch (err) {
-      console.log("err",err);
+      console.log("err", err);
       toast.error(err.response?.data?.message || "Không thể xóa danh mục");
     } finally {
       setOpenDeleteModal(false);
-      setLoading(false)
+      setLoading(false);
+    }
+  };
+
+  const handleToggle = async (id, value) => {
+    try {
+      await axios.patch(`/api/users/${id}`, {
+        isActive: value,
+      });
+
+      // update local state ngay, khỏi gọi lại API
+      setUsers((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, isActive: value } : u)),
+      );
+
+      toast.success("Cập nhật trạng thái thành công!");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Không thể cập nhật");
+    }
+  };
+
+  const handleChangeRole = async (id, value) => {
+    try {
+      const res = await axios.patch(`/api/users/${id}`, {
+        role: value,
+      });
+      if (res.status == 200) {
+        toast.success(`Cập nhật thành công!`);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || `Không thể thay đổi!`);
     }
   };
 
@@ -85,7 +113,7 @@ export default function page() {
         <>
           <div className="p-4 flex items-center">
             <Toaster position="top-right"></Toaster>
-            <h1 className="text-3xl">Users</h1>
+            <h1 className="text-3xl font-bold">Tài khoản</h1>
             <button
               className="group cursor-pointer outline-none hover:rotate-90 duration-300 ml-4 mt-1"
               title="Add New"
@@ -119,7 +147,7 @@ export default function page() {
                   <th className="text-left p-3 px-5">Tên</th>
                   <th className="text-left p-3 px-5">Kích hoạt</th>
                   <th className="text-left p-3 px-5">Quyền</th>
-                  <th>Hành động</th>
+                  <th>Thao tác</th>
                 </tr>
                 {users &&
                   users.map((item) => (
@@ -141,18 +169,30 @@ export default function page() {
                         ) : (
                           <input
                             type="checkbox"
-                            defaultChecked={`${item?.isActive}`}
+                            defaultChecked={Boolean(item?.isActive)}
+                            onChange={(e) =>
+                              handleToggle(item.id, e.target.checked)
+                            }
                             className="w-5 h-5 bg-transparent border-b-2 border-gray-300 py-2 accent-blue-600"
                           ></input>
                         )}
                       </td>
                       <td className="p-3 px-5">
-                        <input
-                          type="text"
-                          defaultValue={item?.role}
-                          className="bg-transparent py-2"
-                          disabled
-                        ></input>
+                        {item.username == `admin` ? (
+                          ""
+                        ) : (
+                          <select
+                            name="role"
+                            className="border border-gray-300 p-2 rounded-md text-black"
+                            defaultValue={item.role}
+                            onChange={(e) =>
+                              handleChangeRole(item.id, e.target.value)
+                            }
+                          >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                        )}
                       </td>
                       <td className="p-3 px-5 flex justify-center">
                         {item.username == "admin" ? (
@@ -161,16 +201,10 @@ export default function page() {
                           <>
                             <button
                               type="button"
-                              className="mr-3 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline cursor-pointer"
-                            >
-                              Save
-                            </button>
-                            <button
-                              type="button"
                               className="text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline cursor-pointer"
                               onClick={() => onDelete(item.id)}
                             >
-                              Delete
+                              Xóa
                             </button>
                           </>
                         )}

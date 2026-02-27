@@ -7,9 +7,9 @@ import Module from './components/Module';
 export default function page() {
     const [active, setActive] = useState("header");
     const tabs = [
-    { id: "header", title: "Header" },
+    { id: "header", title: "Banner" },
     { id: "footer", title: "Footer" },
-    { id: "module", title: "Module" },
+    { id: "module", title: "Danh mục" },
   ];
   return (
     <div className="p-4">

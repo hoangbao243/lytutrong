@@ -1,5 +1,6 @@
 "use client";
 import Loader from "@/components/loader/Loader";
+import { formatDateTime, formatDateTimeVN } from "@/utils";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
@@ -20,20 +21,6 @@ export default function UserInfo() {
     };
     loadUsers();
   }, []);
-
-  // Format ngày giờ theo Việt Nam
-  const formatVNDateUTC = (dateString) => {
-    return new Date(dateString).toLocaleString("vi-VN", {
-      hour12: false,
-      timeZone: "UTC",
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  };
 
   return (
     <div className="w-full h-fit bg-white rounded-xl">
@@ -59,7 +46,7 @@ export default function UserInfo() {
                   <td className="p-3 border-b border-gray-300">{u.username}</td>
                   <td className="p-3 border-b border-gray-300">{u.role}</td>
                   <td className="p-3 border-b border-gray-300">
-                    {formatVNDateUTC(u.lastlogin)}
+                    {formatDateTime(u.lastlogin)}
                   </td>
                 </tr>
               ))
