@@ -72,10 +72,10 @@ export default function LoginPage() {
         <img src="/images/logo2.png" className="w-30 h-30 mx-auto" alt="logo" />
         <div>
           <h2 className="text-2xl font-bold mb-7 text-center mt-3 text-blue-900">
-            Sign in
+            Đăng nhập
           </h2>
           <div>
-            <label htmlFor="username" className="text-md text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Username:</label>
+            <label htmlFor="username" className="text-md text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Tài khoản:</label>
             <input
               id="outlined-basic"
               label="username"
@@ -93,7 +93,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-5">
-            <label htmlFor="password" className="text-md text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Password:</label>
+            <label htmlFor="password" className="text-md text-gray-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Mật khẩu:</label>
             <input
               id="outlined-basic"
               label="password"
@@ -122,7 +122,7 @@ export default function LoginPage() {
               className="w-full py-2 px-4 bg-purple-500 hover:bg-purple-700 rounded-md shadow-lg text-white font-semibold transition duration-200"
               type="submit"
             >
-              Sign In
+              Đăng nhập
             </button>
           </div>
         </div>

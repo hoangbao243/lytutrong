@@ -70,7 +70,7 @@ export async function PATCH(req, { params }) {
         { status: 403 },
       );
     }
-    if (isActive) {
+    if (isActive === false || isActive === true) {
       const activeValue = Number(Boolean(isActive));
       if (typeof isActive !== "boolean") {
         return Response.json(
@@ -78,8 +78,6 @@ export async function PATCH(req, { params }) {
           { status: 400 },
         );
       }
-      console.log(activeValue);
-      
       await pool.query("UPDATE users SET isActive = ? WHERE id = ?", [
         activeValue,
         id,

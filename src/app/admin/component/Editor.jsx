@@ -15,7 +15,7 @@ import { Color } from "@tiptap/extension-text-style";
 import { Iframe } from "@/components/tiptap-ui/tiptap-iframe/tiptap-Iframe";
 import toast, { Toaster } from "react-hot-toast";
 import youtube from "@tiptap/extension-youtube";
-import { formatForDateTimeLocal } from "@/utils";
+import { formatDateTime } from "@/utils";
 
 
 export default function Editor({ content, onChange }) {
@@ -634,7 +634,7 @@ export default function Editor({ content, onChange }) {
 
             <input
               type="datetime-local"
-              value={formatForDateTimeLocal(editPost?.publish_date)}
+              value={formatDateTime(editPost?.publish_date)}
               onChange={(e) =>
                 setEditPost({ ...editPost, publish_date: e.target.value })
               }
