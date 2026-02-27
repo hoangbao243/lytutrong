@@ -175,15 +175,15 @@ export default function PostsManagement() {
                     <td className="p-3 space-x-2">
                       <Link
                         href={`/admin/posts/edit/${item.id}`}
-                        className="text-blue-600 hover:underline"
+                        className="text-blue-600 hover:underline cursor-pointer"
                       >
-                        Edit
+                        Sửa
                       </Link>
                       <button
-                        className="text-red-600 hover:underline"
+                        className="text-red-600 hover:underline cursor-pointer"
                         onClick={() => onDelete(item.id)}
                       >
-                        Delete
+                        Xóa
                       </button>
                     </td>
                   </tr>

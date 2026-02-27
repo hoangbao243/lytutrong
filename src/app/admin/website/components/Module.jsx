@@ -137,7 +137,7 @@ export default function Module() {
       ) : (
         <div>
           <div className="p-4 flex items-center">
-            <h1 className="text-3xl">Quản lý danh mục</h1>
+            <h1 className="text-3xl font-bold">Quản lý danh mục</h1>
             <button
               className="group cursor-pointer outline-none hover:rotate-90 duration-300 ml-4 mt-1"
               title="Add New"

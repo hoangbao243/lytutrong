@@ -7,10 +7,30 @@ import { useEffect, useState } from "react";
 
 export default function AdminLayout({ children }) {
   const sidebarItems = [
-    { id: 1, title: "Bài Viết", src: "/admin/posts", icon: "" },
-    { id: 2, title: "Thông Tin Website", src: "/admin/website", icon: "" },
-    { id: 3, title: "Thư viện ảnh", src: "/admin/image-library", icon: "" },
-    { id: 4, title: "Tài khoản", src: "/admin/users", icon: "" },
+    {
+      id: 1,
+      title: "Bài Viết",
+      src: "/admin/posts",
+      icon: "/images/icon/post.png",
+    },
+    {
+      id: 2,
+      title: "Thông Tin Website",
+      src: "/admin/website",
+      icon: "/images/icon/website.png",
+    },
+    {
+      id: 3,
+      title: "Thư viện ảnh",
+      src: "/admin/image-library",
+      icon: "/images/icon/photo.png",
+    },
+    {
+      id: 4,
+      title: "Tài khoản",
+      src: "/admin/users",
+      icon: "/images/icon/group.png",
+    },
   ];
   const [open, setOpen] = useState(true);
   const [user, setUser] = useState(null);
@@ -37,6 +57,10 @@ export default function AdminLayout({ children }) {
     };
     getUser();
   }, []);
+
+  useEffect(() => {
+    console.log("user.........", user);
+  }, [user]);
 
   return (
     <div className="flex font-sans bg-[#F9FAFB]">
@@ -87,37 +111,32 @@ export default function AdminLayout({ children }) {
         >
           <nav className=" space-y-3 text-black">
             <div className="py-1.5">
-              {sidebarItems &&
-                sidebarItems?.map((item) => (
-                  <Link
-                    key={item?.id}
-                    href={item?.src}
-                    className="group relative flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-100 transition-all duration-200"
-                  >
-                    <div className="absolute left-0 top-0 h-full w-1 bg-blue-500 rounded-r opacity-0 group-hover:opacity-100 transition-all duration-200 group-hover:scale-y-100 scale-y-80"></div>
-                    <div className="w-8 h-8 px-2 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-300 transition-colors duration-200">
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        className="h-5 w-5 text-blue-600 group-hover:text-[#2b6cb0]"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          clipRule="evenodd"
-                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          fillRule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <span
-                      className={`${
-                        open == true ? "block" : "hidden"
-                      } font-medium text-gray-700 group-hover:text-[#1a365d] ml-3`}
+              {user &&
+                sidebarItems &&
+                sidebarItems
+                  .filter(
+                    (item) =>
+                      user?.role === "admin" || item.title !== "Tài khoản",
+                  )
+                  ?.map((item) => (
+                    <Link
+                      key={item?.id}
+                      href={item?.src}
+                      className="group relative flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-100 transition-all duration-200"
                     >
-                      {item?.title}
-                    </span>
-                  </Link>
-                ))}
+                      <div className="absolute left-0 top-0 h-full w-1 bg-blue-500 rounded-r opacity-0 group-hover:opacity-100 transition-all duration-200 group-hover:scale-y-100 scale-y-80"></div>
+                      <div className="w-8 h-8 px-2 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-300 transition-colors duration-200">
+                        <img src={item.icon}></img>
+                      </div>
+                      <span
+                        className={`${
+                          open == true ? "block" : "hidden"
+                        } font-medium text-gray-700 group-hover:text-[#1a365d] ml-3`}
+                      >
+                        {item?.title}
+                      </span>
+                    </Link>
+                  ))}
             </div>
           </nav>
         </aside>

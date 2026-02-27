@@ -44,7 +44,7 @@ export default function HeaderSetting() {
         active:border-b active:brightness-90 active:translate-y-0.5"
         onClick={handleUpload}
       >
-        Upload
+        Lưu
       </button>
     </div>
   );

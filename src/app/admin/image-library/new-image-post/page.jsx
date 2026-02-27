@@ -70,6 +70,7 @@ export default function page() {
         <label className="block mb-2 font-medium">Ảnh thư viện</label>
         <input
           type="file"
+          className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"
           multiple
           accept="image/*"
           onChange={handleImageChange}
@@ -101,7 +102,7 @@ export default function page() {
           type="submit"
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
-          Lưu bài viết
+          Lưu
         </button>
       </div>
     </form>
