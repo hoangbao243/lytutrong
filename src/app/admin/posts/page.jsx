@@ -4,6 +4,8 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import DeleteModal from "../component/DeleteModal";
 import { formatDateTime } from "@/utils";
+import Loader from "@/components/loader/Loader";
+import toast from "react-hot-toast";
 
 const ths = [
   "id",
@@ -24,36 +26,58 @@ export default function PostsManagement() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const [method, setMethod] = useState("all");
   const limit = 5;
 
   //ẩn cột trong table
   const hiddenCols = ["Mô tả"];
   //call api get post pageding by page and limit
   const getPost = async () => {
-    setLoading(true);
-    const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
-    if (res.status == 200) {
-      setPosts(res?.data?.data);
-      setPagination(res?.data?.totalPages || 1);
-    }
-  };
-  useEffect(() => {
     try {
-      getPost();
+      setLoading(true);
+      const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
+      if (res.status == 200) {
+        console.log("ressssssssss",res);
+        
+        setPosts(res?.data?.data);
+        setPagination(res?.data?.totalPages || 1);
+      }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message || "lỗi!");
     } finally {
+      setMethod("all")
       setLoading(false);
     }
+  };
+  //call api search post
+  const getSearchPosts = async () =>{
+    try {
+      setLoading(true)
+      const res = await axios.get("/api/search", {
+        params: { keyword, page },
+      });
+      setPosts(res?.data?.data);
+      setPagination(res?.data?.pagination?.totalPages || 0);
+    } catch (error) {
+      toast.error(error.message || "Lỗi!")
+    }finally{
+      setMethod("search")
+      setLoading(false)
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+
+  useEffect(() => {
+    getPost();
   }, []);
 
   useEffect(() => {
-    try {
+    if (method == "all") {
       getPost();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    }else if(method == "search"){
+      getSearchPosts()
     }
   }, [page]);
 
@@ -84,35 +108,67 @@ export default function PostsManagement() {
     setDeleteId(id);
     setOpenDeleteModal(true);
   };
-
+  //enter for search
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+  
+  const handleSearch = async () => {
+    if (!keyword.trim()) return getPost();
+    getSearchPosts();
+  };
   return (
     <div className="font-sans">
       {loading ? (
         <Loader></Loader>
       ) : (
         <>
-          <div className="flex items-center ">
-            <h1 className="font-bold text-3xl mr-2 my-2">Quản lý bài viết</h1>
-            <Link
-              className="group cursor-pointer outline-none hover:rotate-90 duration-300"
-              title="Add New"
-              href={`/admin/newpost`}
-            >
-              <svg
-                className="stroke-gray-400 fill-none group-hover:fill-gray-500 group-active:stroke-gray-200 group-active:fill-gray-600 group-active:duration-0 duration-300"
-                viewBox="0 0 24 24"
-                height="30px"
-                width="30px"
-                xmlns="http://www.w3.org/2000/svg"
+          <div className="flex items-center justify-between">
+            <div className="flex flex-row">
+              <h1 className="font-bold text-3xl mr-2 my-2">Quản lý bài viết</h1>
+              <Link
+                className="group cursor-pointer outline-none hover:rotate-90 duration-300 mt-3"
+                title="Add New"
+                href={`/admin/newpost`}
               >
-                <path
-                  strokeWidth="1.5"
-                  d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
-                ></path>
-                <path strokeWidth="1.5" d="M8 12H16"></path>
-                <path strokeWidth="1.5" d="M12 16V8"></path>
-              </svg>
-            </Link>
+                <svg
+                  className="stroke-gray-400 fill-none group-hover:fill-gray-500 group-active:stroke-gray-200 group-active:fill-gray-600 group-active:duration-0 duration-300"
+                  viewBox="0 0 24 24"
+                  height="30px"
+                  width="30px"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeWidth="1.5"
+                    d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                  ></path>
+                  <path strokeWidth="1.5" d="M8 12H16"></path>
+                  <path strokeWidth="1.5" d="M12 16V8"></path>
+                </svg>
+              </Link>
+            </div>
+            <div>
+              <div className="w-64 bg-white rounded-xl border-2 border-gray-300 p-2 mr-10">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Tìm kiếm..."
+                    className="flex-1 outline-none"
+                  />
+                  <img
+                    src="/images/icon/search.png"
+                    className="w-7 h-7 cursor-pointer"
+                    alt=""
+                    onClick={handleSearch}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <table className="w-full bg-white shadow rounded-lg overflow-hidden">
@@ -203,7 +259,11 @@ export default function PostsManagement() {
                 disabled={page === 1}
                 className="flex px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
-                <img src="/images/icon/right-arrow2.png" alt="right-arrow" className="w-6 h-6 -scale-x-100"/>
+                <img
+                  src="/images/icon/right-arrow2.png"
+                  alt="right-arrow"
+                  className="w-6 h-6 -scale-x-100"
+                />
                 Prev
               </button>
 
@@ -217,7 +277,11 @@ export default function PostsManagement() {
                 className="flex px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
                 Next
-                <img src="/images/icon/right-arrow2.png" alt="right-arrow" className="w-6 h-6"/>
+                <img
+                  src="/images/icon/right-arrow2.png"
+                  alt="right-arrow"
+                  className="w-6 h-6"
+                />
               </button>
             </div>
           </div>
