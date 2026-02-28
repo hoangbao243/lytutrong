@@ -6,7 +6,6 @@ import axios from "axios";
 
 export default function SearchingPage() {
   const searchParams = useSearchParams();
-  const keyword = searchParams.get("q");
   const router = useRouter()
 
   const [data, setData] = useState([]);
@@ -49,7 +48,7 @@ export default function SearchingPage() {
   return (
     <section className=" max-w-7xl mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">
-        Kết quả tìm kiếm cho: <span className="text-blue-600">{keyword}</span>
+        Kết quả tìm kiếm cho: <span className="text-blue-600">{q}</span>
       </h1>
 
       {loading && <p>Đang tìm kiếm...</p>}
