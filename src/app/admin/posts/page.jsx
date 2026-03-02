@@ -28,58 +28,101 @@ export default function PostsManagement() {
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [method, setMethod] = useState("all");
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
   const limit = 5;
 
   //ẩn cột trong table
   const hiddenCols = ["Mô tả"];
-  //call api get post pageding by page and limit
+  //gọi api lấy bài viết
   const getPost = async () => {
     try {
       setLoading(true);
       const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
       if (res.status == 200) {
-        console.log("ressssssssss",res);
-        
+        console.log("ressssssssss", res);
+
         setPosts(res?.data?.data);
         setPagination(res?.data?.totalPages || 1);
       }
     } catch (error) {
       toast.error(error.message || "lỗi!");
     } finally {
-      setMethod("all")
+      setMethod("all");
       setLoading(false);
     }
   };
-  //call api search post
-  const getSearchPosts = async () =>{
+  //gọi api search post
+  const getSearchPosts = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await axios.get("/api/search", {
-        params: { keyword, page },
+        params: { keyword, page , limit},
       });
       setPosts(res?.data?.data);
       setPagination(res?.data?.pagination?.totalPages || 0);
     } catch (error) {
-      toast.error(error.message || "Lỗi!")
-    }finally{
-      setMethod("search")
-      setLoading(false)
+      toast.error(error.message || "Lỗi!");
+    } finally {
+      setMethod("search");
+      setLoading(false);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }
-
+  };
+  //gọi api lấy bài viết theo danh mục
+  const getPostByCategory = async () => {
+    try {
+      const admin = 1
+      setLoading(true);
+      const res = await axios.get(`/api/post/category/${Number(category)}`, {
+        params: { admin, page , limit },
+      });
+      setPosts(res?.data?.data);
+      setPagination(res?.data?.totalPages || 1);
+    } catch (error) {
+      toast.error(error.message || "Lỗi!");
+    } finally {
+      setMethod("byCategory");
+      setLoading(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
+    //gọi api lấy bài viết
     getPost();
+    //gọi api lấy danh mục
+    const getCategories = async () => {
+      try {
+        const res = await axios.get("/api/category?flat=1");
+        if (res.status == 200) {
+          setCategories(res?.data);
+        } else {
+          toast.error(res.status);
+        }
+      } catch (error) {
+        toast.error(error.message || "Lỗi!");
+      }
+    };
+    getCategories();
   }, []);
 
   useEffect(() => {
     if (method == "all") {
       getPost();
-    }else if(method == "search"){
-      getSearchPosts()
+    } else if (method == "search") {
+      getSearchPosts();
+    }else if (method == "byCategory") {
+      getPostByCategory()
     }
   }, [page]);
+
+  useEffect(()=>{
+    if (category == 0) {
+      getPost();
+    }
+    getPostByCategory()
+  },[category])
 
   const nextPage = () => {
     if (page < pagination) setPage(page + 1);
@@ -114,9 +157,10 @@ export default function PostsManagement() {
       handleSearch();
     }
   };
-  
+
   const handleSearch = async () => {
     if (!keyword.trim()) return getPost();
+    setPage(1);
     getSearchPosts();
   };
   return (
@@ -126,10 +170,10 @@ export default function PostsManagement() {
       ) : (
         <>
           <div className="flex items-center justify-between">
-            <div className="flex flex-row">
-              <h1 className="font-bold text-3xl mr-2 my-2">Quản lý bài viết</h1>
+            <div className="p-4 flex items-center">
+              <h1 className="font-bold text-3xl mr-2 my-2 cursor-pointer" onClick={()=>{getPost(),setPage(1)}}>Quản lý bài viết</h1>
               <Link
-                className="group cursor-pointer outline-none hover:rotate-90 duration-300 mt-3"
+                className="group cursor-pointer outline-none hover:rotate-90 duration-300 mt-1"
                 title="Add New"
                 href={`/admin/newpost`}
               >
@@ -149,7 +193,22 @@ export default function PostsManagement() {
                 </svg>
               </Link>
             </div>
-            <div>
+            <div className="flex">
+              <div className="flex mr-2 justify-center">
+                <select
+                  name="category"
+                  value={category}
+                  onChange={(e) => {setCategory(e.target.value);setPage(1)}}
+                  className="border-2 border-gray-300 p-2 rounded-xl text-black"
+                >
+                  <option value="0">-- Chọn danh mục --</option>
+                  {categories && categories?.filter(item=>item.id!=1)?.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="w-64 bg-white rounded-xl border-2 border-gray-300 p-2 mr-10">
                 <div className="flex items-center gap-2">
                   <input
@@ -216,7 +275,7 @@ export default function PostsManagement() {
                         </span>
                       )}
                     </td>
-                    <td className="p-3">{formatDateTime(item?.createDate)}</td>
+                    <td className="p-3">{formatDateTime(item?.publish_date)}</td>
                     <td className="p-3">{formatDateTime(item?.updateDate)}</td>
 
                     <td className="p-3">

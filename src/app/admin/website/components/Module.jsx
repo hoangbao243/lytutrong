@@ -4,6 +4,7 @@ import DeleteModal from "../../component/DeleteModal";
 import axios from "axios";
 import CategoryModal from "./CategoryModal";
 import Loader from "@/components/loader/Loader";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Module() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -20,7 +21,7 @@ export default function Module() {
 
   const handleDelete = async (id) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await axios.delete(`/api/category/${id}`);
       console.log(res);
 
@@ -34,7 +35,7 @@ export default function Module() {
       alert(err.response?.data?.message || "Không thể xóa danh mục");
     } finally {
       setOpenDeleteModal(false);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -50,15 +51,28 @@ export default function Module() {
 
   useEffect(() => {
     const getCategories = async () => {
-      setLoading(true)
+      setLoading(true);
       const res = await axios.get(`/api/category`);
       if (res.status == 200) {
+        console.log(res);
+
         setCategories(res.data);
       }
-      setLoading(false)
+      setLoading(false);
     };
     getCategories();
   }, []);
+
+   const handleToggle = async (id, value) => {
+      try {
+        await axios.patch(`/api/category/${id}`, {
+          isActive: value,
+        });
+        toast.success("Cập nhật danh mục thành công!");
+      } catch (err) {
+        toast.error(err.response?.data?.message || "Không thể cập nhật");
+      }
+    };
 
   const renderRows = (items, level = 0) => {
     return items.map((item) => (
@@ -79,6 +93,14 @@ export default function Module() {
           </td>
 
           <td className="p-3">{item.parent ?? "—"}</td>
+          <td className="p-3">
+            <input
+              type="checkbox"
+              defaultChecked={Boolean(item?.menu)}
+              onChange={(e) => handleToggle(item.id, e.target.checked)}
+              className="w-5 h-5 bg-transparent border-b-2 border-gray-300 py-2 accent-blue-600"
+            ></input>
+          </td>
 
           <td className="p-3 space-x-2">
             <button
@@ -110,7 +132,7 @@ export default function Module() {
 
   const handleSubmit = async (data) => {
     try {
-      setLoading(true)
+      setLoading(true);
       if (data.id) {
         await axios.put(`/api/category/${data.id}`, data);
         alert("Cập nhật thành công");
@@ -125,8 +147,8 @@ export default function Module() {
       console.log(data);
     } catch (err) {
       alert(err.response?.data?.message || "Có lỗi xảy ra");
-    } finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,6 +158,7 @@ export default function Module() {
         <Loader></Loader>
       ) : (
         <div>
+          <Toaster position="top-right"></Toaster>
           <div className="p-4 flex items-center">
             <h1 className="text-3xl font-bold">Quản lý danh mục</h1>
             <button
@@ -174,6 +197,7 @@ export default function Module() {
                   <th className="pl-2">ID</th>
                   <th>Danh mục</th>
                   <th>Danh mục cha</th>
+                  <th>Menu</th>
                   <th>Hành động</th>
                 </tr>
               </thead>
