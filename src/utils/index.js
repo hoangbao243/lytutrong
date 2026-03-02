@@ -3,3 +3,4 @@ export * from "./title";
 export * from "./extractFileId";
 export * from "./formatDateTimeVN"
 export * from "./monthToText"
+export * from "./formatForInputDateTime"

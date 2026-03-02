@@ -9,9 +9,8 @@ export async function GET(req) {
   const q = searchParams.get("q") || "";
   const keyword = searchParams.get("keyword") || "";
   const page = Number(searchParams.get("page") || 1);
+  const limit = Number(searchParams.get("limit"));
   const offset = (page - 1) * LIMIT;
-  console.log("qqqqqqqqqqqqqq",q);
-  console.log("keyword...........",keyword);
   const pool = await getPool();
   const search = q ? q : keyword;
   const searchValue = `%${search || ""}%`;
@@ -35,7 +34,7 @@ export async function GET(req) {
     ORDER BY createDate DESC
     LIMIT ? OFFSET ?
     `,
-    [searchValue, LIMIT, offset]
+    [searchValue, limit || LIMIT , offset]
   );
 
   return NextResponse.json({
