@@ -10,7 +10,7 @@ export default function Main() {
   useEffect(()=>{
     const getData = async () =>{
       try {
-        const res = await axios.get(`/api/post/topnew`)
+        const res = await axios.get(`/api/post/slides`)
         if (res.status == 200) {
           setData(res.data)
         }
