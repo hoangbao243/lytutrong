@@ -23,7 +23,7 @@ export async function GET(req) {
       AND featured = 1
       AND publish_date <= NOW()
     ORDER BY publish_date DESC
-    LIMIT 4
+    LIMIT 4 OFFSET 5
     `
   );
 
