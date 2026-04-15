@@ -83,7 +83,7 @@ export default function Postpage() {
               ))}
             </div>
             <div className="flex flex-col font-bold text-3xl px-4 my-2 mt-4">
-              {post && capitalizeTitle(post?.caption)}
+              {post && post?.caption}
               <span className="text-sm my-1 font-normal text-gray-400">
                 {post && formatDateTime(post?.createDate)}
               </span>
