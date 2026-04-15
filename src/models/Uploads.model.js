@@ -6,8 +6,8 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URL = process.env.REDIRECT_URL;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
-const FOLDER_ID = `172vo7gY1g2Hqb5kkzfWSymnIEpzTfy2w`;
-const FOLDER_IMAGES = `1rb7BuAy2WBD2yyeAMjSREONeYTR338Hk`;
+const FOLDER_ID = process.env.GG_FOLDER_ID;
+const FOLDER_IMAGES = process.env.FOLDER_IMAGES;
 // const TEMP_FOLDER_ID = `1P9Z5HnX8fT3UPQ8ezYaxZJGqUrijOVoz`
 
 const oauth2Client = new google.auth.OAuth2(

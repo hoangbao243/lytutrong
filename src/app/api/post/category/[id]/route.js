@@ -38,7 +38,7 @@ export async function GET(request, { params }) {
       FROM posts
       WHERE categoryId = ?
         AND status = 1
-      ORDER BY updateDate DESC
+      ORDER BY publish_date DESC
       LIMIT ?
       `,
         [categoryId, limit]
@@ -100,7 +100,7 @@ export async function GET(request, { params }) {
       FROM posts
       WHERE categoryId = ?
         AND status = 1
-      ORDER BY updateDate DESC
+      ORDER BY publish_date DESC
       LIMIT 18446744073709551615 OFFSET 1
       `,
       [categoryId],
