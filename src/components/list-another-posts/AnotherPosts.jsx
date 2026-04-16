@@ -23,13 +23,14 @@ export default function AnotherPosts(data) {
           className="text-[16px] ml-2 text-red-400 border-b border-gray-200 last:border-b-0 py-1"
         >
           <Link href={`/post/${item.id}`}>
-            {item.caption
+            {/* {item.caption
               ?.split(" ")
               .map(
                 (w) =>
                   w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
               )
-              .join(" ")}
+              .join(" ")} */}
+            {item?.caption}
           </Link>
         </div>
       ))}
