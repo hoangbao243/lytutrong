@@ -96,8 +96,9 @@ export default function News() {
                   className="w-full h-full shadow-lg shadow-amber-100/20 rounded-lg"
                 />
                 <h2 className="px-2 pt-2 font-semibold lg:line-clamp-4 line-clamp-3">
-                  {item?.caption?.charAt(0)?.toUpperCase() +
-                    item?.caption?.slice(1)?.toLowerCase()}
+                  {/* {item?.caption?.charAt(0)?.toUpperCase() +
+                    item?.caption?.slice(1)?.toLowerCase()} */}
+                  {item?.caption}
                 </h2>
               </div>
 

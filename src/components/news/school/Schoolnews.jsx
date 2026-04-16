@@ -65,8 +65,9 @@ export default function Schoolnews(props) {
                   className="float-left w-40 min-h-28 object-cover rounded-lg mr-3 mb-2 shadow-lg shadow-amber-200/40"
                 />
                 <h3 className="font-bold text-blue-700 hover:underline line-clamp-2 text-sm md:text-base">
-                  {item?.caption?.charAt(0)?.toUpperCase() +
-                    item?.caption?.slice(1)?.toLowerCase()}
+                  {/* {item?.caption?.charAt(0)?.toUpperCase() +
+                    item?.caption?.slice(1)?.toLowerCase()} */}
+                  {item?.caption}
                 </h3>
                 <p className="text-gray-600 text-sm text-justify h-36.5 leading-6.5">
                   {item?.description}

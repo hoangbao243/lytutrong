@@ -32,8 +32,9 @@ function PostCard({ item }) {
           ref={titleRef}
           className="font-medium text-black hover:text-blue-500 line-clamp-3 text-sm md:text-base"
         >
-          {item?.caption?.charAt(0)?.toUpperCase() +
-            item?.caption?.slice(1)?.toLowerCase()}
+          {/* {item?.caption?.charAt(0)?.toUpperCase() +
+            item?.caption?.slice(1)?.toLowerCase()} */}
+          {item?.caption}
         </h3>
 
         {/* Description */}
