@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import DeleteModal from "../component/DeleteModal";
 import { formatDateTime } from "@/utils";
 import Loader from "@/components/loader/Loader";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const ths = [
   "id",
@@ -136,9 +136,12 @@ export default function PostsManagement() {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(`/api/post/${id}`);
-      if (res == 200) {
+      console.log(res);
+      
+      if (res.status == 200) {
         setOpenDeleteModal(false);
-        console.log(id);
+        getPost();
+        toast.success("Xóa thành công!")
       }
       // reload list
     } catch (err) {
@@ -170,6 +173,7 @@ export default function PostsManagement() {
       ) : (
         <>
           <div className="flex items-center justify-between">
+            <Toaster position="top-right"></Toaster>
             <div className="p-4 flex items-center">
               <h1 className="font-bold text-3xl mr-2 my-2 cursor-pointer" onClick={()=>{getPost(),setPage(1)}}>Quản lý bài viết</h1>
               <Link
