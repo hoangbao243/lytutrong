@@ -46,7 +46,7 @@ export default function PostsManagement() {
         setPagination(res?.data?.totalPages || 1);
       }
     } catch (error) {
-      toast.error(error.message || "lỗi!");
+      console.log(error.message || "Lỗi!");
     } finally {
       setMethod("all");
       setLoading(false);
@@ -62,7 +62,7 @@ export default function PostsManagement() {
       setPosts(res?.data?.data);
       setPagination(res?.data?.pagination?.totalPages || 0);
     } catch (error) {
-      toast.error(error.message || "Lỗi!");
+      console.log(error.message || "Lỗi!");
     } finally {
       setMethod("search");
       setLoading(false);
@@ -80,7 +80,7 @@ export default function PostsManagement() {
       setPosts(res?.data?.data);
       setPagination(res?.data?.totalPages || 1);
     } catch (error) {
-      toast.error(error.message || "Lỗi!");
+      console.log(error.message || "Lỗi!");
     } finally {
       setMethod("byCategory");
       setLoading(false);
@@ -101,7 +101,7 @@ export default function PostsManagement() {
           toast.error(res.status);
         }
       } catch (error) {
-        toast.error(error.message || "Lỗi!");
+        console.log(error.message || "Lỗi!");
       }
     };
     getCategories();
