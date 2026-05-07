@@ -17,7 +17,6 @@ import toast, { Toaster } from "react-hot-toast";
 import youtube from "@tiptap/extension-youtube";
 import { formatDateTime, formatForInputDateTime } from "@/utils";
 
-
 export default function Editor({ content, onChange }) {
   const fontSizes = Array.from({ length: 33 }, (_, i) => i + 8);
   const [uploading, setUploading] = useState(false);
@@ -61,6 +60,27 @@ export default function Editor({ content, onChange }) {
         },
       }),
     ],
+    editorProps: {
+      handlePaste: (view, event) => {
+        const items = event.clipboardData?.items;
+
+        if (!items) return false;
+
+        for (const item of items) {
+          if (item.type.startsWith("image/")) {
+            const file = item.getAsFile();
+
+            handleImageUpload(file).then((url) => {
+              editor.chain().focus().setImage({ src: url }).run();
+            });
+
+            return true;
+          }
+        }
+
+        return false;
+      },
+    },
     content: content || "<p>Nhập nội dung...</p>",
     onUpdate({ editor }) {
       const html = editor.getHTML();
@@ -191,25 +211,24 @@ export default function Editor({ content, onChange }) {
   const handlePublish = async () => {
     try {
       const updatedPost = await moveImage();
-      console.log("updatedPost", updatedPost);
-      // const error = validatePost(updatedPost);
-      // if (error) {
-      //   toast.error(error);
-      //   return;
-      // }
-
       if (!updatedPost) return;
       if (!id) {
         const res = await axios.post(`/api/post`, updatedPost);
         if (res.status == 200) {
-          console.log(res);
-          toast.success("Đăng bài thành công");
+          toast.success("Đăng bài thành công!");
+          setUploading(true);
+          setTimeout(() => {
+            navigate.push("/admin/posts");
+          }, 4000);
         }
       } else {
         const res = await axios.put(`/api/post/${id}`, updatedPost);
         if (res.status == 200) {
-          toast.success(res?.data?.message);
-          console.log("ok");
+          toast.success("Chỉnh sửa thành công!");
+          setUploading(true);
+          setTimeout(() => {
+            navigate.push("/admin/posts");
+          }, 1000);
         }
       }
       setEditPost(updatedPost);
