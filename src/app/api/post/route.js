@@ -20,7 +20,7 @@ export async function GET(req) {
       publish_date
     FROM posts
     WHERE status = 1
-    AND publish_date <= NOW()
+    AND createDate <= NOW()
     ORDER BY id DESC
     `
   );
